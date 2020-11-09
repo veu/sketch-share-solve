@@ -68,11 +68,9 @@ function Board:redraw()
 				gfx.fillRect(0, 0, CELL - (x % 5 == 0 and 2 or 1), CELL - (y % 5 == 0 and 2 or 1))
 				gfx.setColor(gfx.kColorBlack)
 				if self.solution[index] == 1 then
-					gfx.fillRoundRect(2, 2, CELL - 5, CELL - 5, 5)
+					gfx.drawText("o", 0, 0)
 				elseif self.crossed[index] == 1 then
-					gfx.setLineWidth(.1)
-					gfx.drawLine(3, 3, CELL - 5, CELL - 4)
-					gfx.drawLine(3, CELL - 3, CELL - 4, 3)
+					gfx.drawText("x", 0, 0)
 				end
 			end
 		end
