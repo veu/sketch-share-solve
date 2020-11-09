@@ -35,11 +35,13 @@ function Numbers:drawLeft()
 			gfx.drawText(v, CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)), CELL * (y + BOARD_OFFSET_Y - 1) + 1)
 		end
 	end
+	gfx.setDitherPattern(0.5)
 	for y = 0, rawlen(leftNumbers) do
 		gfx.drawLine(
 			CELL * (BOARD_OFFSET_X - 8), CELL * (y + BOARD_OFFSET_Y),
 			CELL * (BOARD_OFFSET_X + 1), CELL * (y + BOARD_OFFSET_Y))
 	end
+	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
 end
 
 function Numbers:drawTop()
@@ -47,13 +49,15 @@ function Numbers:drawTop()
 		for i, v in pairs(numbers) do
 			gfx.drawText(v, CELL * (x + BOARD_OFFSET_X - 1) + 1, CELL * (i + BOARD_OFFSET_Y - 1 - rawlen(numbers)))
 		end
+	end
+	gfx.setDitherPattern(0.5)
 	for x = 0, rawlen(topNumbers) do
 		gfx.drawLine(
 			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y - 5),
 			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y)
 		)
 	end
-	end
+	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
 end
 
 function Numbers:calcLeft(level, width, height)
