@@ -8,7 +8,7 @@ function Board:init()
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
-	self:moveTo(CELL * 6, CELL * 4)
+	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
 	self:setZIndex(5)
 	self:add()
 end

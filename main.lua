@@ -18,6 +18,8 @@ gfx.setFont(fontGrid)
 
 -- globals
 CELL = 16
+BOARD_OFFSET_X = 10
+BOARD_OFFSET_Y = 5
 
 local level = LEVELS[2]
 local height = 10

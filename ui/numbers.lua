@@ -32,21 +32,27 @@ local topNumbers = {}
 function Numbers:drawLeft()
 	for y, numbers in pairs(leftNumbers) do
 		for i, v in pairs(numbers) do
-			gfx.drawText(v, CELL * (i + 5 - rawlen(numbers)), CELL * (y + 3) + 1)
+			gfx.drawText(v, CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)), CELL * (y + BOARD_OFFSET_Y - 1) + 1)
 		end
-		gfx.drawLine(CELL, CELL * (y + 4), CELL * 6, CELL * (y + 4))
+	end
+	for y = 0, rawlen(leftNumbers) do
+		gfx.drawLine(
+			CELL * (BOARD_OFFSET_X - 8), CELL * (y + BOARD_OFFSET_Y),
+			CELL * (BOARD_OFFSET_X + 1), CELL * (y + BOARD_OFFSET_Y))
 	end
 end
 
 function Numbers:drawTop()
 	for x, numbers in pairs(topNumbers) do
 		for i, v in pairs(numbers) do
-			gfx.drawText(v, CELL * (x + 5) + 1, CELL * (i + 3 - rawlen(numbers)))
+			gfx.drawText(v, CELL * (x + BOARD_OFFSET_X - 1) + 1, CELL * (i + BOARD_OFFSET_Y - 1 - rawlen(numbers)))
 		end
+	for x = 0, rawlen(topNumbers) do
 		gfx.drawLine(
-			CELL * (x + 6), CELL,
-			CELL * (x + 6), CELL * 4
+			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y - 5),
+			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y)
 		)
+	end
 	end
 end
 
