@@ -11,25 +11,26 @@ import "ui/numbers"
 
 local gfx <const> = playdate.graphics
 
-fontGrid = gfx.font.new("font/grid")
+local fontGrid = gfx.font.new("font/grid")
 assert(fontGrid)
 
 gfx.setFont(fontGrid)
 
 -- globals
-height = 10
-width = 15
+CELL = 16
 
-local CELL = 16
 local level = LEVELS[2]
+local height = 10
+local width = 15
 
 local board = Board()
 board:loadLevel(level, width, height)
 
 local cursor = Cursor()
+cursor:loadLevel(level, width, height)
 
 local numbers = Numbers()
-numbers:calculate(level)
+numbers:loadLevel(level, width, height)
 numbers:redraw()
 
 function cross(isStart)

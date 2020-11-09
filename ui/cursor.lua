@@ -1,14 +1,9 @@
 local gfx <const> = playdate.graphics
 
-local CELL = 16
-
 class("Cursor").extends(gfx.sprite)
 
 function Cursor:init()
 	Cursor.super.init(self)
-
-	self.gridX = 1
-	self.gridY = 1
 
 	self.image = gfx.image.new(CELL, CELL, gfx.kColorWhite)
 	self:setImage(self.image)
@@ -19,9 +14,16 @@ function Cursor:init()
 	self:add()
 end
 
+function Cursor:loadLevel(level, width, height)
+	self.gridX = 1
+	self.gridY = 1
+	self.levelWidth = width
+	self.levelHeight = height
+end
+
 function Cursor:moveBy(dx, dy)
-	self.gridX = (self.gridX + dx + width - 1) % width + 1
-	self.gridY = (self.gridY + dy + height - 1) % height + 1
+	self.gridX = (self.gridX + dx + self.levelWidth - 1) % self.levelWidth + 1
+	self.gridY = (self.gridY + dy + self.levelHeight - 1) % self.levelHeight + 1
 	self:moveTo(CELL * (5 + self.gridX), CELL * (3 + self.gridY))
 end
 
@@ -30,5 +32,5 @@ function Cursor:move(deps)
 end
 
 function Cursor:getIndex()
-	return self.gridX - 1 + (self.gridY - 1) * width + 1
+	return self.gridX - 1 + (self.gridY - 1) * self.levelWidth + 1
 end

@@ -1,7 +1,5 @@
 local gfx <const> = playdate.graphics
 
-local CELL = 16
-
 class("Numbers").extends(gfx.sprite)
 
 function Numbers:init()
@@ -15,9 +13,9 @@ function Numbers:init()
 	self:add()
 end
 
-function Numbers:calculate(level)
-	self:calcLeft(level)
-	self:calcTop(level)
+function Numbers:loadLevel(level, width, height)
+	self:calcLeft(level, width, height)
+	self:calcTop(level, width, height)
 end
 
 function Numbers:redraw()
@@ -32,18 +30,18 @@ local leftNumbers = {}
 local topNumbers = {}
 
 function Numbers:drawLeft()
-	for y = 1, height do
-		for i, v in pairs(leftNumbers[y]) do
-			gfx.drawText(v, CELL * (i + 5 - rawlen(leftNumbers[y])), CELL * (y + 3) + 1)
+	for y, numbers in pairs(leftNumbers) do
+		for i, v in pairs(numbers) do
+			gfx.drawText(v, CELL * (i + 5 - rawlen(numbers)), CELL * (y + 3) + 1)
 		end
 		gfx.drawLine(CELL, CELL * (y + 4), CELL * 6, CELL * (y + 4))
 	end
 end
 
 function Numbers:drawTop()
-	for x = 1, width do
-		for i, v in pairs(topNumbers[x]) do
-			gfx.drawText(v, CELL * (x + 5) + 1, CELL * (i + 3 - rawlen(topNumbers[x])))
+	for x, numbers in pairs(topNumbers) do
+		for i, v in pairs(numbers) do
+			gfx.drawText(v, CELL * (x + 5) + 1, CELL * (i + 3 - rawlen(numbers)))
 		end
 		gfx.drawLine(
 			CELL * (x + 6), CELL,
@@ -52,7 +50,7 @@ function Numbers:drawTop()
 	end
 end
 
-function Numbers:calcLeft(level)
+function Numbers:calcLeft(level, width, height)
 	for y = 1, height do
 		leftNumbers[y] = {}
 		local i = 1
@@ -71,7 +69,7 @@ function Numbers:calcLeft(level)
 	end
 end
 
-function Numbers:calcTop(level)
+function Numbers:calcTop(level, width, height)
 	for x = 1, width do
 		topNumbers[x] = {}
 		local i = 1

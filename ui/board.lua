@@ -1,7 +1,5 @@
 local gfx <const> = playdate.graphics
 
-local CELL = 16
-
 class("Board").extends(gfx.sprite)
 
 function Board:init()
@@ -18,8 +16,8 @@ end
 function Board:loadLevel(level, width, height)
 	self.last = 0
 	self.level = level
-	self.width = width
-	self.height = height
+	self.levelWidth = width
+	self.levelHeight = height
 	self.solution = {}
 	self.crossed = {}
 	for i = 1, width * height do
@@ -60,11 +58,11 @@ function Board:redraw()
 	gfx.lockFocus(self.image)
 	do
 		gfx.setColor(gfx.kColorBlack)
-		gfx.fillRect(0, 0, CELL * width + 1, CELL * height + 1)
-		for y = 1, height do
-			for x = 1, width do
+		gfx.fillRect(0, 0, CELL * self.levelWidth + 1, CELL * self.levelHeight + 1)
+		for y = 1, self.levelHeight do
+			for x = 1, self.levelWidth do
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
-				local index = x - 1 + (y - 1) * width + 1
+				local index = x - 1 + (y - 1) * self.levelWidth + 1
 				local cell = self.level[index]
 				gfx.setColor(gfx.kColorWhite)
 				gfx.fillRect(0, 0, CELL - (x % 5 == 0 and 2 or 1), CELL - (y % 5 == 0 and 2 or 1))
