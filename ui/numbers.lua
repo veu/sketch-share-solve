@@ -29,10 +29,33 @@ end
 local leftNumbers = {}
 local topNumbers = {}
 
+local numMap = {
+	[0] = "0",
+	[1] = "1",
+	[2] = "2",
+	[3] = "3",
+	[4] = "4",
+	[5] = "5",
+	[6] = "6",
+	[7] = "7",
+	[8] = "8",
+	[9] = "9",
+	[10] = "A",
+	[11] = "B",
+	[12] = "C",
+	[13] = "D",
+	[14] = "E",
+	[15] = "F",
+}
+
 function Numbers:drawLeft()
 	for y, numbers in pairs(leftNumbers) do
 		for i, v in pairs(numbers) do
-			gfx.drawText(v, CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)), CELL * (y + BOARD_OFFSET_Y - 1) + 1)
+			gfx.drawText(
+				numMap[v],
+				CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)),
+				CELL * (y + BOARD_OFFSET_Y - 1) + 1
+			)
 		end
 	end
 	gfx.setDitherPattern(0.5)
@@ -47,7 +70,11 @@ end
 function Numbers:drawTop()
 	for x, numbers in pairs(topNumbers) do
 		for i, v in pairs(numbers) do
-			gfx.drawText(v, CELL * (x + BOARD_OFFSET_X - 1) + 1, CELL * (i + BOARD_OFFSET_Y - 1 - rawlen(numbers)))
+			gfx.drawText(
+				numMap[v],
+				CELL * (x + BOARD_OFFSET_X - 1) + 1,
+				CELL * BOARD_OFFSET_Y + 14 * (i - 1 - rawlen(numbers)) - 1
+				)
 		end
 	end
 	gfx.setDitherPattern(0.5)

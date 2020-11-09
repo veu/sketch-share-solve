@@ -1,6 +1,8 @@
+import "CoreLibs/graphics"
 import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
+
 
 import "input"
 import "levels"
@@ -18,8 +20,8 @@ gfx.setFont(fontGrid)
 
 -- globals
 CELL = 16
-BOARD_OFFSET_X = 10
-BOARD_OFFSET_Y = 5
+BOARD_OFFSET_X = 9.5
+BOARD_OFFSET_Y = 4.5
 
 local level = LEVELS[2]
 local height = 10
