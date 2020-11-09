@@ -20,70 +20,40 @@ gfx.setFont(fontGrid)
 height = 10
 width = 15
 
-local SOLUTION = {}
-for i = 1, width * height do
-	SOLUTION[i] = 0
-end
-local MARKED = {}
 local CELL = 16
 local level = LEVELS[2]
 
-function isSolved()
-	for i, v in pairs(level) do
-		if v ~= SOLUTION[i] then
-			return false
-		end
-	end
-
-	return true
-end
+local board = Board()
+board:loadLevel(level, width, height)
 
 local cursor = Cursor()
 
-function cross(start, last)
-	local index = cursor:getIndex()
-	if SOLUTION[index] == 1 then
-		return
-	end
+local numbers = Numbers()
+numbers:calculate(level)
+numbers:redraw()
 
-	if start or (not MARKED[index]) == last then
-		MARKED[index] = not MARKED[index]
-	end
-
-	return MARKED[index]
+function cross(isStart)
+	board:toggleCross(cursor:getIndex(), isStart)
 end
-function fill(start, last)
-	local index = cursor:getIndex()
-	if MARKED[index] then
-		return
-	end
 
-	if start or SOLUTION[index] ~= last then
-		SOLUTION[index] = SOLUTION[index] == 1 and 0 or 1
-	end
+function fill(isStart)
+	board:toggle(cursor:getIndex(), isStart)
 
 	printSolution()
-
-	return SOLUTION[index]
 end
 
 function printSolution()
 	local s = "{"
 
-	for _, v in pairs(SOLUTION) do
+	for _, v in pairs(board.solution) do
 		s = s .. v .. ","
 	end
 
 	print(s .. "}")
 end
 
-local board = Board()
-local numbers = Numbers()
-numbers:calculate(level)
-numbers:redraw()
-
 function playdate.update()
-	if not isSolved() then
+	if not board:isSolved() then
 		handleFill(fill)
 		handleCross(cross)
 		handleCursorDir(fill, cross, playdate.kButtonRight, function () cursor:moveBy(1, 0) end)
@@ -91,8 +61,6 @@ function playdate.update()
 		handleCursorDir(fill, cross, playdate.kButtonLeft, function () cursor:moveBy(-1, 0) end)
 		handleCursorDir(fill, cross, playdate.kButtonUp, function () cursor:moveBy(0, -1) end)
 	end
-
-	board:redraw(level, SOLUTION, MARKED)
 
 	gfx.sprite.update()
 	playdate.drawFPS(0,0)

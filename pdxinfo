@@ -1,0 +1,4 @@
+name=DIY Grid
+author=Rebecca Koenig
+description=A nonogram game you draw yourself
+bundleID=net.monometric.diy-grid

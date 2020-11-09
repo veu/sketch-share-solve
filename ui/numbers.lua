@@ -47,7 +47,7 @@ function Numbers:drawTop()
 		end
 		gfx.drawLine(
 			CELL * (x + 6), CELL,
-			CELL * (x + 6), CELL * 6
+			CELL * (x + 6), CELL * 4
 		)
 	end
 end

@@ -1,24 +1,23 @@
 local pressCounter = 0
 local PRESSED = {}
-local mode = false
 
 function handleCursorDir(fill, cross, button, update)
 	if playdate.buttonJustPressed(button) then
 		pressCounter = 0
 		update()
 		if PRESSED[playdate.kButtonA] then
-			fill(false, mode)
+			fill(false)
 		elseif PRESSED[playdate.kButtonB] then
-			cross(false, mode)
+			cross(false)
 		end
 	elseif playdate.buttonIsPressed(button) then
 		pressCounter += 1
 		if pressCounter > 5 and pressCounter % 5 == 0 then
 			update()
 			if PRESSED[playdate.kButtonA] then
-				fill(false, mode)
+				fill(false)
 			elseif PRESSED[playdate.kButtonB] then
-				cross(false, mode)
+				cross(false)
 			end
 		end
 	elseif playdate.buttonJustReleased(button) then
@@ -29,7 +28,7 @@ end
 function handleFill(fill)
 	if playdate.buttonJustPressed(playdate.kButtonA) then
 		PRESSED[playdate.kButtonA] = true
-		mode = fill(true)
+		fill(true)
 	end
 	if playdate.buttonJustReleased(playdate.kButtonA) then
 		PRESSED[playdate.kButtonA] = false
@@ -39,7 +38,7 @@ end
 function handleCross(cross)
 	if playdate.buttonJustPressed(playdate.kButtonB) then
 		PRESSED[playdate.kButtonB] = true
-		mode = cross(true)
+		cross(true)
 	end
 	if playdate.buttonJustReleased(playdate.kButtonB) then
 		PRESSED[playdate.kButtonB] = false
