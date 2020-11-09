@@ -5,11 +5,11 @@ class("Cursor").extends(gfx.sprite)
 function Cursor:init()
 	Cursor.super.init(self)
 
-	self.image = gfx.image.new(CELL, CELL, gfx.kColorWhite)
+	self.image = gfx.image.new(CELL - 1, CELL - 1, gfx.kColorWhite)
 	self:setImage(self.image)
 	self:setImageDrawMode(gfx.kDrawModeXOR)
 	self:setCenter(0, 0)
-	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
+	self:moveTo(CELL * BOARD_OFFSET_X + 1, CELL * BOARD_OFFSET_Y + 1)
 	self:setZIndex(20)
 	self:add()
 end
@@ -24,11 +24,18 @@ end
 function Cursor:moveBy(dx, dy)
 	self.gridX = (self.gridX + dx + self.levelWidth - 1) % self.levelWidth + 1
 	self.gridY = (self.gridY + dy + self.levelHeight - 1) % self.levelHeight + 1
-	self:moveTo(CELL * (BOARD_OFFSET_X - 1 + self.gridX), CELL * (BOARD_OFFSET_Y - 1 + self.gridY))
-end
-
-function Cursor:move(deps)
-	self:moveTo(CELL * (BOARD_OFFSET_X - 1 + deps.x), CELL * (BOARD_OFFSET_Y - 1 + deps.y))
+	self:moveTo(CELL * (BOARD_OFFSET_X - 1 + self.gridX) + 1, CELL * (BOARD_OFFSET_Y - 1 + self.gridY) + 1)
+	gfx.lockFocus(self.image)
+	do
+		gfx.clear(gfx.kColorClear)
+		gfx.setColor(gfx.kColorWhite)
+		gfx.fillRect(
+			0, 0,
+			CELL - (self.gridX % 5 == 0 and 2 or 1),
+			CELL - (self.gridY % 5 == 0 and 2 or 1)
+		)
+	end
+	gfx.unlockFocus()
 end
 
 function Cursor:getIndex()
