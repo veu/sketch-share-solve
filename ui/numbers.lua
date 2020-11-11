@@ -103,6 +103,9 @@ function Numbers:calcLeft(level, width, height)
 				i += 1
 			end
 		end
+		if rawlen(leftNumbers[y]) == 0 then
+			leftNumbers[y][1] = 0
+		end
 	end
 end
 
@@ -122,6 +125,9 @@ function Numbers:calcTop(level, width, height)
 			elseif topNumbers[x][i] then
 				i += 1
 			end
+		end
+		if rawlen(topNumbers[x]) == 0 then
+			topNumbers[x][1] = 0
 		end
 	end
 end
