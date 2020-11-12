@@ -3,18 +3,20 @@ import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 
-
 import "input"
 import "levels"
 import "utils"
 import "ui/board"
 import "ui/cursor"
 import "ui/numbers"
+import "ui/sidebar"
 
 local gfx <const> = playdate.graphics
 
 local fontGrid = gfx.font.new("font/grid")
 assert(fontGrid)
+imgAvatars, err = gfx.imagetable.new("img/avatars")
+assert(imgAvatars, err)
 
 gfx.setFont(fontGrid)
 
@@ -36,6 +38,8 @@ cursor:loadLevel(level, width, height)
 local numbers = Numbers()
 numbers:loadLevel(level, width, height)
 numbers:redraw()
+
+local sidebar = Sidebar()
 
 function cross(isStart)
 	board:toggleCross(cursor:getIndex(), isStart)
@@ -68,6 +72,6 @@ function playdate.update()
 	end
 
 	gfx.sprite.update()
-	playdate.drawFPS(0,0)
+	--playdate.drawFPS(0,0)
 	playdate.timer.updateTimers()
 end
