@@ -14,8 +14,7 @@ function Numbers:init()
 end
 
 function Numbers:loadLevel(level, width, height)
-	self:calcLeft(level, width, height)
-	self:calcTop(level, width, height)
+	self.level = level
 end
 
 function Numbers:redraw()
@@ -25,9 +24,6 @@ function Numbers:redraw()
 	self:markDirty()
 	gfx.unlockFocus()
 end
-
-local leftNumbers = {}
-local topNumbers = {}
 
 local numMap = {
 	[0] = "0",
@@ -49,7 +45,7 @@ local numMap = {
 }
 
 function Numbers:drawLeft()
-	for y, numbers in pairs(leftNumbers) do
+	for y, numbers in pairs(self.level.leftNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(
 				numMap[v],
@@ -59,7 +55,7 @@ function Numbers:drawLeft()
 		end
 	end
 	gfx.setDitherPattern(0.5)
-	for y = 0, rawlen(leftNumbers) do
+	for y = 0, rawlen(self.level.leftNumbers) do
 		gfx.drawLine(
 			CELL * (BOARD_OFFSET_X - 8), CELL * (y + BOARD_OFFSET_Y),
 			CELL * (BOARD_OFFSET_X + 1), CELL * (y + BOARD_OFFSET_Y))
@@ -68,7 +64,7 @@ function Numbers:drawLeft()
 end
 
 function Numbers:drawTop()
-	for x, numbers in pairs(topNumbers) do
+	for x, numbers in pairs(self.level.topNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(
 				numMap[v],
@@ -78,56 +74,11 @@ function Numbers:drawTop()
 		end
 	end
 	gfx.setDitherPattern(0.5)
-	for x = 0, rawlen(topNumbers) do
+	for x = 0, rawlen(self.level.topNumbers) do
 		gfx.drawLine(
 			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y - 5),
 			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y)
 		)
 	end
 	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
-end
-
-function Numbers:calcLeft(level, width, height)
-	for y = 1, height do
-		leftNumbers[y] = {}
-		local i = 1
-		for x = 1, width do
-			local index = x - 1 + (y - 1) * width + 1
-			if level[index] == 1 then
-				if not leftNumbers[y][i] then
-					leftNumbers[y][i] = 1
-				else
-					leftNumbers[y][i] += 1
-				end
-			elseif leftNumbers[y][i] then
-				i += 1
-			end
-		end
-		if rawlen(leftNumbers[y]) == 0 then
-			leftNumbers[y][1] = 0
-		end
-	end
-end
-
-function Numbers:calcTop(level, width, height)
-	for x = 1, width do
-		topNumbers[x] = {}
-		local i = 1
-		local numbers = {}
-		for y = 1, height do
-			local index = x - 1 + (y - 1) * width + 1
-			if level[index] == 1 then
-				if not topNumbers[x][i] then
-					topNumbers[x][i] = 1
-				else
-					topNumbers[x][i] += 1
-				end
-			elseif topNumbers[x][i] then
-				i += 1
-			end
-		end
-		if rawlen(topNumbers[x]) == 0 then
-			topNumbers[x][1] = 0
-		end
-	end
 end

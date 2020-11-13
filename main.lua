@@ -6,6 +6,7 @@ import "CoreLibs/timer"
 import "input"
 import "levels"
 import "utils"
+import "model/level"
 import "ui/board"
 import "ui/cursor"
 import "ui/numbers"
@@ -25,9 +26,9 @@ CELL = 16
 BOARD_OFFSET_X = 9.5
 BOARD_OFFSET_Y = 4.5
 
-local level = LEVELS[2]
 local height = 10
 local width = 15
+local level = Level(LEVELS[2], width, height)
 
 local board = Board()
 board:loadLevel(level, width, height)
@@ -62,7 +63,7 @@ function printSolution()
 end
 
 function playdate.update()
-	if not board:isSolved() then
+	if not level:isSolved(board.solution) then
 		handleFill(fill)
 		handleCross(cross)
 		handleCursorDir(fill, cross, playdate.kButtonRight, function () cursor:moveBy(1, 0) end)

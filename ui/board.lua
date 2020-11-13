@@ -28,16 +28,6 @@ function Board:loadLevel(level, width, height)
 	self:redraw()
 end
 
-function Board:isSolved()
-	for i, v in pairs(self.level) do
-		if v ~= self.solution[i] then
-			return false
-		end
-	end
-
-	return true
-end
-
 function Board:toggle(index, isStart)
 	if self.crossed[index] == 0 and (isStart or self.solution[index] ~= self.last) then
 		self.solution[index] = self.solution[index] == 1 and 0 or 1
@@ -63,7 +53,6 @@ function Board:redraw()
 			for x = 1, self.levelWidth do
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
 				local index = x - 1 + (y - 1) * self.levelWidth + 1
-				local cell = self.level[index]
 				gfx.setColor(gfx.kColorWhite)
 				gfx.fillRect(0, 0, CELL - (x % 5 == 0 and 2 or 1), CELL - (y % 5 == 0 and 2 or 1))
 				gfx.setColor(gfx.kColorBlack)
