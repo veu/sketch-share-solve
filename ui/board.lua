@@ -18,11 +18,15 @@ function Board:loadLevel(level, width, height)
 	self.level = level
 	self.levelWidth = width
 	self.levelHeight = height
+
 	self.solution = {}
 	self.crossed = {}
-	for i = 1, width * height do
-		self.solution[i] = 0
-		self.crossed[i] = 0
+	for y = 1, height do
+		for x = 1, width do
+			local index = x - 1 + (y - 1) * width + 1
+			self.solution[index] = 0
+			self.crossed[index] = level:isCellKnownEmpty(x, y) and 1 or 0
+		end
 	end
 
 	self:redraw()

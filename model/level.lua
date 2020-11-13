@@ -17,6 +17,12 @@ function Level:isSolved(solution)
 	return true
 end
 
+function Level:isCellKnownEmpty(x, y)
+	return
+		self.topNumbers[x][1] == 0 or
+		self.leftNumbers[y][1] == 0
+end
+
 function Level:calcTopNumbers(width, height)
 	local topNumbers = {}
 	for x = 1, width do
