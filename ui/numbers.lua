@@ -15,6 +15,7 @@ end
 
 function Numbers:loadLevel(level)
 	self.level = level
+	self:redraw()
 end
 
 function Numbers:redraw()

@@ -7,6 +7,7 @@ import "input"
 import "levels"
 import "utils"
 import "model/level"
+import "screen/grid-play"
 import "ui/board"
 import "ui/cursor"
 import "ui/numbers"
@@ -26,63 +27,15 @@ CELL = 16
 BOARD_OFFSET_X = 9.5
 BOARD_OFFSET_Y = 4.5
 
-local level = Level(LEVELS[2], 15, 10)
+local screen = GridPlay()
+screen:enter()
 
-local board = Board()
-board:loadLevel(level)
-
-local cursor = Cursor()
-cursor:loadLevel(level)
-
-local numbers = Numbers()
-numbers:loadLevel(level)
-numbers:redraw()
-
-local sidebar = Sidebar(not playdate.isCrankDocked())
-
-function cross(isStart)
-	board:toggleCross(cursor:getIndex(), isStart)
+function playdate.gameWillTerminate()
+	screen:leave()
 end
-
-function fill(isStart)
-	board:toggle(cursor:getIndex(), isStart)
-
-	printSolution()
-end
-
-function printSolution()
-	local s = "{"
-
-	for _, v in pairs(board.solution) do
-		s = s .. v .. ","
-	end
-
-	print(s .. "}")
-end
-
-local menu = playdate.getSystemMenu()
-local menuItem, error = menu:addMenuItem("restart grid", function()
-	board:loadLevel(level)
-end)
-assert(menuItem, error)
-local menuItem, error = menu:addMenuItem("grid overview", function()
-	print("TODO")
-end)
-assert(menuItem, error)
 
 function playdate.update()
-	if not level:isSolved(board.solution) then
-		handleFill(fill)
-		handleCross(cross)
-		handleCursorDir(fill, cross, playdate.kButtonRight, function () cursor:moveBy(1, 0) end)
-		handleCursorDir(fill, cross, playdate.kButtonDown, function () cursor:moveBy(0, 1) end)
-		handleCursorDir(fill, cross, playdate.kButtonLeft, function () cursor:moveBy(-1, 0) end)
-		handleCursorDir(fill, cross, playdate.kButtonUp, function () cursor:moveBy(0, -1) end)
-
-		utils.ifChanged(sidebar, sidebar.update, {
-			open = not playdate.isCrankDocked()
-		})
-	end
+	screen:update()
 
 	gfx.sprite.update()
 	--playdate.drawFPS(0,0)

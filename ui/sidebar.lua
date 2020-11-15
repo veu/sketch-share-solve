@@ -2,9 +2,9 @@ local gfx <const> = playdate.graphics
 
 class("Sidebar").extends(gfx.sprite)
 
-function Sidebar:init(opened)
+function Sidebar:init()
 	Sidebar.super.init(self)
-	self.opened = opened
+	self.opened = false
 
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
