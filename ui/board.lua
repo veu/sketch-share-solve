@@ -13,17 +13,15 @@ function Board:init()
 	self:add()
 end
 
-function Board:loadLevel(level, width, height)
+function Board:loadLevel(level)
 	self.last = 0
 	self.level = level
-	self.levelWidth = width
-	self.levelHeight = height
 
 	self.solution = {}
 	self.crossed = {}
-	for y = 1, height do
-		for x = 1, width do
-			local index = x - 1 + (y - 1) * width + 1
+	for y = 1, level.height do
+		for x = 1, level.width do
+			local index = x - 1 + (y - 1) * level.width + 1
 			self.solution[index] = 0
 			self.crossed[index] = level:isCellKnownEmpty(x, y) and 1 or 0
 		end
@@ -52,11 +50,11 @@ function Board:redraw()
 	gfx.lockFocus(self.image)
 	do
 		gfx.setColor(gfx.kColorBlack)
-		gfx.fillRect(0, 0, CELL * self.levelWidth + 1, CELL * self.levelHeight + 1)
-		for y = 1, self.levelHeight do
-			for x = 1, self.levelWidth do
+		gfx.fillRect(0, 0, CELL * self.level.width + 1, CELL * self.level.height + 1)
+		for y = 1, self.level.height do
+			for x = 1, self.level.width do
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
-				local index = x - 1 + (y - 1) * self.levelWidth + 1
+				local index = x - 1 + (y - 1) * self.level.width + 1
 				gfx.setColor(gfx.kColorWhite)
 				gfx.fillRect(0, 0, CELL - (x % 5 == 0 and 2 or 1), CELL - (y % 5 == 0 and 2 or 1))
 				gfx.setColor(gfx.kColorBlack)

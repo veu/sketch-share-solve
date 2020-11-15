@@ -14,16 +14,15 @@ function Cursor:init()
 	self:add()
 end
 
-function Cursor:loadLevel(level, width, height)
+function Cursor:loadLevel(level)
 	self.gridX = 1
 	self.gridY = 1
-	self.levelWidth = width
-	self.levelHeight = height
+	self.level = level
 end
 
 function Cursor:moveBy(dx, dy)
-	self.gridX = (self.gridX + dx + self.levelWidth - 1) % self.levelWidth + 1
-	self.gridY = (self.gridY + dy + self.levelHeight - 1) % self.levelHeight + 1
+	self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
+	self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
 	self:moveTo(CELL * (BOARD_OFFSET_X - 1 + self.gridX) + 1, CELL * (BOARD_OFFSET_Y - 1 + self.gridY) + 1)
 	gfx.lockFocus(self.image)
 	do
@@ -39,5 +38,5 @@ function Cursor:moveBy(dx, dy)
 end
 
 function Cursor:getIndex()
-	return self.gridX - 1 + (self.gridY - 1) * self.levelWidth + 1
+	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
 end

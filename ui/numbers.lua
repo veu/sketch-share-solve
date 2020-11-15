@@ -13,7 +13,7 @@ function Numbers:init()
 	self:add()
 end
 
-function Numbers:loadLevel(level, width, height)
+function Numbers:loadLevel(level)
 	self.level = level
 end
 

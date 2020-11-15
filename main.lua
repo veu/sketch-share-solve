@@ -26,18 +26,16 @@ CELL = 16
 BOARD_OFFSET_X = 9.5
 BOARD_OFFSET_Y = 4.5
 
-local height = 10
-local width = 15
-local level = Level(LEVELS[2], width, height)
+local level = Level(LEVELS[2], 15, 10)
 
 local board = Board()
-board:loadLevel(level, width, height)
+board:loadLevel(level)
 
 local cursor = Cursor()
-cursor:loadLevel(level, width, height)
+cursor:loadLevel(level)
 
 local numbers = Numbers()
-numbers:loadLevel(level, width, height)
+numbers:loadLevel(level)
 numbers:redraw()
 
 local sidebar = Sidebar(not playdate.isCrankDocked())
@@ -64,7 +62,7 @@ end
 
 local menu = playdate.getSystemMenu()
 local menuItem, error = menu:addMenuItem("restart grid", function()
-	board:loadLevel(level, width, height)
+	board:loadLevel(level)
 end)
 assert(menuItem, error)
 local menuItem, error = menu:addMenuItem("grid overview", function()

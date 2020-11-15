@@ -1,6 +1,8 @@
 class("Level").extends()
 
 function Level:init(level, width, height)
+	self.width = 15
+	self.height = 10
 	self.solution = solution
 	self.level = level
 	self.topNumbers = self:calcTopNumbers(width, height)
