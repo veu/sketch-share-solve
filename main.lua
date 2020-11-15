@@ -40,7 +40,7 @@ local numbers = Numbers()
 numbers:loadLevel(level, width, height)
 numbers:redraw()
 
-local sidebar = Sidebar()
+local sidebar = Sidebar(not playdate.isCrankDocked())
 
 function cross(isStart)
 	board:toggleCross(cursor:getIndex(), isStart)
@@ -62,6 +62,16 @@ function printSolution()
 	print(s .. "}")
 end
 
+local menu = playdate.getSystemMenu()
+local menuItem, error = menu:addMenuItem("restart grid", function()
+	board:loadLevel(level, width, height)
+end)
+assert(menuItem, error)
+local menuItem, error = menu:addMenuItem("grid overview", function()
+	print("TODO")
+end)
+assert(menuItem, error)
+
 function playdate.update()
 	if not level:isSolved(board.solution) then
 		handleFill(fill)
@@ -70,6 +80,10 @@ function playdate.update()
 		handleCursorDir(fill, cross, playdate.kButtonDown, function () cursor:moveBy(0, 1) end)
 		handleCursorDir(fill, cross, playdate.kButtonLeft, function () cursor:moveBy(-1, 0) end)
 		handleCursorDir(fill, cross, playdate.kButtonUp, function () cursor:moveBy(0, -1) end)
+
+		utils.ifChanged(sidebar, sidebar.update, {
+			open = not playdate.isCrankDocked()
+		})
 	end
 
 	gfx.sprite.update()
