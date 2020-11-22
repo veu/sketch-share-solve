@@ -11,13 +11,17 @@ function Cursor:init()
 	self:setCenter(0, 0)
 	self:moveTo(CELL * BOARD_OFFSET_X + 1, CELL * BOARD_OFFSET_Y + 1)
 	self:setZIndex(20)
-	self:add()
 end
 
-function Cursor:loadLevel(level)
+function Cursor:enter(level)
 	self.gridX = 1
 	self.gridY = 1
 	self.level = level
+	self:add()
+end
+
+function Cursor:leave()
+	self:remove()
 end
 
 function Cursor:moveBy(dx, dy)

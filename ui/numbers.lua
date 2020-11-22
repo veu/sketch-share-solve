@@ -10,20 +10,27 @@ function Numbers:init()
 	self:setCenter(0, 0)
 	self:moveTo(0, 0)
 	self:setZIndex(7)
-	self:add()
 end
 
-function Numbers:loadLevel(level)
+function Numbers:enter(level)
 	self.level = level
+	self:add()
 	self:redraw()
 end
 
+function Numbers:leave()
+	self:remove()
+end
+
 function Numbers:redraw()
+	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
-	self:drawLeft()
-	self:drawTop()
-	self:markDirty()
+	do
+		self:drawLeft()
+		self:drawTop()
+	end
 	gfx.unlockFocus()
+	self:markDirty()
 end
 
 local numMap = {

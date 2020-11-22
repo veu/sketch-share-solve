@@ -10,8 +10,15 @@ function Sidebar:init()
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(30)
+end
+
+function Sidebar:enter(level)
 	self:add()
 	self:redraw()
+end
+
+function Sidebar:leave()
+	self:remove()
 end
 
 function Sidebar:redraw()
@@ -54,14 +61,4 @@ function Sidebar:drawAvatar(id, text, y)
 	gfx.fillRect(x + 1, y + 1, 22, 22)
 	imgAvatars:getImage(id):drawScaled(x + 2, y + 2, 2)
 	gfx.drawText(text, 6, y + 4)
-end
-
-function Sidebar:open()
-	self.opened = true
-	self:redraw()
-end
-
-function Sidebar:close()
-	self.opened = false
-	self:redraw()
 end

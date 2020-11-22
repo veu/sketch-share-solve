@@ -10,10 +10,9 @@ function Board:init()
 	self:setCenter(0, 0)
 	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
 	self:setZIndex(5)
-	self:add()
 end
 
-function Board:loadLevel(level)
+function Board:enter(level)
 	self.last = 0
 	self.level = level
 
@@ -28,6 +27,11 @@ function Board:loadLevel(level)
 	end
 
 	self:redraw()
+	self:add()
+end
+
+function Board:leave()
+	self:remove()
 end
 
 function Board:toggle(index, isStart)
@@ -47,6 +51,7 @@ function Board:toggleCross(index, isStart)
 end
 
 function Board:redraw()
+	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
 		gfx.setColor(gfx.kColorBlack)

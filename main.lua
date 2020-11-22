@@ -7,6 +7,7 @@ import "input"
 import "levels"
 import "utils"
 import "model/level"
+import "screen/grid-list"
 import "screen/grid-play"
 import "ui/board"
 import "ui/cursor"
@@ -27,12 +28,27 @@ CELL = 16
 BOARD_OFFSET_X = 9.5
 BOARD_OFFSET_Y = 4.5
 
-local screen = GridPlay()
-screen:enter()
+local gridPlay = GridPlay()
+local gridList = GridList()
+local screen = gridList
+
+gridList.onSelectLevel = function(level)
+	gridList:leave()
+	gridPlay:enter(level)
+	screen = gridPlay
+end
+
+gridPlay.onBackToList = function()
+	gridPlay:leave()
+	gridList:enter()
+	screen = gridList
+end
 
 function playdate.gameWillTerminate()
 	screen:leave()
 end
+
+screen:enter()
 
 function playdate.update()
 	screen:update()

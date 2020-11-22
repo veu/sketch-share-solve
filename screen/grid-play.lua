@@ -9,24 +9,32 @@ function GridPlay:init()
 	self.sidebar = Sidebar()
 end
 
-function GridPlay:enter()
+function GridPlay:enter(level)
 	local menu = playdate.getSystemMenu()
 	local menuItem, error = menu:addMenuItem("restart grid", function()
 		self.board:loadLevel(self.level)
 	end)
 	assert(menuItem, error)
 	local menuItem, error = menu:addMenuItem("grid overview", function()
-		print("TODO")
+		self.onBackToList()
 	end)
 	assert(menuItem, error)
 
-	self.level = Level(LEVELS[2], 15, 10)
-	self.board:loadLevel(self.level)
-	self.cursor:loadLevel(self.level)
-	self.numbers:loadLevel(self.level)
+	self.level = Level(level)
+	self.board:enter(self.level)
+	self.cursor:enter(self.level)
+	self.numbers:enter(self.level)
+	self.sidebar:enter(self.level)
 end
 
 function GridPlay:leave()
+	local menu = playdate.getSystemMenu()
+	menu:removeAllMenuItems()
+
+	self.board:leave()
+	self.cursor:leave()
+	self.numbers:leave()
+	self.sidebar:leave()
 end
 
 function GridPlay:update()
