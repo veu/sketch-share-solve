@@ -21,11 +21,22 @@ function Sidebar:leave()
 	self:remove()
 end
 
+function Sidebar:open()
+	self.opened = true
+	self:redraw()
+end
+
+function Sidebar:close()
+	self.opened = false
+	self:redraw()
+end
+
 function Sidebar:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		self.width = 120
+		gfx.setFont(fontText)
+		self.width = self.opened and 200 or 120
 		-- black border
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawLine(self.width, 0, self.width, 240)
@@ -40,8 +51,8 @@ function Sidebar:redraw()
 			self.opened and self.width - 2 or 22, 240 - 2
 		)
 
-		self:drawAvatar(1, "*Playing*", 0)
-		self:drawAvatar(3, "*Created by*", 240 - 24)
+		self:drawAvatar(1, "Playing", 0)
+		self:drawAvatar(3, "Created by", 240 - 24)
 	end
 	gfx.unlockFocus()
 	self:markDirty()
@@ -60,5 +71,5 @@ function Sidebar:drawAvatar(id, text, y)
 	gfx.setColor(gfx.kColorBlack)
 	gfx.fillRect(x + 1, y + 1, 22, 22)
 	imgAvatars:getImage(id):drawScaled(x + 2, y + 2, 2)
-	gfx.drawText(text, 6, y + 4)
+	gfx.drawText(text, 6, y + 5)
 end

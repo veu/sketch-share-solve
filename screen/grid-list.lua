@@ -1,6 +1,6 @@
 local gfx <const> = playdate.graphics
 
-class("GridList").extends()
+class("GridList").extends(Screen)
 
 function GridList:init()
 	GridList.super.init(self)

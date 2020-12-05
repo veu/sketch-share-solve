@@ -54,6 +54,7 @@ function Board:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
+		gfx.setFont(fontGrid)
 		gfx.setColor(gfx.kColorBlack)
 		gfx.fillRect(0, 0, CELL * self.level.width + 1, CELL * self.level.height + 1)
 		for y = 1, self.level.height do

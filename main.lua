@@ -7,6 +7,7 @@ import "input"
 import "levels"
 import "utils"
 import "model/level"
+import "screen/screen"
 import "screen/grid-list"
 import "screen/grid-play"
 import "ui/board"
@@ -16,12 +17,12 @@ import "ui/sidebar"
 
 local gfx <const> = playdate.graphics
 
-local fontGrid = gfx.font.new("font/grid")
+fontGrid = gfx.font.new("font/grid")
 assert(fontGrid)
+fontText = gfx.font.new("font/text")
+assert(fontText)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
-
-gfx.setFont(fontGrid)
 
 -- globals
 CELL = 16
@@ -46,6 +47,14 @@ end
 
 function playdate.gameWillTerminate()
 	screen:leave()
+end
+
+function playdate.crankDocked()
+	screen:crankDocked()
+end
+
+function playdate.crankUndocked()
+	screen:crankUndocked()
 end
 
 screen:enter()

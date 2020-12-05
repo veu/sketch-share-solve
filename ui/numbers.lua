@@ -26,6 +26,7 @@ function Numbers:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
+		gfx.setFont(fontGrid)
 		self:drawLeft()
 		self:drawTop()
 	end

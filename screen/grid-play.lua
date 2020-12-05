@@ -1,4 +1,4 @@
-class("GridPlay").extends()
+class("GridPlay").extends(Screen)
 
 function GridPlay:init()
 	GridPlay.super.init(self)
@@ -37,6 +37,14 @@ function GridPlay:leave()
 	self.sidebar:leave()
 end
 
+function GridPlay:crankDocked()
+	self.sidebar:close()
+end
+
+function GridPlay:crankUndocked()
+	self.sidebar:open()
+end
+
 function GridPlay:update()
 	function cross(isStart)
 		self.board:toggleCross(self.cursor:getIndex(), isStart)
@@ -46,16 +54,13 @@ function GridPlay:update()
 		self.board:toggle(self.cursor:getIndex(), isStart)
 	end
 
-	if not self.level:isSolved(self.board.solution) then
-		handleFill(fill)
-		handleCross(cross)
-		handleCursorDir(fill, cross, playdate.kButtonRight, function () self.cursor:moveBy(1, 0) end)
-		handleCursorDir(fill, cross, playdate.kButtonDown, function () self.cursor:moveBy(0, 1) end)
-		handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.cursor:moveBy(-1, 0) end)
-		handleCursorDir(fill, cross, playdate.kButtonUp, function () self.cursor:moveBy(0, -1) end)
-
-		utils.ifChanged(self.sidebar, self.sidebar.update, {
-			open = not playdate.isCrankDocked()
-		})
+	if self.level:isSolved(self.board.solution) then
+		return
 	end
+	handleFill(fill)
+	handleCross(cross)
+	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.cursor:moveBy(1, 0) end)
+	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.cursor:moveBy(0, 1) end)
+	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.cursor:moveBy(-1, 0) end)
+	handleCursorDir(fill, cross, playdate.kButtonUp, function () self.cursor:moveBy(0, -1) end)
 end
