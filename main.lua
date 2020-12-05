@@ -45,16 +45,16 @@ gridPlay.onBackToList = function()
 	screen = gridList
 end
 
-function playdate.gameWillTerminate()
-	screen:leave()
-end
-
 function playdate.crankDocked()
 	screen:crankDocked()
 end
 
 function playdate.crankUndocked()
 	screen:crankUndocked()
+end
+
+function playdate.cranked(change, acceleratedChange)
+	screen:cranked(change, acceleratedChange)
 end
 
 screen:enter()

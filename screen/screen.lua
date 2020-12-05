@@ -16,5 +16,8 @@ end
 function Screen:crankUndocked()
 end
 
+function Screen:cranked(change, acceleratedChange)
+end
+
 function Screen:update()
 end
