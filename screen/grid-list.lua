@@ -14,6 +14,7 @@ end
 
 function GridList:enter()
 	self.list:add()
+	self:redraw()
 end
 
 function GridList:leave()
@@ -24,23 +25,14 @@ function GridList:cranked(change, acceleratedChange)
 	local max = rawlen(LEVELS)
 	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
 	self.cursor = math.floor(self.cursorRaw)
+	self:redraw()
 end
 
-function GridList:update()
-	handleCursorDir(fill, cross, playdate.kButtonDown, function ()
-		self.cursor = self.cursor % rawlen(LEVELS) + 1
-		self.cursorRaw = self.cursor + 0.5
-	end)
-	handleCursorDir(fill, cross, playdate.kButtonUp, function ()
-		self.cursor = (self.cursor - 2) % rawlen(LEVELS) + 1
-		self.cursorRaw = self.cursor + 0.5
-	end)
+function GridList:AButtonDown()
+	self.onSelectLevel(LEVELS[self.cursor])
+end
 
-	if playdate.buttonJustPressed(playdate.kButtonA) then
-		self.onSelectLevel(LEVELS[self.cursor])
-		return
-	end
-
+function GridList:redraw()
 	gfx.lockFocus(self.list:getImage())
 	do
 		gfx.clear()

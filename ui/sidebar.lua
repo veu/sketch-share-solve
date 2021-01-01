@@ -2,8 +2,9 @@ local gfx <const> = playdate.graphics
 
 class("Sidebar").extends(gfx.sprite)
 
-function Sidebar:init()
+function Sidebar:init(menuItems)
 	Sidebar.super.init(self)
+	self.menuItems = menuItems
 	self.opened = false
 
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
@@ -12,13 +13,27 @@ function Sidebar:init()
 	self:setZIndex(30)
 end
 
-function Sidebar:enter(level)
+function Sidebar:enter(level, opened)
+	self.opened = opened
+	self.cursor = 1
+	self.cursorRaw = 1.5
 	self:add()
 	self:redraw()
 end
 
 function Sidebar:leave()
 	self:remove()
+end
+
+function Sidebar:cranked(change, acceleratedChange)
+	local max = rawlen(self.menuItems)
+	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
+	self.cursor = math.floor(self.cursorRaw)
+	self:redraw()
+end
+
+function Sidebar:AButtonDown()
+	self.menuItems[self.cursor].exec()
 end
 
 function Sidebar:open()
@@ -36,7 +51,7 @@ function Sidebar:redraw()
 	gfx.lockFocus(self.image)
 	do
 		gfx.setFont(fontText)
-		self.width = self.opened and 200 or 120
+		self.width = 200
 		-- black border
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawLine(self.width, 0, self.width, 240)
@@ -52,11 +67,21 @@ function Sidebar:redraw()
 		)
 
 		self:drawAvatar(1, "Playing", 0)
-		self:drawAvatar(3, "Created by", 240 - 24)
+		self:drawAvatar(4, "Created by", 240 - 24)
+
+		for i = 1, rawlen(self.menuItems) do
+			if self.cursor == i then
+				gfx.setColor(gfx.kColorBlack)
+				gfx.fillRect(0, 24 * i + 1, self.width, 24)
+				gfx.setColor(gfx.kColorWhite)
+				gfx.fillRect(0, 24 * i + 1, self.width, 23)
+			end
+			gfx.drawText(self.menuItems[i].text, 5, 24 * i + 5)
+		end
 	end
 	gfx.unlockFocus()
 	self:markDirty()
-	self:moveTo(self.opened and 0 or -120 + 24, 0)
+	self:moveTo(self.opened and 0 or -self.width + 24, 0)
 end
 
 function Sidebar:drawAvatar(id, text, y)

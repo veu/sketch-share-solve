@@ -19,5 +19,8 @@ end
 function Screen:cranked(change, acceleratedChange)
 end
 
+function Screen:AButtonDown()
+end
+
 function Screen:update()
 end

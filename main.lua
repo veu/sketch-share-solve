@@ -57,6 +57,10 @@ function playdate.cranked(change, acceleratedChange)
 	screen:cranked(change, acceleratedChange)
 end
 
+function playdate.AButtonDown()
+	screen:AButtonDown()
+end
+
 screen:enter()
 
 function playdate.update()

@@ -6,25 +6,37 @@ function GridPlay:init()
 	self.board = Board()
 	self.cursor = Cursor()
 	self.numbers = Numbers()
-	self.sidebar = Sidebar()
+
+	local menuItems = {
+		{
+			text = "Reset Grid",
+			exec = function()
+				self.board:enter(self.level)
+			end
+		},
+		{
+			text = "Back to Overview",
+			exec = function()
+				self.onBackToList()
+			end
+		}
+	}
+
+	self.sidebar = Sidebar(menuItems)
+
+	self.sidebar.fun = function()
+		print("reset grid", self.board.enter, self.level)
+		self.board:enter(self.level)
+		print("reseted grid")
+	end
 end
 
 function GridPlay:enter(level)
-	local menu = playdate.getSystemMenu()
-	local menuItem, error = menu:addMenuItem("restart grid", function()
-		self.board:loadLevel(self.level)
-	end)
-	assert(menuItem, error)
-	local menuItem, error = menu:addMenuItem("grid overview", function()
-		self.onBackToList()
-	end)
-	assert(menuItem, error)
-
 	self.level = Level(level)
 	self.board:enter(self.level)
 	self.cursor:enter(self.level)
 	self.numbers:enter(self.level)
-	self.sidebar:enter(self.level)
+	self.sidebar:enter(self.level, not playdate.isCrankDocked())
 end
 
 function GridPlay:leave()
@@ -45,6 +57,16 @@ function GridPlay:crankUndocked()
 	self.sidebar:open()
 end
 
+function GridPlay:cranked(change, acceleratedChange)
+	self.sidebar:cranked(change, acceleratedChange)
+end
+
+function GridPlay:AButtonDown()
+	if self.sidebar.opened then
+		self.sidebar:AButtonDown()
+	end
+end
+
 function GridPlay:update()
 	function cross(isStart)
 		self.board:toggleCross(self.cursor:getIndex(), isStart)
@@ -54,9 +76,10 @@ function GridPlay:update()
 		self.board:toggle(self.cursor:getIndex(), isStart)
 	end
 
-	if self.level:isSolved(self.board.solution) then
+	if self.sidebar.opened or self.level:isSolved(self.board.solution) then
 		return
 	end
+
 	handleFill(fill)
 	handleCross(cross)
 	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.cursor:moveBy(1, 0) end)
