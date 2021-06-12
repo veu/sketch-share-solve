@@ -31,12 +31,12 @@ function GridPlay:init()
 	end
 end
 
-function GridPlay:enter(level)
+function GridPlay:enter(level, avatar)
 	self.level = Level(level)
 	self.board:enter(self.level)
 	self.cursor:enter(self.level)
 	self.numbers:enter(self.level)
-	self.sidebar:enter(self.level, not playdate.isCrankDocked())
+	self.sidebar:enter(not playdate.isCrankDocked(), avatar)
 end
 
 function GridPlay:leave()

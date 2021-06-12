@@ -10,10 +10,13 @@ import "model/level"
 import "screen/screen"
 import "screen/grid-list"
 import "screen/grid-play"
+import "screen/title"
 import "ui/board"
 import "ui/cursor"
 import "ui/numbers"
 import "ui/sidebar"
+import "ui/title"
+import "ui/title-sidebar"
 
 local gfx <const> = playdate.graphics
 
@@ -31,16 +34,25 @@ BOARD_OFFSET_Y = 4.5
 
 local gridPlay = GridPlay()
 local gridList = GridList()
-local screen = gridList
+local title = TitleScreen()
+local screen = title
+local avatar = nil
 
 gridList.onSelectLevel = function(level)
 	gridList:leave()
-	gridPlay:enter(level)
+	gridPlay:enter(level, avatar)
 	screen = gridPlay
 end
 
 gridPlay.onBackToList = function()
 	gridPlay:leave()
+	gridList:enter()
+	screen = gridList
+end
+
+title.onSelected = function(selectedAvatar)
+	avatar = selectedAvatar
+	title:leave()
 	gridList:enter()
 	screen = gridList
 end
