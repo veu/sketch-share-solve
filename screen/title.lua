@@ -6,21 +6,28 @@ function TitleScreen:init()
 	TitleScreen.super.init(self)
 	self.player = 2
 
-	self.sidebar = Sidebar({
-		{ text = "Sweet Snail" },
-		{ text = "Calm Cat" },
-		{ text = "Mindful Mouse" },
-		{ text = "Reliable Raccoon"}
-	})
+	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
 		self.sidebar:updateData(not playdate.isCrankDocked(), index + 1)
 		self.player = index + 1
+	end
+	self.sidebar.onSelected = function ()
+		self.onSelected(self.player)
 	end
 	self.title = Title()
 end
 
 function TitleScreen:enter()
-	self.sidebar:enter(not playdate.isCrankDocked(), 2)
+	local sidebarConfig = {
+		topText = "Who is playing?",
+		menuItems = {
+			{ text = "Sweet Snail" },
+			{ text = "Calm Cat" },
+			{ text = "Mindful Mouse" },
+			{ text = "Reliable Raccoon"}
+		}
+	}
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), 2)
 	self.title:enter(not playdate.isCrankDocked())
 end
 
@@ -44,7 +51,7 @@ function TitleScreen:cranked(change, acceleratedChange)
 end
 
 function TitleScreen:AButtonDown()
-	self.onSelected(self.player)
+	self.sidebar:AButtonDown()
 end
 
 function TitleScreen:update()

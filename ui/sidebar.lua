@@ -2,9 +2,9 @@ local gfx <const> = playdate.graphics
 
 class("Sidebar").extends(gfx.sprite)
 
-function Sidebar:init(menuItems)
+function Sidebar:init()
 	Sidebar.super.init(self)
-	self.menuItems = menuItems
+	self.menuItems = nil
 	self.opened = false
 	self.animator = nil
 	self.width_ = 25
@@ -20,7 +20,9 @@ self.onNavigated = function () end
 self.onSelected = function () end
 end
 
-function Sidebar:enter(opened, player, creator)
+function Sidebar:enter(config, opened, player, creator)
+	self.menuItems = config.menuItems
+	self.topText = config.topText
 	self.opened = opened
 	self.player = player
 	self.creator = creator
@@ -43,6 +45,9 @@ function Sidebar:leave()
 end
 
 function Sidebar:cranked(change, acceleratedChange)
+	if not self.opened then
+		return
+	end
 	local max = rawlen(self.menuItems)
 	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
 	self.cursor = math.floor(self.cursorRaw)
@@ -51,6 +56,9 @@ function Sidebar:cranked(change, acceleratedChange)
 end
 
 function Sidebar:AButtonDown()
+	if not self.opened then
+		return
+	end
 	self.onSelected(self.cursor)
 	if self.menuItems[self.cursor].exec then
 		self.menuItems[self.cursor].exec()
@@ -79,8 +87,6 @@ function Sidebar:update()
 	end
 end
 
--- HERE
-
 function Sidebar:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
@@ -104,7 +110,7 @@ function Sidebar:redraw()
 		-- player avatar
 		drawRightTextRect(
 			-1, -1, self.width_ - 23, 26,
-			self.player and "Playing" or "Who is playing?"
+			self.topText
 		)
 		drawAvatar(self.width_ - 25, -1, self.player or 1)
 

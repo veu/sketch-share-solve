@@ -38,22 +38,22 @@ local title = TitleScreen()
 local screen = title
 local avatar = nil
 
-gridList.onSelectLevel = function(level)
+gridList.onSelectedLevel = function(level)
 	gridList:leave()
-	gridPlay:enter(level, avatar)
+	gridPlay:enter(LEVELS[level], avatar)
 	screen = gridPlay
 end
 
 gridPlay.onBackToList = function()
 	gridPlay:leave()
-	gridList:enter()
+	gridList:enter(avatar)
 	screen = gridList
 end
 
 title.onSelected = function(selectedAvatar)
 	avatar = selectedAvatar
 	title:leave()
-	gridList:enter()
+	gridList:enter(avatar)
 	screen = gridList
 end
 

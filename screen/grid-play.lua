@@ -6,31 +6,33 @@ function GridPlay:init()
 	self.board = Board()
 	self.cursor = Cursor()
 	self.numbers = Numbers()
-
-	local menuItems = {
-		{
-			text = "Reset Grid",
-			exec = function()
-				self.board:enter(self.level)
-			end
-		},
-		{
-			text = "Back to Overview",
-			exec = function()
-				self.onBackToList()
-			end
-		}
-	}
-
-	self.sidebar = Sidebar(menuItems)
+	self.sidebar = Sidebar()
 end
 
-function GridPlay:enter(level, avatar)
+function GridPlay:enter(level, player)
 	self.level = Level(level)
 	self.board:enter(self.level)
 	self.cursor:enter(self.level)
 	self.numbers:enter(self.level)
-	self.sidebar:enter(not playdate.isCrankDocked(), avatar, 4)
+
+	local sidebarConfig = {
+		topText = "Playing",
+		menuItems = {
+			{
+				text = "Reset Grid",
+				exec = function()
+					self.board:enter(self.level)
+				end
+			},
+			{
+				text = "Back to Overview",
+				exec = function()
+					self.onBackToList()
+				end
+			}
+		}
+	}
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), player, 4)
 end
 
 function GridPlay:leave()

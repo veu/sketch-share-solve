@@ -4,45 +4,47 @@ class("GridList").extends(Screen)
 
 function GridList:init()
 	GridList.super.init(self)
+	self.level = 1
 
-	self.list = gfx.sprite.new()
-	self.list:setImage(gfx.image.new(400, 240, gfx.kColorClear))
-	self.list:setCenter(0, 0)
-	self.cursor = 1
-	self.cursorRaw = 1.5
+	self.sidebar = Sidebar()
+	self.sidebar.onNavigated = function (index)
+		self.level = index
+	end
+	self.sidebar.onSelected = function ()
+		self.onSelectedLevel(self.level)
+	end
 end
 
-function GridList:enter()
-	self.list:add()
-	self:redraw()
+function GridList:enter(player)
+	local menuItems = {}
+	for i = 1, rawlen(LEVELS) do
+		table.insert(menuItems, {
+			text = "Level " .. i
+		})
+	end
+	local sidebarConfig = {
+		topText = "Playing",
+		menuItems = menuItems
+	}
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), player, 4)
 end
 
 function GridList:leave()
-	self.list:remove()
+	self.sidebar:leave()
+end
+
+function GridList:crankDocked()
+	self.sidebar:close()
+end
+
+function GridList:crankUndocked()
+	self.sidebar:open()
 end
 
 function GridList:cranked(change, acceleratedChange)
-	local max = rawlen(LEVELS)
-	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
-	self.cursor = math.floor(self.cursorRaw)
-	self:redraw()
+	self.sidebar:cranked(change, acceleratedChange)
 end
 
 function GridList:AButtonDown()
-	self.onSelectLevel(LEVELS[self.cursor])
-end
-
-function GridList:redraw()
-	gfx.lockFocus(self.list:getImage())
-	do
-		gfx.clear()
-
-		for i, level in pairs(LEVELS) do
-			gfx.drawText("*Level " .. i .. "*", 10, 24 * i - 14)
-		end
-
-		gfx.drawRect(4, 24 * self.cursor - 4 - 14, 80, 24)
-	end
-	gfx.unlockFocus()
-	self.list:markDirty()
+	self.sidebar:AButtonDown()
 end
