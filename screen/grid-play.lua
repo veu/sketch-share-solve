@@ -23,12 +23,6 @@ function GridPlay:init()
 	}
 
 	self.sidebar = Sidebar(menuItems)
-
-	self.sidebar.fun = function()
-		print("reset grid", self.board.enter, self.level)
-		self.board:enter(self.level)
-		print("reseted grid")
-	end
 end
 
 function GridPlay:enter(level, avatar)
@@ -36,7 +30,7 @@ function GridPlay:enter(level, avatar)
 	self.board:enter(self.level)
 	self.cursor:enter(self.level)
 	self.numbers:enter(self.level)
-	self.sidebar:enter(not playdate.isCrankDocked(), avatar)
+	self.sidebar:enter(not playdate.isCrankDocked(), avatar, 4)
 end
 
 function GridPlay:leave()

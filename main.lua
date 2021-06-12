@@ -16,7 +16,7 @@ import "ui/cursor"
 import "ui/numbers"
 import "ui/sidebar"
 import "ui/title"
-import "ui/title-sidebar"
+import "utils/ui"
 
 local gfx <const> = playdate.graphics
 
