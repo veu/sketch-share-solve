@@ -109,15 +109,19 @@ function Sidebar:redraw()
 			gfx.fillRect(self.width_, 0, 3, 240)
 		end
 
+		local height = 240 - (self.creator and 48 or (self.player and 23 or 0))
+
 		-- draw sidebar
-		drawPaddedRect(self.width_ - 25, 24, 26, 240 - (self.creator and 48 or 23))
+		drawPaddedRect(self.width_ - 25, self.player and 24 or 0, 26, height)
 
 		-- player avatar
-		drawRightTextRect(
-			-1, -1, self.width_ - 23, 26,
-			self.topText
-		)
-		drawAvatar(self.width_ - 25, -1, self.player or 1)
+		if self.player then
+			drawRightTextRect(
+				-1, -1, self.width_ - 23, 26,
+				self.topText
+			)
+			drawAvatar(self.width_ - 25, -1, self.player or 1)
+		end
 
 		-- creator avatar
 		if self.creator then
@@ -126,7 +130,7 @@ function Sidebar:redraw()
 		end
 
 		-- menu
-		drawStripedRect(-1, 24, self.width_ - 23, 240 - (self.creator and 48 or 23))
+		drawStripedRect(-1, 24, self.width_ - 23, height)
 		self.list:draw()
 	end
 	gfx.unlockFocus()

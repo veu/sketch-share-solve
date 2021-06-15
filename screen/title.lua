@@ -31,7 +31,7 @@ function TitleScreen:enter()
 	self.sidebar:enter(
 		sidebarConfig,
 		not isCrankDocked,
-		isCrankDocked and AVATAR_ID_NIL or 1
+		not isCrankDocked and 1 or nil
 	)
 	self.title:enter(not isCrankDocked)
 end
