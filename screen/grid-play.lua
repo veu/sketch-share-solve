@@ -47,7 +47,12 @@ function GridPlay:enter(context)
 		end
 	})
 
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player, 4)
+	self.sidebar:enter(
+		sidebarConfig,
+		not playdate.isCrankDocked(),
+		context.player,
+		context.creator
+	)
 end
 
 function GridPlay:leave()

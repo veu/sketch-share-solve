@@ -17,16 +17,21 @@ end
 
 function GridList:enter(context)
 	local menuItems = {}
-	for i = 1, rawlen(LEVELS) do
+	for i = 1, #context.save.levels[context.creator] do
 		table.insert(menuItems, {
 			text = "Level " .. i
 		})
 	end
 	local sidebarConfig = {
-		topText = "Playing",
+		topText = "Which level?",
 		menuItems = menuItems
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player, 4)
+	self.sidebar:enter(
+		sidebarConfig,
+		not playdate.isCrankDocked(),
+		context.player,
+		context.creator
+	)
 end
 
 function GridList:leave()

@@ -4,7 +4,7 @@ class("TitleScreen").extends(Screen)
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)
-	self.player = 2
+	self.player = nil
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
@@ -28,7 +28,11 @@ function TitleScreen:enter()
 		}
 	}
 	local isCrankDocked = playdate.isCrankDocked()
-	self.sidebar:enter(sidebarConfig, not isCrankDocked, isCrankDocked and 5 or 1)
+	self.sidebar:enter(
+		sidebarConfig,
+		not isCrankDocked,
+		isCrankDocked and AVATAR_ID_NIL or 1
+	)
 	self.title:enter(not isCrankDocked)
 end
 
@@ -43,7 +47,7 @@ function TitleScreen:crankDocked()
 end
 
 function TitleScreen:crankUndocked()
-	self.sidebar:updateData(not playdate.isCrankDocked(), index)
+	self.sidebar:updateData(not playdate.isCrankDocked(), self.player)
 	self.sidebar:open()
 	self.title:setSidebarOpened(true)
 end

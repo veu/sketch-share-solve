@@ -5,12 +5,14 @@ import "CoreLibs/timer"
 import "CoreLibs/ui/crankIndicator"
 import "CoreLibs/ui/gridview"
 
+import "constants"
 import "input"
 import "levels"
 import "utils"
 import "model/level"
 import "model/numbers"
 import "screen/screen"
+import "screen/creator-selection"
 import "screen/grid-create"
 import "screen/grid-list"
 import "screen/grid-play"
@@ -33,13 +35,7 @@ assert(fontText)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 
--- globals
-CELL = 16
-BOARD_OFFSET_X = 9.5
-BOARD_OFFSET_Y = 4.5
-MODE_PLAY = 1
-MODE_CREATE = 2
-
+local creatorSelection = CreatorSelection()
 local gridCreate = GridCreate()
 local gridList = GridList()
 local gridPlay = GridPlay()
@@ -47,11 +43,21 @@ local modeSelection = ModeSelection()
 local title = TitleScreen()
 local screen = title
 local context = {
+	creator = nil,
 	level = nil,
 	player = nil,
-	mode = nil
+	mode = nil,
+	save = nil
 }
 local showCrank = true
+
+creatorSelection.onSelected = function(selectedCreator)
+	print(selectedCreator)
+	context.creator = selectedCreator
+	creatorSelection:leave()
+	gridList:enter(context)
+	screen = gridList
+end
 
 gridCreate.onTestAndSave = function ()
 	gridCreate:leave()
@@ -60,7 +66,7 @@ gridCreate.onTestAndSave = function ()
 end
 
 gridList.onSelectedLevel = function (level)
-	context.level = Level(LEVELS[level])
+	context.level = Level(context.save.levels[context.creator][level])
 	gridList:leave()
 	gridPlay:enter(context)
 	screen = gridPlay
@@ -89,8 +95,8 @@ modeSelection.onSelected = function(selectedMode)
 	context.mode = selectedMode
 	modeSelection:leave()
 	if context.mode == MODE_PLAY then
-		gridList:enter(context)
-		screen = gridList
+		creatorSelection:enter(context)
+		screen = creatorSelection
 	else
 		context.level = Level.createEmpty(context.player)
 		gridCreate:enter(context)
@@ -121,6 +127,8 @@ end
 function playdate.AButtonDown()
 	screen:AButtonDown()
 end
+
+context.save = playdate.datastore.read() or DEFAULT_SAVE
 
 playdate.ui.crankIndicator:start()
 screen:enter()
