@@ -8,8 +8,8 @@ function TitleScreen:init()
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
-		self.sidebar:updateData(not playdate.isCrankDocked(), index + 1)
-		self.player = index + 1
+		self.sidebar:updateData(not playdate.isCrankDocked(), index)
+		self.player = index
 	end
 	self.sidebar.onSelected = function ()
 		self.onSelected(self.player)
@@ -27,8 +27,9 @@ function TitleScreen:enter()
 			{ text = "Reliable Raccoon"}
 		}
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), 2)
-	self.title:enter(not playdate.isCrankDocked())
+	local isCrankDocked = playdate.isCrankDocked()
+	self.sidebar:enter(sidebarConfig, not isCrankDocked, isCrankDocked and 5 or 1)
+	self.title:enter(not isCrankDocked)
 end
 
 function TitleScreen:leave()
@@ -42,6 +43,7 @@ function TitleScreen:crankDocked()
 end
 
 function TitleScreen:crankUndocked()
+	self.sidebar:updateData(not playdate.isCrankDocked(), index)
 	self.sidebar:open()
 	self.title:setSidebarOpened(true)
 end
