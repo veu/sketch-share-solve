@@ -30,11 +30,9 @@ function Title:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		if not self.sidebarOpened then
-			gfx.setColor(gfx.kColorBlack)
-			local width = gfx.getTextSize("Get cranking")
-			gfx.drawText("Get cranking", 400 - width - 20, 20)
-		end
+		gfx.setColor(gfx.kColorBlack)
+		local width = gfx.getTextSize("DIY Grid")
+		gfx.drawText("DIY Grid", 400 - width - 20, 20)
 	end
 	gfx.unlockFocus()
 	self:markDirty()

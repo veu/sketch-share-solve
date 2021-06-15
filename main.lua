@@ -2,6 +2,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
+import "CoreLibs/ui/crankIndicator"
 
 import "input"
 import "levels"
@@ -48,6 +49,7 @@ local context = {
 	player = nil,
 	mode = nil
 }
+local showCrank = true
 
 gridCreate.onTestAndSave = function ()
 	gridCreate:leave()
@@ -75,6 +77,7 @@ gridPlay.onEdit = function()
 end
 
 gridPlay.onSave = function()
+	-- TODO: save level
 	gridPlay:leave()
 	modeSelection:enter(context.player)
 	screen = modeSelection
@@ -94,6 +97,7 @@ modeSelection.onSelected = function(selectedMode)
 end
 
 title.onSelected = function(selectedAvatar)
+	showCrank = false
 	context.player = selectedAvatar
 	title:leave()
 	modeSelection:enter(context.player)
@@ -116,12 +120,16 @@ function playdate.AButtonDown()
 	screen:AButtonDown()
 end
 
+playdate.ui.crankIndicator:start()
 screen:enter()
 
 function playdate.update()
 	screen:update()
 
 	gfx.sprite.update()
+	if showCrank and playdate.isCrankDocked() then
+		playdate.ui.crankIndicator:update()
+	end
 	--playdate.drawFPS(0,0)
 	playdate.timer.updateTimers()
 end
