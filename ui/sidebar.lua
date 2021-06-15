@@ -4,6 +4,7 @@ class("Sidebar").extends(gfx.sprite)
 
 function Sidebar:init()
 	Sidebar.super.init(self)
+	self.list = List()
 	self.menuItems = nil
 	self.opened = false
 	self.animator = nil
@@ -16,8 +17,8 @@ function Sidebar:init()
 	self:setCenter(0, 0)
 	self:setZIndex(30)
 
-self.onNavigated = function () end
-self.onSelected = function () end
+	self.onNavigated = function () end
+	self.onSelected = function () end
 end
 
 function Sidebar:enter(config, opened, player, creator)
@@ -30,6 +31,7 @@ function Sidebar:enter(config, opened, player, creator)
 	self.cursor = 1
 	self.cursorRaw = 1.5
 	self:add()
+	self.list:enter(self.menuItems)
 	self:redraw()
 end
 
@@ -51,6 +53,7 @@ function Sidebar:cranked(change, acceleratedChange)
 	local max = rawlen(self.menuItems)
 	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
 	self.cursor = math.floor(self.cursorRaw)
+	self.list:select(self.cursor)
 	self.onNavigated(self.cursor)
 	self:redraw()
 end
@@ -67,7 +70,6 @@ end
 
 function Sidebar:open()
 	self.opened = true
-	self:redraw()
 	self.animator = gfx.animator.new(500, 24 - self.width_, 0, playdate.easingFunctions.inOutSine)
 end
 
@@ -84,6 +86,9 @@ function Sidebar:update()
 		else
 			self:moveTo(math.floor(self.animator:currentValue()), 0)
 		end
+	end
+	if self.opened then
+		self:redraw()
 	end
 end
 
@@ -122,7 +127,7 @@ function Sidebar:redraw()
 
 		-- menu
 		drawStripedRect(-1, 24, self.width_ - 23, 240 - (self.creator and 48 or 23))
-		drawMenu(0, 25, self.menuItems, self.cursor)
+		self.list:draw()
 	end
 	gfx.unlockFocus()
 	self:markDirty()

@@ -39,31 +39,3 @@ function drawAvatar(x, y, id)
 	gfx.drawRect(x + 2, y + 2, 22, 22)
 	imgAvatars:getImage(id):drawScaled(x + 3, y + 3, 2)
 end
-
-function drawMenu(x, y, items, selected)
-	for i = 1, rawlen(items) do
-		gfx.pushContext()
-		gfx.setDrawOffset(x + 4, y + 24 * (i - 1) + 4)
-		do
-			-- checkbox
-			gfx.setColor(gfx.kColorBlack)
-			gfx.fillRect(1, 3, 17, 17)
-			gfx.setColor(gfx.kColorWhite)
-			gfx.fillRect(2, 4, 15, 15)
-
-			-- checkmark
-			if selected == i then
-				gfx.setFont(fontGrid)
-				gfx.drawText("o", 2, 4)
-			end
-
-			-- text
-			gfx.setFont(fontText)
-			gfx.setColor(gfx.kColorWhite)
-			local width = gfx.getTextSize(items[i].text)
-			gfx.fillRect(23, 3, width + 4, 18)
-			gfx.setColor(gfx.kColorBlack)
-			gfx.drawText(items[i].text, 25, 5)
-		end
-	end
-end
