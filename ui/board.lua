@@ -10,19 +10,24 @@ function Board:init()
 	self:setCenter(0, 0)
 	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
 	self:setZIndex(5)
+
+	self.onUpdateSolution = function() end
 end
 
-function Board:enter(level)
+function Board:enter(level, mode)
 	self.last = 0
 	self.level = level
+	self.mode = mode
 
 	self.solution = {}
 	self.crossed = {}
 	for y = 1, level.height do
 		for x = 1, level.width do
 			local index = x - 1 + (y - 1) * level.width + 1
-			self.solution[index] = 0
-			self.crossed[index] = level:isCellKnownEmpty(x, y) and 1 or 0
+			self.solution[index] = self.mode == MODE_CREATE and level.level[index] or 0
+			self.crossed[index] =
+				self.mode == MODE_PLAY and level:isCellKnownEmpty(x, y) and 1
+				or 0
 		end
 	end
 
@@ -39,6 +44,7 @@ function Board:toggle(index, isStart)
 		self.solution[index] = self.solution[index] == 1 and 0 or 1
 		self.last = self.solution[index]
 		self:redraw()
+		self.onUpdateSolution(self.solution)
 	end
 end
 

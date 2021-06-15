@@ -15,7 +15,7 @@ function GridList:init()
 	end
 end
 
-function GridList:enter(player)
+function GridList:enter(context)
 	local menuItems = {}
 	for i = 1, rawlen(LEVELS) do
 		table.insert(menuItems, {
@@ -26,7 +26,7 @@ function GridList:enter(player)
 		topText = "Playing",
 		menuItems = menuItems
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), player, 4)
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player, 4)
 end
 
 function GridList:leave()

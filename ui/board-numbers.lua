@@ -1,9 +1,9 @@
 local gfx <const> = playdate.graphics
 
-class("Numbers").extends(gfx.sprite)
+class("BoardNumbers").extends(gfx.sprite)
 
-function Numbers:init()
-	Numbers.super.init(self)
+function BoardNumbers:init()
+	BoardNumbers.super.init(self)
 
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
@@ -12,17 +12,17 @@ function Numbers:init()
 	self:setZIndex(7)
 end
 
-function Numbers:enter(level)
+function BoardNumbers:enter(level)
 	self.level = level
 	self:add()
 	self:redraw()
 end
 
-function Numbers:leave()
+function BoardNumbers:leave()
 	self:remove()
 end
 
-function Numbers:redraw()
+function BoardNumbers:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
@@ -53,7 +53,7 @@ local numMap = {
 	[15] = "F",
 }
 
-function Numbers:drawLeft()
+function BoardNumbers:drawLeft()
 	for y, numbers in pairs(self.level.leftNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(
@@ -72,7 +72,7 @@ function Numbers:drawLeft()
 	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
 end
 
-function Numbers:drawTop()
+function BoardNumbers:drawTop()
 	for x, numbers in pairs(self.level.topNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(

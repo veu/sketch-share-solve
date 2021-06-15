@@ -117,7 +117,7 @@ function Sidebar:redraw()
 		-- creator avatar
 		if self.creator then
 			drawRightTextRect(-1, 240 - 25, self.width_ - 23, 26, "Creator")
-			drawAvatar(self.width_ - 25, 240 - 25, 4)
+			drawAvatar(self.width_ - 25, 240 - 25, self.creator)
 		end
 
 		-- menu

@@ -5,34 +5,49 @@ function GridPlay:init()
 
 	self.board = Board()
 	self.cursor = Cursor()
-	self.numbers = Numbers()
+	self.numbers = BoardNumbers()
 	self.sidebar = Sidebar()
 end
 
-function GridPlay:enter(level, player)
-	self.level = Level(level)
-	self.board:enter(self.level)
+function GridPlay:enter(context)
+	self.level = context.level
+	self.board:enter(self.level, MODE_PLAY)
 	self.cursor:enter(self.level)
-	self.numbers:enter(self.level)
+	self.numbers:enter(Numbers(self.level))
 
 	local sidebarConfig = {
 		topText = "Playing",
-		menuItems = {
-			{
-				text = "Reset Grid",
-				exec = function()
-					self.board:enter(self.level)
-				end
-			},
-			{
-				text = "Back to Overview",
-				exec = function()
-					self.onBackToList()
-				end
-			}
-		}
+		menuItems = {}
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), player, 4)
+
+	table.insert(sidebarConfig.menuItems, {
+		text = "Reset Grid",
+		exec = function()
+			self.board:enter(self.level)
+		end
+	})
+	if context.mode == MODE_CREATE then
+		table.insert(sidebarConfig.menuItems, {
+			text = "Edit",
+			exec = function()
+				self.onEdit()
+			end
+		})
+		table.insert(sidebarConfig.menuItems, {
+			text = "Save",
+			exec = function()
+				self.onSave()
+			end
+		})
+	end
+	table.insert(sidebarConfig.menuItems, {
+		text = "Back to Overview",
+		exec = function()
+			self.onBackToList()
+		end
+	})
+
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player, 4)
 end
 
 function GridPlay:leave()

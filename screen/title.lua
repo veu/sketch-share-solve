@@ -21,8 +21,8 @@ function TitleScreen:enter()
 	local sidebarConfig = {
 		topText = "Who is playing?",
 		menuItems = {
-			{ text = "Sweet Snail" },
-			{ text = "Calm Cat" },
+			{ text = "Suave Snail" },
+			{ text = "Charming Cat" },
 			{ text = "Mindful Mouse" },
 			{ text = "Reliable Raccoon"}
 		}
