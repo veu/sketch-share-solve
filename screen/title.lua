@@ -4,7 +4,7 @@ class("TitleScreen").extends(Screen)
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)
-	self.player = nil
+	self.player = 1
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)

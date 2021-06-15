@@ -4,7 +4,6 @@ class("GridList").extends(Screen)
 
 function GridList:init()
 	GridList.super.init(self)
-	self.level = 1
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
@@ -16,6 +15,7 @@ function GridList:init()
 end
 
 function GridList:enter(context)
+	self.level = 1
 	local menuItems = {}
 	for i = 1, #context.save.levels[context.creator] do
 		table.insert(menuItems, {

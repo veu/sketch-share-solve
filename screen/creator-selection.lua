@@ -4,7 +4,6 @@ class("CreatorSelection").extends(Screen)
 
 function CreatorSelection:init()
 	CreatorSelection.super.init(self)
-	self.creator = AVATAR_ID_RDK
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
@@ -24,7 +23,11 @@ function CreatorSelection:enter(context)
 		menuItems = {}
 	}
 
+	self.creator = nil
 	for creator, value in pairs(context.save.levels) do
+		if not self.creator then
+			self.creator = creator
+		end
 		table.insert(sidebarConfig.menuItems, {
 			text = AVATAR_NAMES[creator]
 		})

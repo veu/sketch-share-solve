@@ -52,7 +52,6 @@ local context = {
 local showCrank = true
 
 creatorSelection.onSelected = function(selectedCreator)
-	print(selectedCreator)
 	context.creator = selectedCreator
 	creatorSelection:leave()
 	gridList:enter(context)
@@ -85,9 +84,16 @@ gridPlay.onEdit = function()
 end
 
 gridPlay.onSave = function()
-	-- TODO: save level
+	if context.save.levels[context.player] then
+		table.insert(context.save.levels[context.player], context.level.level)
+	else
+		context.save.levels[context.player] = {
+			context.level.level
+		}
+	end
+	playdate.datastore.write(context.save)
 	gridPlay:leave()
-	modeSelection:enter(context.player)
+	modeSelection:enter(context)
 	screen = modeSelection
 end
 
@@ -108,7 +114,7 @@ title.onSelected = function(selectedAvatar)
 	showCrank = false
 	context.player = selectedAvatar
 	title:leave()
-	modeSelection:enter(context.player)
+	modeSelection:enter(context)
 	screen = modeSelection
 end
 

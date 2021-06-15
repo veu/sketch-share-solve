@@ -5,7 +5,7 @@ class("ModeSelection").extends(Screen)
 function ModeSelection:init()
 	ModeSelection.super.init(self)
 	self.player = nil
-	self.mode = 1
+	self.mode = nil
 
 	self.sidebar = Sidebar()
 	self.sidebar.onNavigated = function (index)
@@ -17,7 +17,8 @@ function ModeSelection:init()
 	self.title = Title()
 end
 
-function ModeSelection:enter(player)
+function ModeSelection:enter(context)
+	self.mode = 1
 	local sidebarConfig = {
 		topText = "Playing",
 		menuItems = {
@@ -25,7 +26,7 @@ function ModeSelection:enter(player)
 			{ text = "Create" },
 		}
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), player)
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player)
 	self.title:enter(not playdate.isCrankDocked())
 end
 
