@@ -5,7 +5,6 @@ function GridCreate:init()
 
 	self.board = Board()
 	self.cursor = Cursor()
-	self.sidebar = Sidebar()
 end
 
 function GridCreate:enter(context)
@@ -40,6 +39,9 @@ function GridCreate:enter(context)
 		}
 	}
 	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player)
+	self.sidebar.onAbort = function ()
+		self.onBackToList()
+	end
 end
 
 function GridCreate:leave()
@@ -49,28 +51,6 @@ function GridCreate:leave()
 	self.board:leave()
 	self.cursor:leave()
 	self.sidebar:leave()
-end
-
-function GridCreate:crankDocked()
-	self.sidebar:close()
-end
-
-function GridCreate:crankUndocked()
-	self.sidebar:open()
-end
-
-function GridCreate:cranked(change, acceleratedChange)
-	self.sidebar:cranked(change, acceleratedChange)
-end
-
-function GridCreate:AButtonDown()
-	if self.sidebar.opened then
-		self.sidebar:AButtonDown()
-	end
-end
-
-function GridCreate:BButtonDown()
-	self.onBackToList()
 end
 
 function GridCreate:update()

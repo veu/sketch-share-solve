@@ -4,20 +4,12 @@ class("TitleScreen").extends(Screen)
 
 function TitleScreen:init()
 	TitleScreen.super.init(self)
-	self.player = 1
 
-	self.sidebar = Sidebar()
-	self.sidebar.onNavigated = function (index)
-		self.sidebar:updateData(not playdate.isCrankDocked(), index)
-		self.player = index
-	end
-	self.sidebar.onSelected = function ()
-		self.onSelected(self.player)
-	end
 	self.title = Title()
 end
 
 function TitleScreen:enter()
+	self.player = 1
 	local sidebarConfig = {
 		topText = "Who is playing?",
 		menuItems = {
@@ -33,7 +25,16 @@ function TitleScreen:enter()
 		not isCrankDocked,
 		not isCrankDocked and 1 or nil
 	)
-	self.title:enter(not isCrankDocked)
+
+	self.sidebar.onNavigated = function (index)
+		self.sidebar:updateData(not playdate.isCrankDocked(), index)
+		self.player = index
+	end
+	self.sidebar.onSelected = function ()
+		self.onSelected(self.player)
+	end
+
+	self.title:enter()
 end
 
 function TitleScreen:leave()
@@ -41,21 +42,7 @@ function TitleScreen:leave()
 	self.title:leave()
 end
 
-function TitleScreen:crankDocked()
-	self.sidebar:close()
-	self.title:setSidebarOpened(false)
-end
-
 function TitleScreen:crankUndocked()
 	self.sidebar:updateData(not playdate.isCrankDocked(), self.player)
 	self.sidebar:open()
-	self.title:setSidebarOpened(true)
-end
-
-function TitleScreen:cranked(change, acceleratedChange)
-	self.sidebar:cranked(change, acceleratedChange)
-end
-
-function TitleScreen:AButtonDown()
-	self.sidebar:AButtonDown()
 end

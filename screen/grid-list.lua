@@ -5,13 +5,6 @@ class("GridList").extends(Screen)
 function GridList:init()
 	GridList.super.init(self)
 
-	self.sidebar = Sidebar()
-	self.sidebar.onNavigated = function (index)
-		self.level = index
-	end
-	self.sidebar.onSelected = function ()
-		self.onSelectedLevel(self.level)
-	end
 	self.title = Title()
 end
 
@@ -33,30 +26,21 @@ function GridList:enter(context)
 		context.player,
 		context.creator
 	)
-	self.title:enter(not isCrankDocked)
+
+	self.sidebar.onAbort = function ()
+		self.onBackToCreatorSelection()
+	end
+	self.sidebar.onNavigated = function (index)
+		self.level = index
+	end
+	self.sidebar.onSelected = function ()
+		self.onSelectedLevel(self.level)
+	end
+
+	self.title:enter()
 end
 
 function GridList:leave()
 	self.sidebar:leave()
 	self.title:leave()
-end
-
-function GridList:crankDocked()
-	self.sidebar:close()
-end
-
-function GridList:crankUndocked()
-	self.sidebar:open()
-end
-
-function GridList:cranked(change, acceleratedChange)
-	self.sidebar:cranked(change, acceleratedChange)
-end
-
-function GridList:AButtonDown()
-	self.sidebar:AButtonDown()
-end
-
-function GridList:BButtonDown()
-	self.onBackToCreatorSelection()
 end

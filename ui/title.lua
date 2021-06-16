@@ -11,19 +11,13 @@ function Title:init()
 	self:setZIndex(5)
 end
 
-function Title:enter(opened)
-	self.sidebarOpened = opened
+function Title:enter()
 	self:redraw()
 	self:add()
 end
 
 function Title:leave()
 	self:remove()
-end
-
-function Title:setSidebarOpened(opened)
-	self.sidebarOpened = opened
-	self:redraw()
 end
 
 function Title:redraw()

@@ -17,6 +17,7 @@ function Sidebar:init()
 	self:setCenter(0, 0)
 	self:setZIndex(30)
 
+	self.onAbort = function () end
 	self.onNavigated = function () end
 	self.onSelected = function () end
 end
@@ -66,6 +67,13 @@ function Sidebar:AButtonDown()
 	if self.menuItems[self.cursor].exec then
 		self.menuItems[self.cursor].exec()
 	end
+end
+
+function Sidebar:BButtonDown()
+	if not self.opened then
+		return
+	end
+	self.onAbort()
 end
 
 function Sidebar:open()

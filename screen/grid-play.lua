@@ -6,7 +6,6 @@ function GridPlay:init()
 	self.board = Board()
 	self.cursor = Cursor()
 	self.numbers = BoardNumbers()
-	self.sidebar = Sidebar()
 end
 
 function GridPlay:enter(context)
@@ -55,6 +54,14 @@ function GridPlay:enter(context)
 		context.player,
 		context.creator
 	)
+
+	self.sidebar.onAbort = function ()
+		if self.mode == MODE_CREATE then
+			self.onEdit()
+		else
+			self.onBackToList()
+		end
+	end
 end
 
 function GridPlay:leave()
@@ -65,32 +72,6 @@ function GridPlay:leave()
 	self.cursor:leave()
 	self.numbers:leave()
 	self.sidebar:leave()
-end
-
-function GridPlay:crankDocked()
-	self.sidebar:close()
-end
-
-function GridPlay:crankUndocked()
-	self.sidebar:open()
-end
-
-function GridPlay:cranked(change, acceleratedChange)
-	self.sidebar:cranked(change, acceleratedChange)
-end
-
-function GridPlay:AButtonDown()
-	if self.sidebar.opened then
-		self.sidebar:AButtonDown()
-	end
-end
-
-function GridPlay:BButtonDown()
-	if self.mode == MODE_CREATE then
-		self.onEdit()
-	else
-		self.onBackToList()
-	end
 end
 
 function GridPlay:update()
