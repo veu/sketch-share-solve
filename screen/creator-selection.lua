@@ -6,13 +6,6 @@ function CreatorSelection:init()
 	CreatorSelection.super.init(self)
 
 	self.sidebar = Sidebar()
-	self.sidebar.onNavigated = function (index)
-		self.sidebar:updateData(not playdate.isCrankDocked(), self.player, index)
-		self.creator = index
-	end
-	self.sidebar.onSelected = function ()
-		self.onSelected(self.creator)
-	end
 	self.title = Title()
 end
 
@@ -35,6 +28,24 @@ function CreatorSelection:enter(context)
 
 	local isCrankDocked = playdate.isCrankDocked()
 	self.sidebar:enter(sidebarConfig, not isCrankDocked, self.player, self.creator)
+
+	self.sidebar.onNavigated = function (index)
+		local i = 1
+		for creator, value in pairs(context.save.levels) do
+			if i == index then
+				self.creator = creator
+				break
+			end
+			i += 1
+		end
+		self.sidebar:updateData(not playdate.isCrankDocked(), self.player, self.creator)
+		self.creator = self.creator
+	end
+
+	self.sidebar.onSelected = function ()
+		self.onSelected(self.creator)
+	end
+
 	self.title:enter(not isCrankDocked)
 end
 
@@ -60,6 +71,10 @@ end
 
 function CreatorSelection:AButtonDown()
 	self.sidebar:AButtonDown()
+end
+
+function CreatorSelection:BButtonDown()
+	self.onBackToModeSelection()
 end
 
 function CreatorSelection:update()

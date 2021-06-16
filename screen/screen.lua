@@ -22,5 +22,8 @@ end
 function Screen:AButtonDown()
 end
 
+function Screen:BButtonDown()
+end
+
 function Screen:update()
 end

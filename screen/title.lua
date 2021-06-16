@@ -59,6 +59,3 @@ end
 function TitleScreen:AButtonDown()
 	self.sidebar:AButtonDown()
 end
-
-function TitleScreen:update()
-end

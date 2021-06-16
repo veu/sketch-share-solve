@@ -41,7 +41,6 @@ local gridList = GridList()
 local gridPlay = GridPlay()
 local modeSelection = ModeSelection()
 local title = TitleScreen()
-local screen = title
 local context = {
 	creator = nil,
 	level = nil,
@@ -51,42 +50,45 @@ local context = {
 }
 local showCrank = true
 
+local screen = title
+function switchToScreen(newScreen)
+	screen:leave()
+	newScreen:enter(context)
+	screen = newScreen
+end
+
+creatorSelection.onBackToModeSelection = function()
+	switchToScreen(modeSelection)
+end
+
 creatorSelection.onSelected = function(selectedCreator)
 	context.creator = selectedCreator
-	creatorSelection:leave()
-	gridList:enter(context)
-	screen = gridList
+	switchToScreen(gridList)
 end
 
 gridCreate.onBackToList = function()
-	gridCreate:leave()
-	modeSelection:enter(context)
-	screen = modeSelection
+	switchToScreen(modeSelection)
 end
 
 gridCreate.onTestAndSave = function ()
-	gridCreate:leave()
-	gridPlay:enter(context)
-	screen = gridPlay
+	switchToScreen(gridPlay)
+end
+
+gridList.onBackToCreatorSelection = function()
+	switchToScreen(creatorSelection)
 end
 
 gridList.onSelectedLevel = function (level)
 	context.level = Level(context.save.levels[context.creator][level])
-	gridList:leave()
-	gridPlay:enter(context)
-	screen = gridPlay
+	switchToScreen(gridPlay)
 end
 
 gridPlay.onBackToList = function()
-	gridPlay:leave()
-	gridList:enter(context)
-	screen = gridList
+	switchToScreen(gridList)
 end
 
 gridPlay.onEdit = function()
-	gridPlay:leave()
-	gridCreate:enter(context)
-	screen = gridCreate
+	switchToScreen(gridCreate)
 end
 
 gridPlay.onSave = function()
@@ -98,30 +100,27 @@ gridPlay.onSave = function()
 		}
 	end
 	playdate.datastore.write(context.save)
-	gridPlay:leave()
-	modeSelection:enter(context)
-	screen = modeSelection
+	switchToScreen(modeSelection)
+end
+
+modeSelection.onBackToTitle = function()
+	switchToScreen(title)
 end
 
 modeSelection.onSelected = function(selectedMode)
 	context.mode = selectedMode
-	modeSelection:leave()
 	if context.mode == MODE_PLAY then
-		creatorSelection:enter(context)
-		screen = creatorSelection
+		switchToScreen(creatorSelection)
 	else
 		context.level = Level.createEmpty(context.player)
-		gridCreate:enter(context)
-		screen = gridCreate
+		switchToScreen(gridCreate)
 	end
 end
 
 title.onSelected = function(selectedAvatar)
 	showCrank = false
 	context.player = selectedAvatar
-	title:leave()
-	modeSelection:enter(context)
-	screen = modeSelection
+	switchToScreen(modeSelection)
 end
 
 function playdate.crankDocked()
@@ -138,6 +137,10 @@ end
 
 function playdate.AButtonDown()
 	screen:AButtonDown()
+end
+
+function playdate.BButtonDown()
+	screen:BButtonDown()
 end
 
 context.save = playdate.datastore.read() or DEFAULT_SAVE

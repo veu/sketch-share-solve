@@ -32,7 +32,7 @@ function GridCreate:enter(context)
 				end
 			},
 			{
-				text = "Back to Overview",
+				text = "Back to Title",
 				exec = function()
 					self.onBackToList()
 				end
@@ -72,6 +72,10 @@ function GridCreate:AButtonDown()
 	if self.sidebar.opened then
 		self.sidebar:AButtonDown()
 	end
+end
+
+function GridCreate:BButtonDown()
+	self.onBackToList()
 end
 
 function GridCreate:update()

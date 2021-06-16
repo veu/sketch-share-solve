@@ -11,6 +11,7 @@ end
 
 function GridPlay:enter(context)
 	self.level = context.level
+	self.mode = context.mode
 	self.board:enter(self.level, MODE_PLAY)
 	self.cursor:enter(self.level)
 	self.numbers:enter(Numbers(self.level))
@@ -26,26 +27,27 @@ function GridPlay:enter(context)
 			self.board:enter(self.level)
 		end
 	})
-	if context.mode == MODE_CREATE then
-		table.insert(sidebarConfig.menuItems, {
-			text = "Edit",
-			exec = function()
-				self.onEdit()
-			end
-		})
 		table.insert(sidebarConfig.menuItems, {
 			text = "Save",
 			exec = function()
 				self.onSave()
 			end
 		})
+		if self.mode == MODE_CREATE then
+			table.insert(sidebarConfig.menuItems, {
+				text = "Back to Editor",
+				exec = function()
+					self.onEdit()
+				end
+			})
+	else
+		table.insert(sidebarConfig.menuItems, {
+			text = "Back to Overview",
+			exec = function()
+				self.onBackToList()
+			end
+		})
 	end
-	table.insert(sidebarConfig.menuItems, {
-		text = "Back to Overview",
-		exec = function()
-			self.onBackToList()
-		end
-	})
 
 	self.sidebar:enter(
 		sidebarConfig,
@@ -80,6 +82,14 @@ end
 function GridPlay:AButtonDown()
 	if self.sidebar.opened then
 		self.sidebar:AButtonDown()
+	end
+end
+
+function GridPlay:BButtonDown()
+	if self.mode == MODE_CREATE then
+		self.onEdit()
+	else
+		self.onBackToList()
 	end
 end
 

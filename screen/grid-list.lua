@@ -12,6 +12,7 @@ function GridList:init()
 	self.sidebar.onSelected = function ()
 		self.onSelectedLevel(self.level)
 	end
+	self.title = Title()
 end
 
 function GridList:enter(context)
@@ -32,10 +33,12 @@ function GridList:enter(context)
 		context.player,
 		context.creator
 	)
+	self.title:enter(not isCrankDocked)
 end
 
 function GridList:leave()
 	self.sidebar:leave()
+	self.title:leave()
 end
 
 function GridList:crankDocked()
@@ -52,4 +55,8 @@ end
 
 function GridList:AButtonDown()
 	self.sidebar:AButtonDown()
+end
+
+function GridList:BButtonDown()
+	self.onBackToCreatorSelection()
 end

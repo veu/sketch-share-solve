@@ -53,5 +53,9 @@ function ModeSelection:AButtonDown()
 	self.sidebar:AButtonDown()
 end
 
+function ModeSelection:BButtonDown()
+	self.onBackToTitle()
+end
+
 function ModeSelection:update()
 end
