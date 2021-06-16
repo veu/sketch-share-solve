@@ -58,6 +58,12 @@ creatorSelection.onSelected = function(selectedCreator)
 	screen = gridList
 end
 
+gridCreate.onBackToList = function()
+	gridCreate:leave()
+	modeSelection:enter(context)
+	screen = modeSelection
+end
+
 gridCreate.onTestAndSave = function ()
 	gridCreate:leave()
 	gridPlay:enter(context)
