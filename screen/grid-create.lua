@@ -39,12 +39,7 @@ function GridCreate:enter(context)
 			}
 		}
 	}
-	self.sidebar:enter(
-		sidebarConfig,
-		not playdate.isCrankDocked(),
-		context.player,
-		self.level.creator
-	)
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player)
 end
 
 function GridCreate:leave()
