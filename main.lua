@@ -112,7 +112,7 @@ modeSelection.onSelected = function(selectedMode)
 	if context.mode == MODE_PLAY then
 		switchToScreen(creatorSelection)
 	else
-		context.level = Level.createEmpty(context.player)
+		context.level = Level.createEmpty()
 		switchToScreen(gridCreate)
 	end
 end

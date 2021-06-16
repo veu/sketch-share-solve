@@ -1,7 +1,6 @@
 class("Level").extends()
 
-function Level:init(level, creator)
-	self.creator = creator or 1
+function Level:init(level)
 	self.width = 15
 	self.height = 10
 	self.level = level
@@ -43,11 +42,11 @@ function Level:isRowKnownEmpty(cellY)
 	return true
 end
 
-Level.createEmpty = function (creator)
+Level.createEmpty = function ()
 	local level = {}
 	for x = 1, 150 do
 		table.insert(level, 0)
 	end
 
-	return Level(level, creator)
+	return Level(level)
 end
