@@ -23,25 +23,19 @@ function GridPlay:enter(context)
 		menuItems = {}
 	}
 
-	table.insert(sidebarConfig.menuItems, {
-		text = "Reset Grid",
-		exec = function()
-			self.board:enter(self.level)
-		end
-	})
+	if self.mode == MODE_CREATE then
 		table.insert(sidebarConfig.menuItems, {
 			text = "Save",
 			exec = function()
 				self.onSave()
 			end
 		})
-		if self.mode == MODE_CREATE then
-			table.insert(sidebarConfig.menuItems, {
-				text = "Back to Editor",
-				exec = function()
-					self.onEdit()
-				end
-			})
+		table.insert(sidebarConfig.menuItems, {
+			text = "Back to Editor",
+			exec = function()
+				self.onEdit()
+			end
+		})
 	else
 		table.insert(sidebarConfig.menuItems, {
 			text = "Back to Overview",

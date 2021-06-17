@@ -94,7 +94,7 @@ function Board:redraw()
 					CELL - (x % 5 == 0 and 2 or 1),
 					CELL - (y % 5 == 0 and 2 or 1)
 				)
-				if isSolved then
+				if self.mode == MODE_PLAY and isSolved then
 					if self.solution[index] == 1 then
 						gfx.setColor(gfx.kColorBlack)
 						gfx.fillRect(

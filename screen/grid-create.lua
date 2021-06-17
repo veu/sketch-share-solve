@@ -17,12 +17,6 @@ function GridCreate:enter(context)
 		topText = "Playing",
 		menuItems = {
 			{
-				text = "Reset Grid",
-				exec = function()
-					self.board:enter(self.level)
-				end
-			},
-			{
 				text = "Test and Save",
 				exec = function()
 					self.onTestAndSave()
@@ -64,7 +58,6 @@ function GridCreate:update()
 	end
 
 	handleFill(fill)
-	handleCross(cross)
 	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.board:moveBy(1, 0) end)
 	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.board:moveBy(0, 1) end)
 	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.board:moveBy(-1, 0) end)
