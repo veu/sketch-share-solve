@@ -34,6 +34,8 @@ fontText = gfx.font.new("font/text")
 assert(fontText)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
+imgBoard, err = gfx.imagetable.new("img/board")
+assert(imgBoard, err)
 
 local creatorSelection = CreatorSelection()
 local gridCreate = GridCreate()

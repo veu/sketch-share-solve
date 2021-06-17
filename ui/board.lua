@@ -68,12 +68,27 @@ function Board:redraw()
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
 				local index = x - 1 + (y - 1) * self.level.width + 1
 				gfx.setColor(gfx.kColorWhite)
-				gfx.fillRect(0, 0, CELL - (x % 5 == 0 and 2 or 1), CELL - (y % 5 == 0 and 2 or 1))
+				gfx.fillRect(
+					0,
+					0,
+					CELL - (x % 5 == 0 and 2 or 1),
+					CELL - (y % 5 == 0 and 2 or 1)
+				)
 				gfx.setColor(gfx.kColorBlack)
 				if self.solution[index] == 1 then
-					gfx.drawText("o", 0, 0)
+					gfx.pushContext()
+					do
+						gfx.setClipRect(
+							0,
+							0,
+							CELL - (x % 5 == 0 and 2 or 1) - 1,
+							CELL - (y % 5 == 0 and 2 or 1) - 1
+						)
+						imgBoard:drawImage(2, 0, 0)
+					end
+					gfx.popContext()
 				elseif self.crossed[index] == 1 then
-					gfx.drawText("x", 0, 0)
+					imgBoard:drawImage(1, 0, 0)
 				end
 			end
 		end
