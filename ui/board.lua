@@ -70,7 +70,12 @@ function Board:moveBy(dx, dy)
 	self:redraw()
 end
 
+function Board:hideCursor()
+	self.cursor:leave()
+end
+
 function Board:redraw()
+	local isSolved = self.level:isSolved(self.solution)
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
@@ -89,21 +94,32 @@ function Board:redraw()
 					CELL - (x % 5 == 0 and 2 or 1),
 					CELL - (y % 5 == 0 and 2 or 1)
 				)
-				gfx.setColor(gfx.kColorBlack)
-				if self.solution[index] == 1 then
-					gfx.pushContext()
-					do
-						gfx.setClipRect(
+				if isSolved then
+					if self.solution[index] == 1 then
+						gfx.setColor(gfx.kColorBlack)
+						gfx.fillRect(
 							0,
 							0,
-							CELL - (not isSelected and x % 5 == 0 and 2 or 1) - 1,
-							CELL - (not isSelected and y % 5 == 0 and 2 or 1) - 1
+							CELL - (x % 5 == 0 and 2 or 1),
+							CELL - (y % 5 == 0 and 2 or 1)
 						)
-						imgBoard:drawImage(2, 0, 0)
 					end
-					gfx.popContext()
-				elseif self.crossed[index] == 1 then
-					imgBoard:drawImage(1, 0, 0)
+				else
+					if self.solution[index] == 1 then
+						gfx.pushContext()
+						do
+							gfx.setClipRect(
+								0,
+								0,
+								CELL - (not isSelected and x % 5 == 0 and 2 or 1) - 1,
+								CELL - (not isSelected and y % 5 == 0 and 2 or 1) - 1
+							)
+							imgBoard:drawImage(2, 0, 0)
+						end
+						gfx.popContext()
+					elseif self.crossed[index] == 1 then
+						imgBoard:drawImage(1, 0, 0)
+					end
 				end
 			end
 		end
