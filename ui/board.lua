@@ -12,6 +12,8 @@ function Board:init()
 	self:setZIndex(5)
 
 	self.onUpdateSolution = function() end
+
+	self.cursor = Cursor()
 end
 
 function Board:enter(level, mode)
@@ -31,12 +33,15 @@ function Board:enter(level, mode)
 		end
 	end
 
-	self:redraw()
 	self:add()
+	self.cursor:enter(level)
+
+	self:redraw()
 end
 
 function Board:leave()
 	self:remove()
+	self.cursor:leave()
 end
 
 function Board:toggle(index, isStart)
@@ -56,6 +61,15 @@ function Board:toggleCross(index, isStart)
 	end
 end
 
+function Board:getCursor()
+	return self.cursor:getIndex()
+end
+
+function Board:moveBy(dx, dy)
+	self.cursor:moveBy(dx, dy)
+	self:redraw()
+end
+
 function Board:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
@@ -67,6 +81,7 @@ function Board:redraw()
 			for x = 1, self.level.width do
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
 				local index = x - 1 + (y - 1) * self.level.width + 1
+				local isSelected = index == self.cursor:getIndex()
 				gfx.setColor(gfx.kColorWhite)
 				gfx.fillRect(
 					0,
@@ -81,8 +96,8 @@ function Board:redraw()
 						gfx.setClipRect(
 							0,
 							0,
-							CELL - (x % 5 == 0 and 2 or 1) - 1,
-							CELL - (y % 5 == 0 and 2 or 1) - 1
+							CELL - (not isSelected and x % 5 == 0 and 2 or 1) - 1,
+							CELL - (not isSelected and y % 5 == 0 and 2 or 1) - 1
 						)
 						imgBoard:drawImage(2, 0, 0)
 					end

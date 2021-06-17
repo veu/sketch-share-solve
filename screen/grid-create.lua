@@ -4,7 +4,6 @@ function GridCreate:init()
 	GridCreate.super.init(self)
 
 	self.board = Board()
-	self.cursor = Cursor()
 end
 
 function GridCreate:enter(context)
@@ -13,7 +12,6 @@ function GridCreate:enter(context)
 	self.board.onUpdateSolution = function (level)
 		self.level.level = level
 	end
-	self.cursor:enter(self.level)
 
 	local sidebarConfig = {
 		topText = "Playing",
@@ -49,17 +47,16 @@ function GridCreate:leave()
 	menu:removeAllMenuItems()
 
 	self.board:leave()
-	self.cursor:leave()
 	self.sidebar:leave()
 end
 
 function GridCreate:update()
 	function cross(isStart)
-		self.board:toggleCross(self.cursor:getIndex(), isStart)
+		self.board:toggleCross(self.board:getCursor(), isStart)
 	end
 
 	function fill(isStart)
-		self.board:toggle(self.cursor:getIndex(), isStart)
+		self.board:toggle(self.board:getCursor(), isStart)
 	end
 
 	if self.sidebar.opened then
@@ -68,8 +65,8 @@ function GridCreate:update()
 
 	handleFill(fill)
 	handleCross(cross)
-	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.cursor:moveBy(1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.cursor:moveBy(0, 1) end)
-	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.cursor:moveBy(-1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonUp, function () self.cursor:moveBy(0, -1) end)
+	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.board:moveBy(1, 0) end)
+	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.board:moveBy(0, 1) end)
+	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.board:moveBy(-1, 0) end)
+	handleCursorDir(fill, cross, playdate.kButtonUp, function () self.board:moveBy(0, -1) end)
 end
