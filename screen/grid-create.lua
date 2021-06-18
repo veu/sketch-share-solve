@@ -9,8 +9,8 @@ end
 function GridCreate:enter(context)
 	self.level = context.level
 	self.board:enter(self.level, MODE_CREATE)
-	self.board.onUpdateSolution = function (level)
-		self.level.level = level
+	self.board.onUpdateSolution = function (grid)
+		self.level.grid = grid
 	end
 
 	local sidebarConfig = {

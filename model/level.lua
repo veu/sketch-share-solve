@@ -3,11 +3,12 @@ class("Level").extends()
 function Level:init(level)
 	self.width = 15
 	self.height = 10
-	self.level = level
+	self.title = level.title
+	self.grid = level.grid
 end
 
 function Level:isSolved(solution)
-	for i, v in pairs(self.level) do
+	for i, v in pairs(self.grid) do
 		if v ~= solution[i] then
 			return false
 		end
@@ -23,7 +24,7 @@ end
 function Level:isColumnKnownEmpty(cellX)
 	for y = 1, self.height do
 		local index = cellX - 1 + (y - 1) * self.width + 1
-		if self.level[index] == 1 then
+		if self.grid[index] == 1 then
 			return false
 		end
 	end
@@ -34,7 +35,7 @@ end
 function Level:isRowKnownEmpty(cellY)
 	for x = 1, self.width do
 		local index = x - 1 + (cellY - 1) * self.width + 1
-		if self.level[index] == 1 then
+		if self.grid[index] == 1 then
 			return false
 		end
 	end
@@ -43,10 +44,12 @@ function Level:isRowKnownEmpty(cellY)
 end
 
 Level.createEmpty = function ()
-	local level = {}
+	local grid = {}
 	for x = 1, 150 do
-		table.insert(level, 0)
+		table.insert(grid, 0)
 	end
 
-	return Level(level)
+	return Level({
+		grid = grid
+	})
 end

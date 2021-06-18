@@ -13,7 +13,7 @@ function Numbers:calcTopNumbers(level)
 		local numbers = {}
 		for y = 1, level.height do
 			local index = x - 1 + (y - 1) * level.width + 1
-			if level.level[index] == 1 then
+			if level.grid[index] == 1 then
 				if not topNumbers[x][i] then
 					topNumbers[x][i] = 1
 				else
@@ -37,7 +37,7 @@ for y = 1, level.height do
 	local i = 1
 	for x = 1, level.width do
 		local index = x - 1 + (y - 1) * level.width + 1
-		if level.level[index] == 1 then
+		if level.grid[index] == 1 then
 			if not leftNumbers[y][i] then
 				leftNumbers[y][i] = 1
 			else

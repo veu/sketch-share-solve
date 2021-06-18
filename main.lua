@@ -95,12 +95,14 @@ gridPlay.onEdit = function()
 end
 
 gridPlay.onSave = function()
+	local level = {
+		title = context.level.title,
+		grid = context.level.grid
+	}
 	if context.save.levels[context.player] then
-		table.insert(context.save.levels[context.player], context.level.level)
+		table.insert(context.save.levels[context.player], level)
 	else
-		context.save.levels[context.player] = {
-			context.level.level
-		}
+		context.save.levels[context.player] = { level }
 	end
 	playdate.datastore.write(context.save)
 	switchToScreen(modeSelection)
@@ -146,6 +148,7 @@ function playdate.BButtonDown()
 	screen:BButtonDown()
 end
 
+-- playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE
 
 playdate.ui.crankIndicator:start()
