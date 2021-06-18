@@ -14,9 +14,10 @@ function Cursor:init()
 end
 
 function Cursor:enter(level)
-	self.gridX = 1
-	self.gridY = 1
+	self.gridX = 8
+	self.gridY = 4
 	self.level = level
+	self:redraw()
 	self:add()
 end
 
@@ -24,10 +25,22 @@ function Cursor:leave()
 	self:remove()
 end
 
+function Cursor:getIndex()
+	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
+end
+
 function Cursor:moveBy(dx, dy)
 	self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
 	self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
-	self:moveTo(CELL * (BOARD_OFFSET_X - 1 + self.gridX) + 1, CELL * (BOARD_OFFSET_Y - 1 + self.gridY) + 1)
+	self:redraw()
+end
+
+function Cursor:redraw()
+	self:moveTo(
+		CELL * (BOARD_OFFSET_X - 1 + self.gridX) + 1,
+		CELL * (BOARD_OFFSET_Y - 1 + self.gridY) + 1
+	)
+
 	gfx.lockFocus(self.image)
 	do
 		gfx.clear(gfx.kColorClear)
@@ -39,8 +52,4 @@ function Cursor:moveBy(dx, dy)
 		)
 	end
 	gfx.unlockFocus()
-end
-
-function Cursor:getIndex()
-	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
 end
