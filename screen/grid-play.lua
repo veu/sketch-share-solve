@@ -5,6 +5,7 @@ function GridPlay:init()
 
 	self.board = Board()
 	self.numbers = BoardNumbers()
+	self.dialog = Dialog()
 end
 
 function GridPlay:enter(context)
@@ -13,7 +14,9 @@ function GridPlay:enter(context)
 	self.board:enter(self.level, MODE_PLAY)
 	self.board.onUpdateSolution = function (solution)
 		if self.level:isSolved(solution) then
+			self.numbers:leave()
 			self.board:hideCursor()
+			self.dialog:enter("Solved! Want to save it?", self.onSave)
 		end
 	end
 	self.numbers:enter(Numbers(self.level))
@@ -24,12 +27,6 @@ function GridPlay:enter(context)
 	}
 
 	if self.mode == MODE_CREATE then
-		table.insert(sidebarConfig.menuItems, {
-			text = "Save",
-			exec = function()
-				self.onSave()
-			end
-		})
 		table.insert(sidebarConfig.menuItems, {
 			text = "Back to Editor",
 			exec = function()
@@ -68,6 +65,15 @@ function GridPlay:leave()
 	self.board:leave()
 	self.numbers:leave()
 	self.sidebar:leave()
+	self.dialog:leave()
+end
+
+function GridPlay:AButtonDown()
+	if self.sidebar.opened then
+		self.sidebar:AButtonDown()
+	elseif self.dialog:isVisible() then
+		self.dialog:AButtonDown()
+	end
 end
 
 function GridPlay:update()
