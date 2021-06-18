@@ -14,7 +14,6 @@ function GridCreate:enter(context)
 	end
 
 	local sidebarConfig = {
-		topText = "Playing",
 		menuItems = {
 			{
 				text = "Test and Save",

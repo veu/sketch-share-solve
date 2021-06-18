@@ -17,8 +17,8 @@ function GridList:enter(context)
 		})
 	end
 	local sidebarConfig = {
-		topText = "Which level?",
-		menuItems = menuItems
+		menuItems = menuItems,
+		menuTitle = "Choose level"
 	}
 	self.sidebar:enter(
 		sidebarConfig,

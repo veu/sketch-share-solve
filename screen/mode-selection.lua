@@ -13,7 +13,6 @@ end
 function ModeSelection:enter(context)
 	self.mode = 1
 	local sidebarConfig = {
-		topText = "Playing",
 		menuItems = {
 			{ text = "Play" },
 			{ text = "Create" },

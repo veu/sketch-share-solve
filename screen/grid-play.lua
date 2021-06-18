@@ -22,7 +22,6 @@ function GridPlay:enter(context)
 	self.numbers:enter(Numbers(self.level))
 
 	local sidebarConfig = {
-		topText = "Playing",
 		menuItems = {}
 	}
 

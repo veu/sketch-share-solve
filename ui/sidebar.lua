@@ -6,6 +6,7 @@ function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()
 	self.menuItems = nil
+	self.menuTitle = nil
 	self.opened = false
 	self.animator = nil
 	self.width_ = 25
@@ -24,7 +25,7 @@ end
 
 function Sidebar:enter(config, opened, player, creator)
 	self.menuItems = config.menuItems
-	self.topText = config.topText
+	self.menuTitle = config.menuTitle
 	self.opened = opened
 	self.player = player
 	self.creator = creator
@@ -32,7 +33,7 @@ function Sidebar:enter(config, opened, player, creator)
 	self.cursor = 1
 	self.cursorRaw = 1.5
 	self:add()
-	self.list:enter(self.menuItems)
+	self.list:enter(self.menuItems, self.menuTitle)
 	self:redraw()
 end
 
@@ -124,10 +125,7 @@ function Sidebar:redraw()
 
 		-- player avatar
 		if self.player then
-			drawRightTextRect(
-				-1, -1, self.width_ - 23, 26,
-				self.topText
-			)
+			drawRightTextRect(-1, -1, self.width_ - 23, 26, "Playing")
 			drawAvatar(self.width_ - 25, -1, self.player or 1)
 		end
 

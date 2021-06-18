@@ -11,8 +11,8 @@ end
 function CreatorSelection:enter(context)
 	self.player = context.player
 	local sidebarConfig = {
-		topText = "Which level set?",
-		menuItems = {}
+		menuItems = {},
+		menuTitle = "Choose creator"
 	}
 
 	self.creator = nil

@@ -11,13 +11,13 @@ end
 function TitleScreen:enter()
 	self.player = 1
 	local sidebarConfig = {
-		topText = "Who is playing?",
 		menuItems = {
 			{ text = "Suave Snail" },
 			{ text = "Charming Cat" },
 			{ text = "Mindful Mouse" },
 			{ text = "Reliable Raccoon"}
-		}
+		},
+		menuTitle = "Who is playing?"
 	}
 	local isCrankDocked = playdate.isCrankDocked()
 	self.sidebar:enter(
