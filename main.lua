@@ -145,7 +145,7 @@ function playdate.crankUndocked()
 end
 
 function playdate.cranked(change, acceleratedChange)
-	screen:cranked(change, acceleratedChange)
+	screen:cranked(-change, -acceleratedChange)
 end
 
 function playdate.AButtonDown()
