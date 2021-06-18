@@ -17,6 +17,8 @@ function GridPlay:enter(context)
 			self.board:hideCursor()
 			if self.mode == MODE_CREATE then
 				self.dialog:enter("Solved! Want to save it?", self.onSave)
+			else
+				self.dialog:enter(self.level.title and "Solved: " .. self.level.title or "Solved!")
 			end
 		end
 	end

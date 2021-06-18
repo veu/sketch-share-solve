@@ -23,8 +23,10 @@ function Dialog:enter(message, callback)
 end
 
 function Dialog:AButtonDown()
-	self.callback()
-	self:setVisible(false)
+	if self.callback then
+		self.callback()
+		self:setVisible(false)
+	end
 end
 
 function Dialog:leave()
@@ -48,8 +50,10 @@ function Dialog:redraw()
 		gfx.setFont(fontText)
 		gfx.drawText(self.message, 400 - 6 - width + 8, 8 + 8)
 
-		local size = gfx.getTextSize("(A) Confirm")
-		gfx.drawText("(A) Confirm", 400 - 8 - 8 - size, 8 + 8 + 22)
+		if self.callback then
+			local size = gfx.getTextSize("(A) Confirm")
+			gfx.drawText("(A) Confirm", 400 - 8 - 8 - size, 8 + 8 + 22)
+		end
 	end
 	gfx.unlockFocus()
 	self:markDirty()
