@@ -3,6 +3,7 @@ class("Level").extends()
 function Level:init(level)
 	self.width = 15
 	self.height = 10
+	self.id = level.id
 	self.title = level.title
 	self.grid = level.grid
 end

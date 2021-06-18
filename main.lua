@@ -95,6 +95,12 @@ gridPlay.onEdit = function()
 	switchToScreen(gridCreate)
 end
 
+gridPlay.onPlayed = function (level)
+	context.player.played[level.id] = true
+
+	playdate.datastore.write(context.save)
+end
+
 gridPlay.onSave = function()
 	local level = {
 		title = context.level.title,
