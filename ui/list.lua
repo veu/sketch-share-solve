@@ -25,6 +25,8 @@ function List:enter(menuItems, menuTitle)
 	end
 
 	function self.listview:drawCell(section, row, column, selected, x, y, width, height)
+		gfx.setColor(gfx.kColorWhite)
+		gfx.fillRect(x, y - 1, 19, 19)
 		gfx.setColor(gfx.kColorBlack)
 		gfx.fillRect(x + 1, y, 17, 17)
 		gfx.setColor(gfx.kColorWhite)
