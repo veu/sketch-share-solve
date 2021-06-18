@@ -36,6 +36,8 @@ function Board:enter(level, mode)
 	self:add()
 	self.cursor:enter(level)
 
+	-- trigger once to assure consistency
+	self.onUpdateSolution(self.solution)
 	self:redraw()
 end
 
@@ -95,24 +97,24 @@ function Board:redraw()
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
 				local index = x - 1 + (y - 1) * self.level.width + 1
 				local isSelected = index == self.cursor:getIndex()
-				gfx.setColor(gfx.kColorWhite)
-				gfx.fillRect(
-					0,
-					0,
-					CELL - (x % 5 == 0 and 2 or 1),
-					CELL - (y % 5 == 0 and 2 or 1)
-				)
 				if self.mode == MODE_PLAY and isSolved then
-					if self.solution[index] == 1 then
-						gfx.setColor(gfx.kColorBlack)
+					if self.solution[index] == 0 then
+						gfx.setColor(gfx.kColorWhite)
 						gfx.fillRect(
 							0,
 							0,
-							CELL - (x % 5 == 0 and 2 or 1),
-							CELL - (y % 5 == 0 and 2 or 1)
+							CELL - (x == self.level.width and 1 or 0),
+							CELL - (y == self.level.height and 1 or 0)
 						)
 					end
 				else
+					gfx.setColor(gfx.kColorWhite)
+					gfx.fillRect(
+						0,
+						0,
+						CELL - (x % 5 == 0 and 2 or 1),
+						CELL - (y % 5 == 0 and 2 or 1)
+					)
 					if self.solution[index] == 1 then
 						gfx.pushContext()
 						do

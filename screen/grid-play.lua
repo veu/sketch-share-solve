@@ -11,12 +11,13 @@ end
 function GridPlay:enter(context)
 	self.level = context.level
 	self.mode = context.mode
-	self.board:enter(self.level, MODE_PLAY)
 	self.board.onUpdateSolution = function (solution)
 		if self.level:isSolved(solution) then
 			self.numbers:leave()
 			self.board:hideCursor()
-			self.dialog:enter("Solved! Want to save it?", self.onSave)
+			if self.mode == MODE_CREATE then
+				self.dialog:enter("Solved! Want to save it?", self.onSave)
+			end
 		end
 	end
 	self.numbers:enter(Numbers(self.level))
@@ -55,6 +56,7 @@ function GridPlay:enter(context)
 			self.onBackToList()
 		end
 	end
+	self.board:enter(self.level, MODE_PLAY)
 end
 
 function GridPlay:leave()
