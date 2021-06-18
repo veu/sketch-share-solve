@@ -12,7 +12,7 @@ function handleCursorDir(fill, cross, button, update)
 		end
 	elseif playdate.buttonIsPressed(button) then
 		pressCounter += 1
-		if pressCounter > 4 and pressCounter % 4 == 0 then
+		if pressCounter > 3 and pressCounter % 3 == 0 then
 			update()
 			if PRESSED[playdate.kButtonA] then
 				fill(false)
