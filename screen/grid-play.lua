@@ -47,8 +47,8 @@ function GridPlay:enter(context)
 	self.sidebar:enter(
 		sidebarConfig,
 		not playdate.isCrankDocked(),
-		context.player,
-		context.creator
+		context.player.avatar,
+		context.creator and context.creator.avatar
 	)
 
 	self.sidebar.onAbort = function ()

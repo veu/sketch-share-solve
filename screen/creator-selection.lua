@@ -9,44 +9,38 @@ function CreatorSelection:init()
 end
 
 function CreatorSelection:enter(context)
-	self.player = context.player
 	local sidebarConfig = {
 		menuItems = {},
 		menuTitle = "Choose creator"
 	}
 
-	self.creator = nil
-	for creator, value in pairs(context.save.levels) do
-		if not self.creator then
-			self.creator = creator
+	local creator = nil
+	for _, id in pairs(context.save.profileList) do
+		local profile = context.save.profiles[id]
+		if #profile.created > 0 then
+			if not creator then
+				creator = profile
+			end
+			table.insert(sidebarConfig.menuItems, {
+				text = profile.name,
+				ref = profile
+			})
 		end
-		table.insert(sidebarConfig.menuItems, {
-			text = AVATAR_NAMES[creator]
-		})
 	end
 
 	local isCrankDocked = playdate.isCrankDocked()
-	self.sidebar:enter(sidebarConfig, not isCrankDocked, self.player, self.creator)
+	self.sidebar:enter(sidebarConfig, not isCrankDocked, context.player.avatar, creator.avatar)
 
 	self.sidebar.onAbort = function ()
 		self.onBackToModeSelection()
 	end
 
-	self.sidebar.onNavigated = function (index)
-		local i = 1
-		for creator, value in pairs(context.save.levels) do
-			if i == index then
-				self.creator = creator
-				break
-			end
-			i += 1
-		end
-		self.sidebar:updateData(not playdate.isCrankDocked(), self.player, self.creator)
-		self.creator = self.creator
+	self.sidebar.onNavigated = function (creator)
+		self.sidebar:setCreator(creator.avatar)
 	end
 
-	self.sidebar.onSelected = function ()
-		self.onSelected(self.creator)
+	self.sidebar.onSelected = function (creator)
+		self.onSelected(creator)
 	end
 
 	self.title:enter()
@@ -55,9 +49,4 @@ end
 function CreatorSelection:leave()
 	self.sidebar:leave()
 	self.title:leave()
-end
-
-function CreatorSelection:crankUndocked()
-	self.sidebar:updateData(not playdate.isCrankDocked(), self.player, self.creator)
-	self.sidebar:open()
 end

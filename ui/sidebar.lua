@@ -37,9 +37,12 @@ function Sidebar:enter(config, opened, player, creator)
 	self:redraw()
 end
 
-function Sidebar:updateData(opened, player, creator)
-	self.opened = opened
+function Sidebar:setPlayer(player)
 	self.player = player
+	self:redraw()
+end
+
+function Sidebar:setCreator(creator)
 	self.creator = creator
 	self:redraw()
 end
@@ -56,7 +59,7 @@ function Sidebar:cranked(change, acceleratedChange)
 	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
 	self.cursor = math.floor(self.cursorRaw)
 	self.list:select(self.cursor)
-	self.onNavigated(self.cursor)
+	self.onNavigated(self.menuItems[self.cursor].ref)
 	self:redraw()
 end
 
@@ -64,7 +67,7 @@ function Sidebar:AButtonDown()
 	if not self.opened then
 		return
 	end
-	self.onSelected(self.cursor)
+	self.onSelected(self.menuItems[self.cursor].ref)
 	if self.menuItems[self.cursor].exec then
 		self.menuItems[self.cursor].exec()
 	end

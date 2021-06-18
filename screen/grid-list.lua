@@ -9,12 +9,15 @@ function GridList:init()
 end
 
 function GridList:enter(context)
-	self.level = 1
 	local menuItems = {}
-	for i = 1, #context.save.levels[context.creator] do
+	for i, id in pairs(context.creator.created) do
+		local level = context.save.levels[id]
+		assert(level)
 		table.insert(menuItems, {
-			text = "Level " .. i
+			text = level.title or "Level " .. i, -- TODO: only show name for played
+			ref = level
 		})
+
 	end
 	local sidebarConfig = {
 		menuItems = menuItems,
@@ -23,18 +26,15 @@ function GridList:enter(context)
 	self.sidebar:enter(
 		sidebarConfig,
 		not playdate.isCrankDocked(),
-		context.player,
-		context.creator
+		context.player.avatar,
+		context.creator.avatar
 	)
 
 	self.sidebar.onAbort = function ()
 		self.onBackToCreatorSelection()
 	end
-	self.sidebar.onNavigated = function (index)
-		self.level = index
-	end
-	self.sidebar.onSelected = function ()
-		self.onSelectedLevel(self.level)
+	self.sidebar.onSelected = function (level)
+		self.onSelectedLevel(level)
 	end
 
 	self.title:enter()

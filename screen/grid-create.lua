@@ -35,7 +35,7 @@ function GridCreate:enter(context)
 			}
 		}
 	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player)
+	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player.avatar)
 	self.sidebar.onAbort = function ()
 		self.onBackToList()
 	end

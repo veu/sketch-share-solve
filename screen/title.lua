@@ -8,17 +8,26 @@ function TitleScreen:init()
 	self.title = Title()
 end
 
-function TitleScreen:enter()
-	self.player = 1
+function TitleScreen:enter(context)
+	self.player = nil
+	self.save = context.save
 	local sidebarConfig = {
-		menuItems = {
-			{ text = "Suave Snail" },
-			{ text = "Charming Cat" },
-			{ text = "Mindful Mouse" },
-			{ text = "Reliable Raccoon"}
-		},
+		menuItems = {},
 		menuTitle = "Who is playing?"
 	}
+	for _, id in pairs(context.save.profileList) do
+		local profile = context.save.profiles[id]
+		if not profile.hidden then
+			if not self.player then
+				self.player = profile
+			end
+			table.insert(sidebarConfig.menuItems, {
+				text = profile.name,
+				ref = profile
+			})
+		end
+	end
+
 	local isCrankDocked = playdate.isCrankDocked()
 	self.sidebar:enter(
 		sidebarConfig,
@@ -26,12 +35,12 @@ function TitleScreen:enter()
 		not isCrankDocked and 1 or nil
 	)
 
-	self.sidebar.onNavigated = function (index)
-		self.sidebar:updateData(not playdate.isCrankDocked(), index)
-		self.player = index
+	self.sidebar.onNavigated = function (player)
+		self.player = player
+		self.sidebar:setPlayer(player.avatar)
 	end
-	self.sidebar.onSelected = function ()
-		self.onSelected(self.player)
+	self.sidebar.onSelected = function (id)
+		self.onSelected(id)
 	end
 
 	self.title:enter()
@@ -43,6 +52,6 @@ function TitleScreen:leave()
 end
 
 function TitleScreen:crankUndocked()
-	self.sidebar:updateData(not playdate.isCrankDocked(), self.player)
+	self.sidebar:setPlayer(self.player.avatar)
 	self.sidebar:open()
 end

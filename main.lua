@@ -1,6 +1,7 @@
 import "CoreLibs/graphics"
 import "CoreLibs/object"
 import "CoreLibs/sprites"
+import "CoreLibs/string"
 import "CoreLibs/timer"
 import "CoreLibs/ui/crankIndicator"
 import "CoreLibs/ui/gridview"
@@ -64,8 +65,8 @@ creatorSelection.onBackToModeSelection = function()
 	switchToScreen(modeSelection)
 end
 
-creatorSelection.onSelected = function(selectedCreator)
-	context.creator = selectedCreator
+creatorSelection.onSelected = function(creator)
+	context.creator = creator
 	switchToScreen(gridList)
 end
 
@@ -82,7 +83,7 @@ gridList.onBackToCreatorSelection = function()
 end
 
 gridList.onSelectedLevel = function (level)
-	context.level = Level(context.save.levels[context.creator][level])
+	context.level = Level(level)
 	switchToScreen(gridPlay)
 end
 
@@ -99,12 +100,13 @@ gridPlay.onSave = function()
 		title = context.level.title,
 		grid = context.level.grid
 	}
-	if context.save.levels[context.player] then
-		table.insert(context.save.levels[context.player], level)
-	else
-		context.save.levels[context.player] = { level }
-	end
+	local id = playdate.string.UUID(16)
+
+	context.save.levels[id] = level
+	table.insert(context.player.created, id)
+
 	playdate.datastore.write(context.save)
+
 	switchToScreen(modeSelection)
 end
 
@@ -122,9 +124,9 @@ modeSelection.onSelected = function(selectedMode)
 	end
 end
 
-title.onSelected = function(selectedAvatar)
+title.onSelected = function(player)
 	showCrank = false
-	context.player = selectedAvatar
+	context.player = player
 	switchToScreen(modeSelection)
 end
 
@@ -148,11 +150,11 @@ function playdate.BButtonDown()
 	screen:BButtonDown()
 end
 
--- playdate.datastore.write(DEFAULT_SAVE)
+--playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE
 
 playdate.ui.crankIndicator:start()
-screen:enter()
+screen:enter(context)
 
 function playdate.update()
 	screen:update()
