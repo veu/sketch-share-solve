@@ -31,8 +31,7 @@ function List:enter(menuItems, menuTitle)
 		gfx.fillRect(x + 2, y + 1, 15, 15)
 
 		if selected then
-			gfx.setFont(fontGrid)
-			gfx.drawText("o", x + 2, y + 1)
+			imgBoard:drawImage(2, x + 2, y + 1)
 		end
 
 		local cellText = items[row]
