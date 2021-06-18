@@ -61,6 +61,14 @@ function Board:toggleCross(index, isStart)
 	end
 end
 
+function Board:invert()
+	for i = 1, #self.solution do
+		self.solution[i] = self.solution[i] == 1 and 0 or 1
+	end
+	self.onUpdateSolution(self.solution)
+	self:redraw()
+end
+
 function Board:getCursor()
 	return self.cursor:getIndex()
 end

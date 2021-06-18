@@ -23,6 +23,12 @@ function GridCreate:enter(context)
 				end
 			},
 			{
+				text = "Invert colors",
+				exec = function()
+					self.board:invert()
+				end
+			},
+			{
 				text = "Back to Title",
 				exec = function()
 					self.onBackToList()
