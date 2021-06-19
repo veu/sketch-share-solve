@@ -102,11 +102,12 @@ gridPlay.onPlayed = function (level)
 end
 
 gridPlay.onSave = function()
+	local id = playdate.string.UUID(16)
 	local level = {
+		id = id,
 		title = context.level.title,
 		grid = context.level.grid
 	}
-	local id = playdate.string.UUID(16)
 
 	context.save.levels[id] = level
 	table.insert(context.player.created, id)
