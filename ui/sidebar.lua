@@ -13,7 +13,7 @@ function Sidebar:init()
 	self.player = nil
 	self.creator = nil
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
+	self.image = gfx.image.new(203, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(30)
@@ -98,9 +98,6 @@ function Sidebar:update()
 		else
 			self:moveTo(math.floor(self.animator:currentValue()), 0)
 		end
-	end
-	if self.opened then
-		self:redraw()
 	end
 end
 
