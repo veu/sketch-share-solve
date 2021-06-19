@@ -15,12 +15,14 @@ function GridList:enter(context)
 	for i, id in pairs(creator.created) do
 		local level = context.save.levels[id]
 		assert(level)
-		local text = (creator == player or player.played[level.id])
+		local played = player.played[level.id]
+		local text = (creator == player or played)
 			and level.title
 			or "Level " .. i
 		table.insert(menuItems, {
 			text = text,
-			ref = level
+			ref = level,
+			done = played
 		})
 
 	end

@@ -33,7 +33,8 @@ function List:enter(menuItems, menuTitle)
 		gfx.fillRect(x + 2, y + 1, 15, 15)
 
 		if selected then
-			imgBoard:drawImage(2, x + 2, y + 1)
+			local image = menuItems[row].done and 3 or 2
+			imgBoard:drawImage(image, x + 2, y + 1)
 		end
 
 		local cellText = items[row]
