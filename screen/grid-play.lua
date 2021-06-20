@@ -6,6 +6,9 @@ function GridPlay:init()
 	self.board = Board()
 	self.numbers = BoardNumbers()
 	self.dialog = Dialog()
+
+	self.onPlayed = function () end
+	self.onSave = function () end
 end
 
 function GridPlay:enter(context)
@@ -25,40 +28,6 @@ function GridPlay:enter(context)
 	end
 	self.numbers:enter(Numbers(self.level))
 
-	local sidebarConfig = {
-		menuItems = {}
-	}
-
-	if self.mode == MODE_CREATE then
-		table.insert(sidebarConfig.menuItems, {
-			text = "Back to Editor",
-			exec = function()
-				self.onEdit()
-			end
-		})
-	else
-		table.insert(sidebarConfig.menuItems, {
-			text = "Back to Overview",
-			exec = function()
-				self.onBackToList()
-			end
-		})
-	end
-
-	self.sidebar:enter(
-		sidebarConfig,
-		not playdate.isCrankDocked(),
-		context.player.avatar,
-		context.creator and context.creator.avatar
-	)
-
-	self.sidebar.onAbort = function ()
-		if self.mode == MODE_CREATE then
-			self.onEdit()
-		else
-			self.onBackToList()
-		end
-	end
 	self.board:enter(self.level, MODE_PLAY)
 end
 
@@ -68,14 +37,11 @@ function GridPlay:leave()
 
 	self.board:leave()
 	self.numbers:leave()
-	self.sidebar:leave()
 	self.dialog:leave()
 end
 
 function GridPlay:AButtonDown()
-	if self.sidebar.opened then
-		self.sidebar:AButtonDown()
-	elseif self.dialog:isVisible() then
+	if self.dialog:isVisible() then
 		self.dialog:AButtonDown()
 	end
 end
@@ -89,7 +55,7 @@ function GridPlay:update()
 		self.board:toggle(self.board:getCursor(), isStart)
 	end
 
-	if self.sidebar.opened or self.level:isSolved(self.board.solution) then
+	if not playdate.isCrankDocked() or self.level:isSolved(self.board.solution) then
 		return
 	end
 

@@ -13,18 +13,21 @@ import "utils"
 import "model/level"
 import "model/numbers"
 import "screen/screen"
-import "screen/creator-selection"
 import "screen/grid-create"
-import "screen/grid-list"
 import "screen/grid-play"
-import "screen/mode-selection"
 import "screen/title"
+import "sidebar/sidebar"
+import "sidebar/create-grid"
+import "sidebar/select-creator"
+import "sidebar/select-level"
+import "sidebar/select-mode"
+import "sidebar/select-player"
+import "sidebar/test-grid"
 import "ui/board"
 import "ui/board-numbers"
 import "ui/cursor"
 import "ui/dialog"
 import "ui/list"
-import "ui/sidebar"
 import "ui/title"
 import "utils/ui"
 
@@ -39,60 +42,41 @@ assert(imgAvatars, err)
 imgBoard, err = gfx.imagetable.new("img/board")
 assert(imgBoard, err)
 
-local creatorSelection = CreatorSelection()
+-- screens
 local gridCreate = GridCreate()
-local gridList = GridList()
 local gridPlay = GridPlay()
-local modeSelection = ModeSelection()
 local title = TitleScreen()
+
+-- sidebars
+local createGridSidebar = CreateGridSidebar()
+local testGridSidebar = TestGridSidebar()
+local selectCreatorSidebar = SelectCreatorSidebar()
+local selectLevelSidebar = SelectLevelSidebar()
+local selectPlayerSidebar = SelectPlayerSidebar()
+local selectModeSidebar = SelectModeSidebar()
+
 local context = {
 	creator = nil,
 	level = nil,
 	player = nil,
 	mode = nil,
-	save = nil
+	save = nil,
+	screen = title
 }
 local showCrank = true
 
-local screen = title
+local sidebar = selectPlayerSidebar
+
 function switchToScreen(newScreen)
-	screen:leave()
-	newScreen:enter(context)
-	screen = newScreen
+	context.screen:leave()
+	context.screen = newScreen
+	context.screen:enter(context)
 end
 
-creatorSelection.onBackToModeSelection = function()
-	switchToScreen(modeSelection)
-end
-
-creatorSelection.onSelected = function(creator)
-	context.creator = creator
-	switchToScreen(gridList)
-end
-
-gridCreate.onBackToList = function()
-	switchToScreen(modeSelection)
-end
-
-gridCreate.onTestAndSave = function ()
-	switchToScreen(gridPlay)
-end
-
-gridList.onBackToCreatorSelection = function()
-	switchToScreen(creatorSelection)
-end
-
-gridList.onSelectedLevel = function (level)
-	context.level = Level(level)
-	switchToScreen(gridPlay)
-end
-
-gridPlay.onBackToList = function()
-	switchToScreen(gridList)
-end
-
-gridPlay.onEdit = function()
-	switchToScreen(gridCreate)
+function switchToSidebar(newSidebar)
+	sidebar:leave()
+	sidebar = newSidebar
+	sidebar:enter(context)
 end
 
 gridPlay.onPlayed = function (level)
@@ -114,57 +98,102 @@ gridPlay.onSave = function()
 
 	playdate.datastore.write(context.save)
 
-	switchToScreen(modeSelection)
-end
-
-modeSelection.onBackToTitle = function()
 	switchToScreen(title)
+	switchToSidebar(selectPlayerSidebar)
 end
 
-modeSelection.onSelected = function(selectedMode)
+createGridSidebar.onAbort = function()
+	switchToScreen(title)
+	switchToSidebar(selectModeSidebar)
+end
+
+createGridSidebar.onTestAndSave = function ()
+	switchToScreen(gridPlay)
+	switchToSidebar(testGridSidebar)
+end
+
+testGridSidebar.onAbort = function ()
+	switchToScreen(gridCreate)
+	switchToSidebar(createGridSidebar)
+end
+
+selectCreatorSidebar.onAbort = function()
+	switchToSidebar(selectModeSidebar)
+end
+
+selectCreatorSidebar.onSelected = function(creator)
+	context.creator = creator
+	switchToSidebar(selectLevelSidebar)
+end
+
+selectLevelSidebar.onAbort = function()
+	switchToScreen(title)
+	switchToSidebar(selectCreatorSidebar)
+end
+
+selectLevelSidebar.onSelected = function (level)
+	context.level = Level(level)
+	switchToScreen(gridPlay)
+end
+
+selectModeSidebar.onAbort = function()
+	switchToSidebar(selectPlayerSidebar)
+end
+
+selectModeSidebar.onSelected = function(selectedMode)
 	context.mode = selectedMode
 	if context.mode == MODE_PLAY then
-		switchToScreen(creatorSelection)
+		switchToSidebar(selectCreatorSidebar)
 	else
 		context.level = Level.createEmpty()
 		switchToScreen(gridCreate)
+		switchToSidebar(createGridSidebar)
 	end
 end
 
-title.onSelected = function(player)
+selectPlayerSidebar.onSelected = function(player)
 	showCrank = false
 	context.player = player
-	switchToScreen(modeSelection)
+	switchToSidebar(selectModeSidebar)
 end
 
 function playdate.crankDocked()
-	screen:crankDocked()
+	sidebar:close()
 end
 
 function playdate.crankUndocked()
-	screen:crankUndocked()
+	sidebar:open()
 end
 
 function playdate.cranked(change, acceleratedChange)
-	screen:cranked(-change, -acceleratedChange)
+	sidebar:cranked(-change, -acceleratedChange)
 end
 
 function playdate.AButtonDown()
-	screen:AButtonDown()
+	if playdate.isCrankDocked() then
+		context.screen:AButtonDown()
+	else
+		sidebar:AButtonDown()
+	end
 end
 
 function playdate.BButtonDown()
-	screen:BButtonDown()
+	if playdate.isCrankDocked() then
+		context.screen:BButtonDown()
+	else
+		sidebar:BButtonDown()
+	end
 end
 
 --playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE
 
 playdate.ui.crankIndicator:start()
-screen:enter(context)
+context.screen:enter(context)
+sidebar:enter(context)
 
 function playdate.update()
-	screen:update()
+	context.screen:update()
 
 	gfx.sprite.update()
 	if showCrank and playdate.isCrankDocked() then

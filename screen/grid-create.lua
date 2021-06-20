@@ -12,33 +12,6 @@ function GridCreate:enter(context)
 	self.board.onUpdateSolution = function (grid)
 		self.level.grid = grid
 	end
-
-	local sidebarConfig = {
-		menuItems = {
-			{
-				text = "Test and Save",
-				exec = function()
-					self.onTestAndSave()
-				end
-			},
-			{
-				text = "Invert colors",
-				exec = function()
-					self.board:invert()
-				end
-			},
-			{
-				text = "Back to Title",
-				exec = function()
-					self.onBackToList()
-				end
-			}
-		}
-	}
-	self.sidebar:enter(sidebarConfig, not playdate.isCrankDocked(), context.player.avatar)
-	self.sidebar.onAbort = function ()
-		self.onBackToList()
-	end
 end
 
 function GridCreate:leave()
@@ -46,7 +19,10 @@ function GridCreate:leave()
 	menu:removeAllMenuItems()
 
 	self.board:leave()
-	self.sidebar:leave()
+end
+
+function GridCreate:invertBoard()
+	self.board:invert()
 end
 
 function GridCreate:update()
@@ -58,7 +34,7 @@ function GridCreate:update()
 		self.board:toggle(self.board:getCursor(), isStart)
 	end
 
-	if self.sidebar.opened then
+	if not playdate.isCrankDocked() then
 		return
 	end
 

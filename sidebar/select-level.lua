@@ -1,14 +1,12 @@
 local gfx <const> = playdate.graphics
 
-class("GridList").extends(Screen)
+class("SelectLevelSidebar").extends(Sidebar)
 
-function GridList:init()
-	GridList.super.init(self)
-
-	self.title = Title()
+function SelectLevelSidebar:init()
+	SelectLevelSidebar.super.init(self)
 end
 
-function GridList:enter(context)
+function SelectLevelSidebar:enter(context)
 	local player = context.player
 	local creator = context.creator
 	local menuItems = {}
@@ -32,10 +30,8 @@ function GridList:enter(context)
 						end
 					end
 				end
-
 			end
 			gfx.unlockFocus()
-
 		end
 
 		table.insert(menuItems, {
@@ -43,30 +39,18 @@ function GridList:enter(context)
 			ref = level,
 			img = image
 		})
-
 	end
-	local sidebarConfig = {
+
+	local config = {
 		menuItems = menuItems,
 		menuTitle = "Choose level"
 	}
-	self.sidebar:enter(
-		sidebarConfig,
+
+	SelectLevelSidebar.super.enter(
+		self,
+		config,
 		not playdate.isCrankDocked(),
 		context.player.avatar,
 		context.creator.avatar
 	)
-
-	self.sidebar.onAbort = function ()
-		self.onBackToCreatorSelection()
-	end
-	self.sidebar.onSelected = function (level)
-		self.onSelectedLevel(level)
-	end
-
-	self.title:enter()
-end
-
-function GridList:leave()
-	self.sidebar:leave()
-	self.title:leave()
 end

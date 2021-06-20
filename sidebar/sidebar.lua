@@ -36,6 +36,11 @@ function Sidebar:enter(config, opened, player, creator)
 	self:add()
 	self.list:enter(self.menuItems, self.menuTitle)
 	self:redraw()
+
+	if opened then
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+	end
 end
 
 function Sidebar:setPlayer(player)
@@ -58,10 +63,14 @@ function Sidebar:cranked(change, acceleratedChange)
 	end
 	local max = rawlen(self.menuItems)
 	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
-	self.cursor = math.floor(self.cursorRaw)
-	self.list:select(self.cursor)
-	self.onNavigated(self.menuItems[self.cursor].ref)
-	self:redraw()
+	local newCursor = math.floor(self.cursorRaw)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:redraw()
+	end
 end
 
 function Sidebar:AButtonDown()
@@ -106,6 +115,9 @@ function Sidebar:update()
 	end
 end
 
+function Sidebar:onNavigated_()
+end
+
 function Sidebar:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
@@ -130,7 +142,7 @@ function Sidebar:redraw()
 
 		-- player avatar
 		if self.player then
-			drawRightTextRect(-1, -1, SIDEBAR_WIDTH - 23, 26, "Playing")
+			drawRightTextRect(-1, -1, SIDEBAR_WIDTH - 23, 26, "Player")
 			drawAvatar(SIDEBAR_WIDTH - 25, -1, self.player or 1)
 		end
 

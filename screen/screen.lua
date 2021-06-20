@@ -12,16 +12,7 @@ end
 function Screen:leave()
 end
 
-function Screen:crankDocked()
-	self.sidebar:close()
-end
-
-function Screen:crankUndocked()
-	self.sidebar:open()
-end
-
-function Screen:cranked(change, acceleratedChange)
-	self.sidebar:cranked(change, acceleratedChange)
+function Screen:invertBoard()
 end
 
 function Screen:AButtonDown()
