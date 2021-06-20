@@ -2,6 +2,9 @@ local gfx <const> = playdate.graphics
 
 class("Sidebar").extends(gfx.sprite)
 
+local SIDEBAR_WIDTH = 200
+local SEPARATOR_WIDTH = 24
+
 function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()
@@ -9,11 +12,10 @@ function Sidebar:init()
 	self.menuTitle = nil
 	self.opened = false
 	self.animator = nil
-	self.width_ = 25
 	self.player = nil
 	self.creator = nil
 
-	self.image = gfx.image.new(203, 240, gfx.kColorClear)
+	self.image = gfx.image.new(SIDEBAR_WIDTH + 3, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(30)
@@ -29,7 +31,6 @@ function Sidebar:enter(config, opened, player, creator)
 	self.opened = opened
 	self.player = player
 	self.creator = creator
-	self.width_ = 200
 	self.cursor = 1
 	self.cursorRaw = 1.5
 	self:add()
@@ -82,19 +83,23 @@ end
 
 function Sidebar:open()
 	self.opened = true
-	self.animator = gfx.animator.new(500, 24 - self.width_, 0, playdate.easingFunctions.inOutSine)
+	self.animator = gfx.animator.new(
+		500, SEPARATOR_WIDTH - SIDEBAR_WIDTH, 0, playdate.easingFunctions.inOutSine
+	)
 end
 
 function Sidebar:close()
 	self.opened = false
 	self:redraw()
-	self.animator = gfx.animator.new(500, 0, 24 - self.width_, playdate.easingFunctions.inOutSine)
+	self.animator = gfx.animator.new(
+		500, 0, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
+	)
 end
 
 function Sidebar:update()
 	if self.animator then
 		if self.animator:ended() then
-			self:moveTo(self.opened and 0 or 24 - self.width_, 0)
+			self:moveTo(self.opened and 0 or SEPARATOR_WIDTH - SIDEBAR_WIDTH, 0)
 		else
 			self:moveTo(math.floor(self.animator:currentValue()), 0)
 		end
@@ -109,37 +114,37 @@ function Sidebar:redraw()
 
 		-- background
 		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(0, 0, self.width_, 240)
+		gfx.fillRect(0, 0, SIDEBAR_WIDTH, 240)
 
 		-- shadow
 		if self.opened then
 			gfx.setColor(gfx.kColorBlack)
 			gfx.setDitherPattern(0.5)
-			gfx.fillRect(self.width_, 0, 3, 240)
+			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)
 		end
 
 		local height = 240 - (self.creator and 48 or (self.player and 23 or 0))
 
 		-- draw sidebar
-		drawPaddedRect(self.width_ - 25, self.player and 24 or 0, 26, height)
+		drawPaddedRect(SIDEBAR_WIDTH - 25, self.player and 24 or 0, 26, height)
 
 		-- player avatar
 		if self.player then
-			drawRightTextRect(-1, -1, self.width_ - 23, 26, "Playing")
-			drawAvatar(self.width_ - 25, -1, self.player or 1)
+			drawRightTextRect(-1, -1, SIDEBAR_WIDTH - 23, 26, "Playing")
+			drawAvatar(SIDEBAR_WIDTH - 25, -1, self.player or 1)
 		end
 
 		-- creator avatar
 		if self.creator then
-			drawRightTextRect(-1, 240 - 25, self.width_ - 23, 26, "Creator")
-			drawAvatar(self.width_ - 25, 240 - 25, self.creator)
+			drawRightTextRect(-1, 240 - 25, SIDEBAR_WIDTH - 23, 26, "Creator")
+			drawAvatar(SIDEBAR_WIDTH - 25, 240 - 25, self.creator)
 		end
 
 		-- menu
-		drawStripedRect(-1, 24, self.width_ - 23, height)
+		drawStripedRect(-1, 24, SIDEBAR_WIDTH - 23, height)
 		self.list:draw()
 	end
 	gfx.unlockFocus()
 	self:markDirty()
-	self:moveTo(self.opened and 0 or -self.width_ + 24, 0)
+	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 end
