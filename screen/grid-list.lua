@@ -15,14 +15,33 @@ function GridList:enter(context)
 	for i, id in pairs(creator.created) do
 		local level = context.save.levels[id]
 		assert(level)
-		local played = player.played[level.id]
-		local text = (creator == player or played)
-			and level.title
-			or "Level " .. i
+		local revealed = creator.id == player.id or player.played[level.id]
+		local text = revealed and level.title or "Level " .. i
+
+		local image = nil
+		if revealed then
+			image = gfx.image.new(16, 16, gfx.kColorBlack)
+			gfx.lockFocus(image)
+			do
+				gfx.setColor(gfx.kColorWhite)
+				for y = 1, 10 do
+					for x = 1, 15 do
+						local index = x - 1 + (y - 1) * 15 + 1
+						if level.grid[index] == 0 then
+							gfx.fillRect(x - 1, y + 1, 1, 1)
+						end
+					end
+				end
+
+			end
+			gfx.unlockFocus()
+
+		end
+
 		table.insert(menuItems, {
 			text = text,
 			ref = level,
-			done = played
+			img = image
 		})
 
 	end

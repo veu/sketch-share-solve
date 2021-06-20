@@ -28,13 +28,16 @@ function List:enter(menuItems, menuTitle)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.fillRect(x, y - 1, 19, 19)
 		gfx.setColor(gfx.kColorBlack)
+		if not selected then
+			gfx.setDitherPattern(.5, playdate.graphics.image.kDitherTypeFloydSteinberg)
+		end
 		gfx.fillRect(x + 1, y, 17, 17)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.fillRect(x + 2, y + 1, 15, 15)
 
 		if selected then
-			local image = menuItems[row].done and 3 or 2
-			imgBoard:drawImage(image, x + 2, y + 1)
+			local image = menuItems[row].img or imgBoard:getImage(2)
+			image:draw(x + 2, y + 1)
 		end
 
 		local cellText = items[row]
