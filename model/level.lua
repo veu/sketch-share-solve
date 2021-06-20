@@ -1,8 +1,6 @@
 class("Level").extends()
 
 function Level:init(level)
-	self.width = 15
-	self.height = 10
 	self.id = level.id
 	self.title = level.title
 	self.grid = level.grid
@@ -23,8 +21,8 @@ function Level:isCellKnownEmpty(cellX, cellY)
 end
 
 function Level:isColumnKnownEmpty(cellX)
-	for y = 1, self.height do
-		local index = cellX - 1 + (y - 1) * self.width + 1
+	for y = 1, LEVEL_HEIGHT do
+		local index = cellX - 1 + (y - 1) * LEVEL_WIDTH + 1
 		if self.grid[index] == 1 then
 			return false
 		end
@@ -34,8 +32,8 @@ function Level:isColumnKnownEmpty(cellX)
 end
 
 function Level:isRowKnownEmpty(cellY)
-	for x = 1, self.width do
-		local index = x - 1 + (cellY - 1) * self.width + 1
+	for x = 1, LEVEL_WIDTH do
+		local index = x - 1 + (cellY - 1) * LEVEL_WIDTH + 1
 		if self.grid[index] == 1 then
 			return false
 		end

@@ -24,8 +24,8 @@ function GridList:enter(context)
 			gfx.lockFocus(image)
 			do
 				gfx.setColor(gfx.kColorWhite)
-				for y = 1, 10 do
-					for x = 1, 15 do
+				for y = 1, LEVEL_HEIGHT do
+					for x = 1, LEVEL_WIDTH do
 						local index = x - 1 + (y - 1) * 15 + 1
 						if level.grid[index] == 0 then
 							gfx.fillRect(x - 1, y + 1, 1, 1)

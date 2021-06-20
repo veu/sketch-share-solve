@@ -23,9 +23,9 @@ function Board:enter(level, mode)
 
 	self.solution = {}
 	self.crossed = {}
-	for y = 1, level.height do
-		for x = 1, level.width do
-			local index = x - 1 + (y - 1) * level.width + 1
+	for y = 1, LEVEL_HEIGHT do
+		for x = 1, LEVEL_WIDTH do
+			local index = x - 1 + (y - 1) * LEVEL_WIDTH + 1
 			self.solution[index] = self.mode == MODE_CREATE and level.grid[index] or 0
 			self.crossed[index] =
 				self.mode == MODE_PLAY and level:isCellKnownEmpty(x, y) and 1
@@ -92,25 +92,25 @@ function Board:redraw()
 		-- lines
 		if isSolved then
 			gfx.setColor(gfx.kColorBlack)
-			gfx.drawRect(0, 0, CELL * self.level.width + 1, CELL * self.level.height + 1)
+			gfx.drawRect(0, 0, CELL * LEVEL_WIDTH + 1, CELL * LEVEL_HEIGHT + 1)
 		else
-			for x = 0, self.level.width do
+			for x = 0, LEVEL_WIDTH do
 				gfx.setColor(gfx.kColorBlack)
 				gfx.setDitherPattern((isSolved or x % 5 == 0) and 0 or 0.5)
 				gfx.drawLine(
 					CELL * x,
 					0,
 					CELL * x,
-					CELL * self.level.height + 1
+					CELL * LEVEL_HEIGHT + 1
 				)
 			end
-			for y = 0, self.level.height do
+			for y = 0, LEVEL_HEIGHT do
 				gfx.setColor(gfx.kColorBlack)
 				gfx.setDitherPattern((isSolved or y % 5 == 0) and 0 or 0.5)
 				gfx.drawLine(
 					0,
 					CELL * y,
-					CELL * self.level.width + 1,
+					CELL * LEVEL_WIDTH + 1,
 					CELL * y
 				)
 			end
@@ -118,10 +118,10 @@ function Board:redraw()
 
 		-- cells
 		gfx.setFont(fontGrid)
-		for y = 1, self.level.height do
-			for x = 1, self.level.width do
+		for y = 1, LEVEL_HEIGHT do
+			for x = 1, LEVEL_WIDTH do
 				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
-				local index = x - 1 + (y - 1) * self.level.width + 1
+				local index = x - 1 + (y - 1) * LEVEL_WIDTH + 1
 				if isSolved then
 					if self.solution[index] == 1 then
 						gfx.setColor(gfx.kColorBlack)
