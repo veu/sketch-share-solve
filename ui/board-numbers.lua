@@ -63,11 +63,11 @@ function BoardNumbers:drawLeft()
 			)
 		end
 	end
-	gfx.setDitherPattern(0.5)
+	gfx.setDitherPattern(0.9)
 	for y = 0, rawlen(self.level.leftNumbers) do
 		gfx.drawLine(
 			CELL * (BOARD_OFFSET_X - 8), CELL * (y + BOARD_OFFSET_Y),
-			CELL * (BOARD_OFFSET_X + 1), CELL * (y + BOARD_OFFSET_Y))
+			CELL * (BOARD_OFFSET_X), CELL * (y + BOARD_OFFSET_Y))
 	end
 	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
 end
@@ -82,7 +82,7 @@ function BoardNumbers:drawTop()
 				)
 		end
 	end
-	gfx.setDitherPattern(0.5)
+	gfx.setDitherPattern(0.8)
 	for x = 0, rawlen(self.level.topNumbers) do
 		gfx.drawLine(
 			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y - 5),
