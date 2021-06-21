@@ -87,6 +87,8 @@ gridPlay.onPlayed = function (level)
 	context.player.played[level.id] = true
 
 	playdate.datastore.write(context.save)
+
+	switchToSidebar(selectLevelSidebar)
 end
 
 gridPlay.onReadyToSave = function ()
