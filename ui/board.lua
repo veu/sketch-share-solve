@@ -36,8 +36,6 @@ function Board:enter(level, mode)
 	self:add()
 	self.cursor:enter(level)
 
-	-- trigger once to assure consistency
-	self.onUpdateSolution(self.solution)
 	self:redraw()
 end
 

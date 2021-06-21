@@ -74,7 +74,7 @@ function Sidebar:cranked(change, acceleratedChange)
 end
 
 function Sidebar:AButtonDown()
-	if not self.opened then
+	if not self.opened or self.menuItems[self.cursor].disabled then
 		return
 	end
 	self.onSelected(self.menuItems[self.cursor].ref)

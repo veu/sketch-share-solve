@@ -4,11 +4,25 @@ function Level:init(level)
 	self.id = level.id
 	self.title = level.title
 	self.grid = level.grid
+
+	self.hasBeenSolved = false
 end
 
 function Level:isSolved(solution)
 	for i, v in pairs(self.grid) do
 		if v ~= solution[i] then
+			return false
+		end
+	end
+
+	self.hasBeenSolved = true
+
+	return true
+end
+
+function Level:isTrivial()
+	for i, v in pairs(self.grid) do
+		if v == 1 then
 			return false
 		end
 	end
@@ -49,6 +63,7 @@ Level.createEmpty = function ()
 	end
 
 	return Level({
+		id = playdate.string.UUID(16),
 		grid = grid
 	})
 end

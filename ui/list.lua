@@ -46,6 +46,10 @@ function List:enter(menuItems, menuTitle)
 		local width = gfx.getTextSize(cellText)
 		gfx.fillRect(x + 23, y, width + 4, 18)
 		gfx.drawText(cellText, x + 25, y + 2)
+		if menuItems[row].disabled then
+			gfx.setColor(gfx.kColorBlack)
+			gfx.drawLine(x + 25, y + 2 + 7, x + 25 + width, y + 2 + 7)
+		end
 	end
 end
 

@@ -79,27 +79,19 @@ function switchToSidebar(newSidebar)
 	sidebar:enter(context)
 end
 
+gridCreate.onChanged = function ()
+	switchToSidebar(createGridSidebar)
+end
+
 gridPlay.onPlayed = function (level)
 	context.player.played[level.id] = true
 
 	playdate.datastore.write(context.save)
 end
 
-gridPlay.onSave = function()
-	local id = playdate.string.UUID(16)
-	local level = {
-		id = id,
-		title = context.level.title,
-		grid = context.level.grid
-	}
-
-	context.save.levels[id] = level
-	table.insert(context.player.created, id)
-
-	playdate.datastore.write(context.save)
-
-	switchToScreen(title)
-	switchToSidebar(selectPlayerSidebar)
+gridPlay.onReadyToSave = function ()
+	showCrank = true
+	switchToSidebar(testGridSidebar)
 end
 
 createGridSidebar.onAbort = function()
@@ -110,11 +102,6 @@ end
 createGridSidebar.onTestAndSave = function ()
 	switchToScreen(gridPlay)
 	switchToSidebar(testGridSidebar)
-end
-
-testGridSidebar.onAbort = function ()
-	switchToScreen(gridCreate)
-	switchToSidebar(createGridSidebar)
 end
 
 selectCreatorSidebar.onAbort = function()
@@ -157,6 +144,30 @@ selectPlayerSidebar.onSelected = function(player)
 	switchToSidebar(selectModeSidebar)
 end
 
+testGridSidebar.onAbort = function ()
+	showCrank = false
+	switchToScreen(gridCreate)
+	switchToSidebar(createGridSidebar)
+end
+
+testGridSidebar.onSave = function ()
+	showCrank = false
+	local id = context.level.id
+	local level = {
+		id = id,
+		title = context.level.title,
+		grid = context.level.grid
+	}
+
+	context.save.levels[id] = level
+	table.insert(context.player.created, id)
+
+	playdate.datastore.write(context.save)
+
+	switchToScreen(title)
+	switchToSidebar(selectModeSidebar)
+end
+
 function playdate.crankDocked()
 	sidebar:close()
 end
@@ -184,6 +195,8 @@ function playdate.BButtonDown()
 		sidebar:BButtonDown()
 	end
 end
+
+math.randomseed(playdate.getSecondsSinceEpoch())
 
 --playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE

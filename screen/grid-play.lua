@@ -8,7 +8,6 @@ function GridPlay:init()
 	self.dialog = Dialog()
 
 	self.onPlayed = function () end
-	self.onSave = function () end
 end
 
 function GridPlay:enter(context)
@@ -19,7 +18,8 @@ function GridPlay:enter(context)
 			self.numbers:leave()
 			self.board:hideCursor()
 			if self.mode == MODE_CREATE then
-				self.dialog:enter("Solved! Want to save it?", self.onSave)
+				self.onReadyToSave()
+				self.dialog:enter("Solved! Ready to save.")
 			else
 				self.onPlayed(self.level)
 				self.dialog:enter(self.level.title and "Solved: " .. self.level.title or "Solved!")

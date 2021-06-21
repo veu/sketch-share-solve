@@ -9,6 +9,7 @@ function CreateGridSidebar:enter(context)
 		menuItems = {
 			{
 				text = "Test and Save",
+				disabled = context.level:isTrivial(),
 				exec = function()
 					self.onTestAndSave()
 				end

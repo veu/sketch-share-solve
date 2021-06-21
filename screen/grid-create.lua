@@ -4,6 +4,8 @@ function GridCreate:init()
 	GridCreate.super.init(self)
 
 	self.board = Board()
+
+	self.onChanged = function () end
 end
 
 function GridCreate:enter(context)
@@ -11,6 +13,7 @@ function GridCreate:enter(context)
 	self.board:enter(self.level, MODE_CREATE)
 	self.board.onUpdateSolution = function (grid)
 		self.level.grid = grid
+		self.onChanged()
 	end
 end
 
