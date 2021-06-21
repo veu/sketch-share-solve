@@ -162,6 +162,9 @@ testGridSidebar.onSave = function ()
 	context.level.title = ""
 	switchToSidebar(saveGridSidebar)
 
+	playdate.keyboard.canDismiss = function ()
+		return true
+	end
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
 		if not ok or rawlen(playdate.string.trimWhitespace(context.level.title)) == 0 then
 			switchToScreen(gridCreate)
