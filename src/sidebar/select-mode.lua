@@ -12,6 +12,10 @@ function SelectModeSidebar:enter(context)
 		}
 	}
 
-	SelectModeSidebar.super.enter(self, config, not playdate.isCrankDocked(),
-		not playdate.isCrankDocked() and 1 or nil)
+	SelectModeSidebar.super.enter(
+		self,
+		config,
+		not playdate.isCrankDocked(),
+		context.player.avatar
+	)
 end

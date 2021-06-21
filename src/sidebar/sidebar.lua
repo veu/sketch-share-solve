@@ -2,9 +2,6 @@ local gfx <const> = playdate.graphics
 
 class("Sidebar").extends(gfx.sprite)
 
-local SIDEBAR_WIDTH = 200
-local SEPARATOR_WIDTH = 24
-
 function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()

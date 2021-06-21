@@ -1,4 +1,5 @@
 import "CoreLibs/graphics"
+import "CoreLibs/keyboard"
 import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/string"
@@ -18,6 +19,7 @@ import "screen/grid-play"
 import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-grid"
+import "sidebar/save-grid"
 import "sidebar/select-creator"
 import "sidebar/select-level"
 import "sidebar/select-mode"
@@ -50,6 +52,7 @@ local title = TitleScreen()
 -- sidebars
 local createGridSidebar = CreateGridSidebar()
 local testGridSidebar = TestGridSidebar()
+local saveGridSidebar = SaveGridSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
 local selectLevelSidebar = SelectLevelSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
@@ -80,6 +83,7 @@ function switchToSidebar(newSidebar)
 end
 
 gridCreate.onChanged = function ()
+	context.level.hasBeenSolved = false
 	switchToSidebar(createGridSidebar)
 end
 
@@ -154,20 +158,46 @@ end
 
 testGridSidebar.onSave = function ()
 	showCrank = false
-	local id = context.level.id
-	local level = {
-		id = id,
-		title = context.level.title,
-		grid = context.level.grid
-	}
 
-	context.save.levels[id] = level
-	table.insert(context.player.created, id)
+	context.level.title = ""
+	switchToSidebar(saveGridSidebar)
 
-	playdate.datastore.write(context.save)
+	playdate.keyboard.keyboardWillHideCallback = function (ok)
+		if not ok or rawlen(playdate.string.trimWhitespace(context.level.title)) == 0 then
+			switchToScreen(gridCreate)
+			switchToSidebar(createGridSidebar)
+			return
+		end
 
-	switchToScreen(title)
-	switchToSidebar(selectModeSidebar)
+		local id = context.level.id
+		local level = {
+			id = id,
+			title = context.level.title,
+			grid = context.level.grid
+		}
+
+		context.save.levels[id] = level
+		table.insert(context.player.created, id)
+
+		playdate.datastore.write(context.save)
+
+		switchToScreen(title)
+		switchToSidebar(selectModeSidebar)
+	end
+
+	playdate.keyboard.textChangedCallback = function ()
+		local text = playdate.keyboard.text
+		gfx.setFont(fontText)
+		local size = gfx.getTextSize(text)
+		if size <= MAX_LEVEL_NAME_SIZE then
+			context.level.title = text
+			switchToSidebar(saveGridSidebar)
+		else
+			playdate.keyboard.text = context.level.title
+		end
+	end
+
+	playdate.keyboard.show()
 end
 
 function playdate.crankDocked()

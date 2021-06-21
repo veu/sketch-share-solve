@@ -18,20 +18,7 @@ function SelectLevelSidebar:enter(context)
 
 		local image = nil
 		if revealed then
-			image = gfx.image.new(16, 16, gfx.kColorBlack)
-			gfx.lockFocus(image)
-			do
-				gfx.setColor(gfx.kColorWhite)
-				for y = 1, LEVEL_HEIGHT do
-					for x = 1, LEVEL_WIDTH do
-						local index = x - 1 + (y - 1) * 15 + 1
-						if level.grid[index] == 0 then
-							gfx.fillRect(x - 1, y + 1, 1, 1)
-						end
-					end
-				end
-			end
-			gfx.unlockFocus()
+			image = createLevelPreview(level)
 		end
 
 		table.insert(menuItems, {

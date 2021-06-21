@@ -39,3 +39,22 @@ function drawAvatar(x, y, id)
 	gfx.drawRect(x + 2, y + 2, 22, 22)
 	imgAvatars:getImage(id):drawScaled(x + 3, y + 3, 2)
 end
+
+function createLevelPreview(level)
+	local image = gfx.image.new(16, 16, gfx.kColorBlack)
+	gfx.lockFocus(image)
+	do
+		gfx.setColor(gfx.kColorWhite)
+		for y = 1, LEVEL_HEIGHT do
+			for x = 1, LEVEL_WIDTH do
+				local index = x - 1 + (y - 1) * 15 + 1
+				if level.grid[index] == 0 then
+					gfx.fillRect(x - 1, y + 1, 1, 1)
+				end
+			end
+		end
+	end
+	gfx.unlockFocus()
+
+	return image
+end
