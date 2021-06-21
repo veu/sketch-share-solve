@@ -19,4 +19,4 @@ MAX_LEVEL_NAME_SIZE = 161
 SIDEBAR_WIDTH = 221
 SEPARATOR_WIDTH = 24
 
-GAME_NAME = "Sketch & Solve"
+GAME_NAME = "Sketch, Share, Solve"

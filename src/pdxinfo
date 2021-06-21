@@ -1,4 +1,4 @@
-name=Sketch & Solve
+name=Sketch, Share, Solve
 author=Rebecca Koenig
 description=A nonogram game you sketch yourself
-bundleID=net.monometric.sketch-and-solve
+bundleID=net.monometric.sketch-share-solve
