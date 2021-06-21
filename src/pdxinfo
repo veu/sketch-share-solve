@@ -1,4 +1,4 @@
-name=DIY Grid
+name=Sketch & Solve
 author=Rebecca Koenig
-description=A nonogram game you draw yourself
-bundleID=net.monometric.diy-grid
+description=A nonogram game you sketch yourself
+bundleID=net.monometric.sketch-and-solve

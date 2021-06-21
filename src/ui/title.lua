@@ -26,8 +26,8 @@ function Title:redraw()
 	do
 		gfx.setFont(fontText)
 		gfx.setColor(gfx.kColorBlack)
-		local width = gfx.getTextSize("DIY Grid")
-		gfx.drawText("DIY Grid", 400 - width - 20, 20)
+		local width = gfx.getTextSize(GAME_NAME)
+		gfx.drawText(GAME_NAME, 400 - width - 20, 20)
 	end
 	gfx.unlockFocus()
 	self:markDirty()
