@@ -6,6 +6,7 @@ end
 
 function SaveGridSidebar:enter(context)
 	local config = {
+		menuTitle = "Choose name",
 		menuItems = {
 			{
 				text = context.level.title,

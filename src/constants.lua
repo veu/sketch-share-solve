@@ -14,6 +14,13 @@ AVATAR_ID_MOUSE = 3
 AVATAR_ID_RACCOON = 4
 AVATAR_ID_NIL = 5
 AVATAR_ID_RDK = 6
+NUM_AVATARS = 4
+AVATAR_NAMES = {
+	"Suave Snail",
+	"Charming Cat",
+	"Mindful Mouse",
+	"Reliable Raccoon"
+}
 
 MAX_LEVEL_NAME_SIZE = 161
 SIDEBAR_WIDTH = 221

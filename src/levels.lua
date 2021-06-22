@@ -1,10 +1,6 @@
 DEFAULT_SAVE = {
 	profileList = {
-		"IHOMLFGGPUEOLDQY",
-		"YOWXPTTMSZOXHFQK",
-		"VYJHXBWQZUEFGYFC",
-		"YSJHQGQZCEPXOZDX",
-		"VTXUSWWBWHRKJJGG"
+		"IHOMLFGGPUEOLDQY"
 	},
 	profiles = {
 		IHOMLFGGPUEOLDQY = {
@@ -19,34 +15,6 @@ DEFAULT_SAVE = {
 				"GZXGGQJLYOFTKEYW",
 				"GGBPCAPGGDWMHWGH"
 			},
-			played = {}
-		},
-		YOWXPTTMSZOXHFQK = {
-			id = "YOWXPTTMSZOXHFQK",
-			avatar = AVATAR_ID_SNAIL,
-			name = "Suave Snail",
-			created = {},
-			played = {}
-		},
-		VYJHXBWQZUEFGYFC = {
-			id = "VYJHXBWQZUEFGYFC",
-			avatar = AVATAR_ID_CAT,
-			name =  "Charming Cat",
-			created = {},
-			played = {}
-		},
-		YSJHQGQZCEPXOZDX = {
-			id = "YSJHQGQZCEPXOZDX",
-			avatar = AVATAR_ID_MOUSE,
-			name = "Mindful Mouse",
-			created = {},
-			played = {}
-		},
-		VTXUSWWBWHRKJJGG = {
-			id = "VTXUSWWBWHRKJJGG",
-			avatar = AVATAR_ID_RACCOON,
-			name = "Reliable Raccoon",
-			created = {},
 			played = {}
 		}
 	},

@@ -2,6 +2,8 @@ class("SelectPlayerSidebar").extends(Sidebar)
 
 function SelectPlayerSidebar:init()
 	SelectPlayerSidebar.super.init(self)
+
+	self.onNewPlayer = function () end
 end
 
 function SelectPlayerSidebar:enter(context)
@@ -22,13 +24,21 @@ function SelectPlayerSidebar:enter(context)
 		end
 	end
 
+	table.insert(config.menuItems, {
+		text = "New player",
+		exec = function()
+			self.onNewPlayer()
+		end
+	})
+
 	SelectPlayerSidebar.super.enter(self, config, not playdate.isCrankDocked(),
 		not playdate.isCrankDocked() and 1 or nil)
 end
 
 function SelectPlayerSidebar:onNavigated_(player)
 	self.player = player
-	self:setPlayer(player.avatar)
+	local avatar = player and player.avatar or AVATAR_ID_NIL
+	self:setPlayer(avatar)
 end
 
 function SelectPlayerSidebar:open()

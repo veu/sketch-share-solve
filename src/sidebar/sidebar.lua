@@ -74,9 +74,10 @@ function Sidebar:AButtonDown()
 	if not self.opened or self.menuItems[self.cursor].disabled then
 		return
 	end
-	self.onSelected(self.menuItems[self.cursor].ref)
 	if self.menuItems[self.cursor].exec then
 		self.menuItems[self.cursor].exec()
+	else
+		self.onSelected(self.menuItems[self.cursor].ref)
 	end
 end
 

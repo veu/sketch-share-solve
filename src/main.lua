@@ -19,7 +19,9 @@ import "screen/grid-play"
 import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-grid"
+import "sidebar/name-player"
 import "sidebar/save-grid"
+import "sidebar/select-avatar"
 import "sidebar/select-creator"
 import "sidebar/select-level"
 import "sidebar/select-mode"
@@ -51,8 +53,10 @@ local title = TitleScreen()
 
 -- sidebars
 local createGridSidebar = CreateGridSidebar()
+local namePlayerSidebar = NamePlayerSidebar()
 local testGridSidebar = TestGridSidebar()
 local saveGridSidebar = SaveGridSidebar()
+local selectAvatarSidebar = SelectAvatarSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
 local selectLevelSidebar = SelectLevelSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
@@ -110,6 +114,53 @@ createGridSidebar.onTestAndSave = function ()
 	switchToSidebar(testGridSidebar)
 end
 
+namePlayerSidebar.onAbort = function()
+	switchToSidebar(selectAvatarSidebar)
+end
+
+selectAvatarSidebar.onAbort = function()
+	switchToSidebar(selectPlayerSidebar)
+end
+
+selectAvatarSidebar.onSelected = function(avatar)
+	local player = context.player
+	player.avatar = avatar
+
+	switchToSidebar(namePlayerSidebar)
+
+	playdate.keyboard.canDismiss = function ()
+		return true
+	end
+
+	playdate.keyboard.keyboardWillHideCallback = function (ok)
+		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
+			switchToSidebar(selectAvatarSidebar)
+			return
+		end
+
+		context.save.profiles[player.id] = player
+		table.insert(context.save.profileList, player.id)
+
+		playdate.datastore.write(context.save)
+
+		switchToSidebar(selectModeSidebar)
+	end
+
+	playdate.keyboard.textChangedCallback = function ()
+		local text = playdate.keyboard.text
+		gfx.setFont(fontText)
+		local size = gfx.getTextSize(text)
+		if size <= MAX_LEVEL_NAME_SIZE then
+			context.player.name = text
+			switchToSidebar(namePlayerSidebar)
+		else
+			playdate.keyboard.text = context.player.name
+		end
+	end
+
+	playdate.keyboard.show()
+end
+
 selectCreatorSidebar.onAbort = function()
 	switchToSidebar(selectModeSidebar)
 end
@@ -142,6 +193,18 @@ selectModeSidebar.onSelected = function(selectedMode)
 		switchToScreen(gridCreate)
 		switchToSidebar(createGridSidebar)
 	end
+end
+
+selectPlayerSidebar.onNewPlayer = function()
+	context.player = {
+		id = playdate.string.UUID(16),
+		avatar = 1,
+		name = "",
+		created = {},
+		played = {}
+	}
+
+	switchToSidebar(selectAvatarSidebar)
 end
 
 selectPlayerSidebar.onSelected = function(player)
