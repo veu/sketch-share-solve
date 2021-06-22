@@ -6,7 +6,6 @@ DEFAULT_SAVE = {
 		IHOMLFGGPUEOLDQY = {
 			id = "IHOMLFGGPUEOLDQY",
 			hidden = true,
-			avatar = AVATAR_ID_RDK,
 			name = "RDK",
 			created = {
 				"BCYQPNSTSAQBHEIM",

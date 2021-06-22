@@ -178,6 +178,7 @@ gridPlay.onReadyToSave = function ()
 end
 
 createAvatarSidebar.onAbort = function ()
+	switchToScreen(title)
 	switchToSidebar(selectAvatarSidebar)
 end
 

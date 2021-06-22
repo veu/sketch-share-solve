@@ -11,7 +11,8 @@ function Player:init(player)
 	if avatar then
 		self.avatar = avatar
 	else
-		self.avatar = imgAvatars:getImage(AVATAR_ID_NIL)
+		local id = self.id == "IHOMLFGGPUEOLDQY" and AVATAR_ID_RDK or AVATAR_ID_NIL
+		self.avatar = imgAvatars:getImage(id)
 	end
 end
 
