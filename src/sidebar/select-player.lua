@@ -12,7 +12,7 @@ function SelectPlayerSidebar:enter(context)
 		menuTitle = "Who is playing?"
 	}
 	for _, id in pairs(context.save.profileList) do
-		local profile = Player(context.save.profiles[id])
+		local profile = Player.load(context, id)
 		if not profile.hidden then
 			if not self.player then
 				self.player = profile

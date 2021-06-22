@@ -71,6 +71,10 @@ function Level:save(context)
 	playdate.datastore.write(context.save)
 end
 
+Level.load = function (context, id)
+	return Level(context.save.levels[id])
+end
+
 Level.createEmpty = function (width, height)
 	local grid = {}
 	for x = 1, 150 do
@@ -80,7 +84,7 @@ Level.createEmpty = function (width, height)
 	return Level({
 		id = playdate.string.UUID(16),
 		grid = grid,
-		width = width,
-		height = height
+		width = width or 15,
+		height = height or 10
 	})
 end

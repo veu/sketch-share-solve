@@ -11,8 +11,7 @@ function SelectLevelSidebar:enter(context)
 	local creator = context.creator
 	local menuItems = {}
 	for i, id in pairs(creator.created) do
-		local level = context.save.levels[id]
-		assert(level)
+		local level = Level.load(context, id)
 		local revealed = creator.id == player.id or player.played[level.id]
 		local text = revealed and level.title or "Level " .. i
 

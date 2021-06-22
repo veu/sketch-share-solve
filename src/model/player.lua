@@ -40,6 +40,10 @@ function Player:save(context)
 	playdate.datastore.write(context.save)
 end
 
+Player.load = function (context, id)
+	return Player(context.save.profiles[id])
+end
+
 function Player.createEmpty()
 	return Player({
 		id = playdate.string.UUID(16),
