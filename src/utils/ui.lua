@@ -33,11 +33,30 @@ function drawRightTextRect(x, y, w, h, text)
 	gfx.drawText(text, x + w - width - 5, y + 6)
 end
 
-function drawAvatar(x, y, id)
+function drawAvatar(x, y, avatar)
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(x, y, 26, 26)
 	gfx.drawRect(x + 2, y + 2, 22, 22)
-	imgAvatars:getImage(id):drawScaled(x + 3, y + 3, 2)
+	avatar:drawScaled(x + 3, y + 3, 2)
+end
+
+function createAvatarPreview(level)
+	local image = gfx.image.new(level.width, level.height, gfx.kColorBlack)
+	gfx.lockFocus(image)
+	do
+		gfx.setColor(gfx.kColorWhite)
+		for y = 1, level.height do
+			for x = 1, level.width do
+				local index = x - 1 + (y - 1) * level.width + 1
+				if level.grid[index] == 0 then
+					gfx.fillRect(x - 1, y - 1, 1, 1)
+				end
+			end
+		end
+	end
+	gfx.unlockFocus()
+
+	return image
 end
 
 function createLevelPreview(level)
@@ -45,9 +64,9 @@ function createLevelPreview(level)
 	gfx.lockFocus(image)
 	do
 		gfx.setColor(gfx.kColorWhite)
-		for y = 1, LEVEL_HEIGHT do
-			for x = 1, LEVEL_WIDTH do
-				local index = x - 1 + (y - 1) * 15 + 1
+		for y = 1, level.height do
+			for x = 1, level.width do
+				local index = x - 1 + (y - 1) * level.width + 1
 				if level.grid[index] == 0 then
 					gfx.fillRect(x - 1, y + 1, 1, 1)
 				end

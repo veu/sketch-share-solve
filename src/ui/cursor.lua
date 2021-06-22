@@ -24,7 +24,7 @@ function Cursor:init()
 end
 
 function Cursor:enter(level)
-	self.gridX = 8
+	self.gridX = math.floor(level.width / 2)
 	self.gridY = 4
 	self:moveTo(
 		CELL * (BOARD_OFFSET_X - 1 + self.gridX) - 2,
@@ -40,12 +40,12 @@ function Cursor:leave()
 end
 
 function Cursor:getIndex()
-	return self.gridX - 1 + (self.gridY - 1) * LEVEL_WIDTH + 1
+	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
 end
 
 function Cursor:moveBy(dx, dy)
-	self.gridX = (self.gridX + dx + LEVEL_WIDTH - 1) % LEVEL_WIDTH + 1
-	self.gridY = (self.gridY + dy + LEVEL_HEIGHT - 1) % LEVEL_HEIGHT + 1
+	self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
+	self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
 	self:redraw()
 end
 

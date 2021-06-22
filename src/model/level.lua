@@ -4,6 +4,8 @@ function Level:init(level)
 	self.id = level.id
 	self.title = level.title
 	self.grid = level.grid
+	self.width = level.width or 15
+	self.height = level.height or 10
 
 	self.hasBeenSolved = false
 end
@@ -35,8 +37,8 @@ function Level:isCellKnownEmpty(cellX, cellY)
 end
 
 function Level:isColumnKnownEmpty(cellX)
-	for y = 1, LEVEL_HEIGHT do
-		local index = cellX - 1 + (y - 1) * LEVEL_WIDTH + 1
+	for y = 1, self.height do
+		local index = cellX - 1 + (y - 1) * self.width + 1
 		if self.grid[index] == 1 then
 			return false
 		end
@@ -46,8 +48,8 @@ function Level:isColumnKnownEmpty(cellX)
 end
 
 function Level:isRowKnownEmpty(cellY)
-	for x = 1, LEVEL_WIDTH do
-		local index = x - 1 + (cellY - 1) * LEVEL_WIDTH + 1
+	for x = 1, self.width do
+		local index = x - 1 + (cellY - 1) * self.width + 1
 		if self.grid[index] == 1 then
 			return false
 		end
@@ -56,7 +58,20 @@ function Level:isRowKnownEmpty(cellY)
 	return true
 end
 
-Level.createEmpty = function ()
+function Level:save(context)
+	local level = {
+		id = self.id,
+		title = self.title,
+		grid = self.grid
+	}
+
+	context.save.levels[self.id] = level
+	table.insert(context.player.created, self.id)
+
+	playdate.datastore.write(context.save)
+end
+
+Level.createEmpty = function (width, height)
 	local grid = {}
 	for x = 1, 150 do
 		table.insert(grid, 0)
@@ -64,6 +79,8 @@ Level.createEmpty = function ()
 
 	return Level({
 		id = playdate.string.UUID(16),
-		grid = grid
+		grid = grid,
+		width = width,
+		height = height
 	})
 end

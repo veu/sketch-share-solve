@@ -12,7 +12,7 @@ function SelectPlayerSidebar:enter(context)
 		menuTitle = "Who is playing?"
 	}
 	for _, id in pairs(context.save.profileList) do
-		local profile = context.save.profiles[id]
+		local profile = Player(context.save.profiles[id])
 		if not profile.hidden then
 			if not self.player then
 				self.player = profile
@@ -31,13 +31,17 @@ function SelectPlayerSidebar:enter(context)
 		end
 	})
 
-	SelectPlayerSidebar.super.enter(self, config, not playdate.isCrankDocked(),
-		not playdate.isCrankDocked() and 1 or nil)
+	SelectPlayerSidebar.super.enter(
+		self,
+		config,
+		not playdate.isCrankDocked(),
+		not playdate.isCrankDocked() and imgAvatars:getImage(1) or nil
+	)
 end
 
 function SelectPlayerSidebar:onNavigated_(player)
 	self.player = player
-	local avatar = player and player.avatar or AVATAR_ID_NIL
+	local avatar = player and player.avatar or imgAvatars:getImage(AVATAR_ID_NIL)
 	self:setPlayer(avatar)
 end
 

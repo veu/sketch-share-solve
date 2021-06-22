@@ -59,7 +59,7 @@ function Sidebar:cranked(change, acceleratedChange)
 		return
 	end
 	local max = rawlen(self.menuItems)
-	self.cursorRaw = (self.cursorRaw - acceleratedChange / 20 - 1 + max) % max + 1
+	self.cursorRaw = math.max(1, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
 	local newCursor = math.floor(self.cursorRaw)
 	if self.cursor ~= newCursor then
 		self.cursor = newCursor
@@ -141,7 +141,7 @@ function Sidebar:redraw()
 		-- player avatar
 		if self.player then
 			drawRightTextRect(-1, -1, SIDEBAR_WIDTH - 23, 26, "Player")
-			drawAvatar(SIDEBAR_WIDTH - 25, -1, self.player or 1)
+			drawAvatar(SIDEBAR_WIDTH - 25, -1, self.player)
 		end
 
 		-- creator avatar

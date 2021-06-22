@@ -1,6 +1,4 @@
 CELL = 16
-LEVEL_WIDTH = 15
-LEVEL_HEIGHT = 10
 
 BOARD_OFFSET_X = 9.5
 BOARD_OFFSET_Y = 4.5
@@ -21,6 +19,7 @@ AVATAR_NAMES = {
 	"Mindful Mouse",
 	"Reliable Raccoon"
 }
+AVATAR_FOLDER_NAME = "avatars/"
 
 MAX_LEVEL_NAME_SIZE = 161
 SIDEBAR_WIDTH = 221

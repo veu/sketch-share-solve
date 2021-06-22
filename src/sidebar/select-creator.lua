@@ -12,7 +12,7 @@ function SelectCreatorSidebar:enter(context)
 
 	local creator = nil
 	for _, id in pairs(context.save.profileList) do
-		local profile = context.save.profiles[id]
+		local profile = Player(context.save.profiles[id])
 		if #profile.created > 0 then
 			if not creator then
 				creator = profile

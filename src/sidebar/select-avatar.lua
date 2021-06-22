@@ -18,9 +18,21 @@ function SelectAvatarSidebar:enter(context)
 		})
 	end
 
-	SelectAvatarSidebar.super.enter(self, config, not playdate.isCrankDocked(), 1)
+	table.insert(config.menuItems, {
+		text = "New avatar",
+		exec = function()
+			self.onNewAvatar()
+		end
+	})
+
+	SelectAvatarSidebar.super.enter(
+		self,
+		config,
+		not playdate.isCrankDocked(),
+		imgAvatars:getImage(1)
+	)
 end
 
 function SelectAvatarSidebar:onNavigated_(avatar)
-	self:setPlayer(avatar)
+	self:setPlayer(imgAvatars:getImage(avatar or AVATAR_ID_NIL))
 end

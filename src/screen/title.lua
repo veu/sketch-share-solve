@@ -5,6 +5,8 @@ class("TitleScreen").extends(Screen)
 function TitleScreen:init()
 	TitleScreen.super.init(self)
 
+	self.showCrank = true
+
 	self.title = Title()
 end
 

@@ -13,11 +13,16 @@ import "levels"
 import "utils"
 import "model/level"
 import "model/numbers"
+import "model/player"
+
 import "screen/screen"
+import "screen/avatar-create"
 import "screen/grid-create"
 import "screen/grid-play"
 import "screen/title"
+
 import "sidebar/sidebar"
+import "sidebar/create-avatar"
 import "sidebar/create-grid"
 import "sidebar/name-player"
 import "sidebar/save-grid"
@@ -27,6 +32,7 @@ import "sidebar/select-level"
 import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/test-grid"
+
 import "ui/board"
 import "ui/board-numbers"
 import "ui/cursor"
@@ -47,11 +53,13 @@ imgBoard, err = gfx.imagetable.new("img/board")
 assert(imgBoard, err)
 
 -- screens
+local avatarCreate = AvatarCreate()
 local gridCreate = GridCreate()
 local gridPlay = GridPlay()
 local title = TitleScreen()
 
 -- sidebars
+local createAvatarSidebar = CreateAvatarSidebar()
 local createGridSidebar = CreateGridSidebar()
 local namePlayerSidebar = NamePlayerSidebar()
 local testGridSidebar = TestGridSidebar()
@@ -70,9 +78,71 @@ local context = {
 	save = nil,
 	screen = title
 }
-local showCrank = true
 
 local sidebar = selectPlayerSidebar
+
+function showPlayerKeyboard()
+	playdate.keyboard.canDismiss = function ()
+		return true
+	end
+
+	playdate.keyboard.keyboardWillHideCallback = function (ok)
+		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
+			switchToSidebar(selectAvatarSidebar)
+			return
+		end
+
+		context.player:save(context)
+
+		switchToSidebar(selectModeSidebar)
+	end
+
+	playdate.keyboard.textChangedCallback = function ()
+		local text = playdate.keyboard.text
+		gfx.setFont(fontText)
+		local size = gfx.getTextSize(text)
+		if size <= MAX_LEVEL_NAME_SIZE then
+			context.player.name = text
+			switchToSidebar(namePlayerSidebar)
+		else
+			playdate.keyboard.text = context.player.name
+		end
+	end
+
+	playdate.keyboard.show()
+end
+
+function showLevelKeyboard()
+	playdate.keyboard.canDismiss = function ()
+		return true
+	end
+	playdate.keyboard.keyboardWillHideCallback = function (ok)
+		if not ok or rawlen(playdate.string.trimWhitespace(context.level.title)) == 0 then
+			switchToScreen(gridCreate)
+			switchToSidebar(createGridSidebar)
+			return
+		end
+
+		context.level:save(context)
+
+		switchToScreen(title)
+		switchToSidebar(selectModeSidebar)
+	end
+
+	playdate.keyboard.textChangedCallback = function ()
+		local text = playdate.keyboard.text
+		gfx.setFont(fontText)
+		local size = gfx.getTextSize(text)
+		if size <= MAX_LEVEL_NAME_SIZE then
+			context.level.title = text
+			switchToSidebar(saveGridSidebar)
+		else
+			playdate.keyboard.text = context.level.title
+		end
+	end
+
+	playdate.keyboard.show()
+end
 
 function switchToScreen(newScreen)
 	context.screen:leave()
@@ -86,6 +156,10 @@ function switchToSidebar(newSidebar)
 	sidebar:enter(context)
 end
 
+avatarCreate.onChanged = function()
+	switchToSidebar(createAvatarSidebar)
+end
+
 gridCreate.onChanged = function ()
 	context.level.hasBeenSolved = false
 	switchToSidebar(createGridSidebar)
@@ -94,14 +168,25 @@ end
 gridPlay.onPlayed = function (level)
 	context.player.played[level.id] = true
 
-	playdate.datastore.write(context.save)
+	context.player:save(context)
 
 	switchToSidebar(selectLevelSidebar)
 end
 
 gridPlay.onReadyToSave = function ()
-	showCrank = true
 	switchToSidebar(testGridSidebar)
+end
+
+createAvatarSidebar.onAbort = function ()
+	switchToSidebar(selectAvatarSidebar)
+end
+
+createAvatarSidebar.onSave = function()
+	context.player.avatar = createAvatarPreview(context.level)
+
+	switchToScreen(title)
+	switchToSidebar(namePlayerSidebar)
+	showPlayerKeyboard()
 end
 
 createGridSidebar.onAbort = function()
@@ -122,43 +207,17 @@ selectAvatarSidebar.onAbort = function()
 	switchToSidebar(selectPlayerSidebar)
 end
 
+selectAvatarSidebar.onNewAvatar = function ()
+	switchToScreen(avatarCreate)
+	switchToSidebar(createAvatarSidebar)
+end
+
 selectAvatarSidebar.onSelected = function(avatar)
 	local player = context.player
-	player.avatar = avatar
+	player.avatar = imgAvatars:getImage(avatar)
 
 	switchToSidebar(namePlayerSidebar)
-
-	playdate.keyboard.canDismiss = function ()
-		return true
-	end
-
-	playdate.keyboard.keyboardWillHideCallback = function (ok)
-		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
-			switchToSidebar(selectAvatarSidebar)
-			return
-		end
-
-		context.save.profiles[player.id] = player
-		table.insert(context.save.profileList, player.id)
-
-		playdate.datastore.write(context.save)
-
-		switchToSidebar(selectModeSidebar)
-	end
-
-	playdate.keyboard.textChangedCallback = function ()
-		local text = playdate.keyboard.text
-		gfx.setFont(fontText)
-		local size = gfx.getTextSize(text)
-		if size <= MAX_LEVEL_NAME_SIZE then
-			context.player.name = text
-			switchToSidebar(namePlayerSidebar)
-		else
-			playdate.keyboard.text = context.player.name
-		end
-	end
-
-	playdate.keyboard.show()
+	showPlayerKeyboard()
 end
 
 selectCreatorSidebar.onAbort = function()
@@ -196,74 +255,26 @@ selectModeSidebar.onSelected = function(selectedMode)
 end
 
 selectPlayerSidebar.onNewPlayer = function()
-	context.player = {
-		id = playdate.string.UUID(16),
-		avatar = 1,
-		name = "",
-		created = {},
-		played = {}
-	}
+	context.player = Player.createEmpty()
 
 	switchToSidebar(selectAvatarSidebar)
 end
 
 selectPlayerSidebar.onSelected = function(player)
-	showCrank = false
 	context.player = player
+
 	switchToSidebar(selectModeSidebar)
 end
 
 testGridSidebar.onAbort = function ()
-	showCrank = false
 	switchToScreen(gridCreate)
 	switchToSidebar(createGridSidebar)
 end
 
 testGridSidebar.onSave = function ()
-	showCrank = false
-
 	context.level.title = ""
 	switchToSidebar(saveGridSidebar)
-
-	playdate.keyboard.canDismiss = function ()
-		return true
-	end
-	playdate.keyboard.keyboardWillHideCallback = function (ok)
-		if not ok or rawlen(playdate.string.trimWhitespace(context.level.title)) == 0 then
-			switchToScreen(gridCreate)
-			switchToSidebar(createGridSidebar)
-			return
-		end
-
-		local id = context.level.id
-		local level = {
-			id = id,
-			title = context.level.title,
-			grid = context.level.grid
-		}
-
-		context.save.levels[id] = level
-		table.insert(context.player.created, id)
-
-		playdate.datastore.write(context.save)
-
-		switchToScreen(title)
-		switchToSidebar(selectModeSidebar)
-	end
-
-	playdate.keyboard.textChangedCallback = function ()
-		local text = playdate.keyboard.text
-		gfx.setFont(fontText)
-		local size = gfx.getTextSize(text)
-		if size <= MAX_LEVEL_NAME_SIZE then
-			context.level.title = text
-			switchToSidebar(saveGridSidebar)
-		else
-			playdate.keyboard.text = context.level.title
-		end
-	end
-
-	playdate.keyboard.show()
+	showLevelKeyboard()
 end
 
 function playdate.crankDocked()
@@ -307,7 +318,7 @@ function playdate.update()
 	context.screen:update()
 
 	gfx.sprite.update()
-	if showCrank and playdate.isCrankDocked() then
+	if context.screen.showCrank and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
 	end
 	--playdate.drawFPS(0,0)
