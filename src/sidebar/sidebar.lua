@@ -15,7 +15,7 @@ function Sidebar:init()
 	self.image = gfx.image.new(SIDEBAR_WIDTH + 3, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
-	self:setZIndex(30)
+	self:setZIndex(Z_INDEX_SIDEBAR)
 
 	self.onAbort = function () end
 	self.onNavigated = function () end

@@ -8,7 +8,7 @@ function Cursor:init()
 	self.image = gfx.image.new(CELL + 5, CELL + 5, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
-	self:setZIndex(20)
+	self:setZIndex(Z_INDEX_CURSOR)
 
 	gfx.pushContext(self.image)
 	do

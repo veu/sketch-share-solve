@@ -9,7 +9,7 @@ function BoardNumbers:init()
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:moveTo(0, 0)
-	self:setZIndex(7)
+	self:setZIndex(Z_INDEX_BOARD_NUMBERS)
 end
 
 function BoardNumbers:enter(level)

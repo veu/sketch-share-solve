@@ -9,7 +9,7 @@ function Board:init()
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
-	self:setZIndex(5)
+	self:setZIndex(Z_INDEX_BOARD)
 
 	self.onUpdateSolution = function() end
 
