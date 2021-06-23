@@ -58,8 +58,8 @@ function Sidebar:cranked(change, acceleratedChange)
 	if not self.opened then
 		return
 	end
-	local max = rawlen(self.menuItems)
-	self.cursorRaw = math.max(1, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
+	local max = rawlen(self.menuItems) + 0.5
+	self.cursorRaw = math.max(1.5, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
 	local newCursor = math.floor(self.cursorRaw)
 	if self.cursor ~= newCursor then
 		self.cursor = newCursor
