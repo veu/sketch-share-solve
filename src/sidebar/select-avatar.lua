@@ -14,12 +14,14 @@ function SelectAvatarSidebar:enter(context)
 	for i = 1, NUM_AVATARS do
 		table.insert(config.menuItems, {
 			text = AVATAR_NAMES[i],
+			avatar = imgAvatars:getImage(i),
 			ref = i
 		})
 	end
 
 	table.insert(config.menuItems, {
 		text = "New avatar",
+		avatar = imgAvatars:getImage(AVATAR_ID_NIL),
 		exec = function()
 			self.onNewAvatar()
 		end
@@ -28,11 +30,10 @@ function SelectAvatarSidebar:enter(context)
 	SelectAvatarSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		imgAvatars:getImage(1)
 	)
 end
 
-function SelectAvatarSidebar:onNavigated_(avatar)
-	self:setPlayer(imgAvatars:getImage(avatar or AVATAR_ID_NIL))
+function SelectAvatarSidebar:onCranked()
+	self.playerAvatar:change(self.cursorRaw)
 end

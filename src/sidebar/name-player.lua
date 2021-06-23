@@ -11,21 +11,13 @@ function NamePlayerSidebar:enter(context)
 			{
 				text = context.player.name
 			}
-		}
+		},
+		stayOpen = true
 	}
 
 	NamePlayerSidebar.super.enter(
 		self,
 		config,
-		true,
 		context.player.avatar
 	)
-end
-
-function NamePlayerSidebar:open()
-	-- needs to stay open until keyboard is closed
-end
-
-function NamePlayerSidebar:close()
-	-- needs to stay open until keyboard is closed
 end

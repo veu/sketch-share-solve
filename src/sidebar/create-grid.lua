@@ -26,7 +26,6 @@ function CreateGridSidebar:enter(context)
 	CreateGridSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		context.player.avatar
 	)
 end

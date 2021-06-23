@@ -5,6 +5,8 @@ class("Sidebar").extends(gfx.sprite)
 function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()
+	self.playerAvatar = Avatar()
+	self.creatorAvatar = Avatar()
 	self.menuItems = nil
 	self.menuTitle = nil
 	self.opened = false
@@ -22,15 +24,20 @@ function Sidebar:init()
 	self.onSelected = function () end
 end
 
-function Sidebar:enter(config, opened, player, creator)
+function Sidebar:enter(config, player, creator)
 	self.menuItems = config.menuItems
 	self.menuTitle = config.menuTitle
-	self.opened = opened
+	self.stayOpen = config.stayOpen
+	self.opened = self.stayOpen or not playdate.isCrankDocked()
 	self.player = player
 	self.creator = creator
 	self.cursor = 1
-	self.cursorRaw = 1.5
+	self.cursorRaw = 1
 	self:add()
+	self.playerAvatar:enter(config, player)
+	self.playerAvatar:moveTo(self.opened and AVATAR_OFFSET or -1, -1)
+	self.creatorAvatar:enter(config, creator)
+	self.creatorAvatar:moveTo(self.opened and AVATAR_OFFSET or -1, 240 - 25)
 	self.list:enter(self.menuItems, self.menuTitle)
 	self:redraw()
 
@@ -40,17 +47,9 @@ function Sidebar:enter(config, opened, player, creator)
 	end
 end
 
-function Sidebar:setPlayer(player)
-	self.player = player
-	self:redraw()
-end
-
-function Sidebar:setCreator(creator)
-	self.creator = creator
-	self:redraw()
-end
-
 function Sidebar:leave()
+	self.playerAvatar:leave()
+	self.creatorAvatar:leave()
 	self:remove()
 end
 
@@ -58,9 +57,9 @@ function Sidebar:cranked(change, acceleratedChange)
 	if not self.opened then
 		return
 	end
-	local max = rawlen(self.menuItems) + 0.5
-	self.cursorRaw = math.max(1.5, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
-	local newCursor = math.floor(self.cursorRaw)
+	local max = rawlen(self.menuItems)
+	self.cursorRaw = math.max(1, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
+	local newCursor = math.floor(self.cursorRaw + 0.5)
 	if self.cursor ~= newCursor then
 		self.cursor = newCursor
 		self.list:select(self.cursor)
@@ -68,6 +67,7 @@ function Sidebar:cranked(change, acceleratedChange)
 		self.onNavigated(self.menuItems[self.cursor].ref)
 		self:redraw()
 	end
+	self:onCranked()
 end
 
 function Sidebar:AButtonDown()
@@ -89,6 +89,9 @@ function Sidebar:BButtonDown()
 end
 
 function Sidebar:open()
+	if self.stayOpen then
+		return
+	end
 	self.opened = true
 	self.animator = gfx.animator.new(
 		500, SEPARATOR_WIDTH - SIDEBAR_WIDTH, 0, playdate.easingFunctions.inOutSine
@@ -96,6 +99,9 @@ function Sidebar:open()
 end
 
 function Sidebar:close()
+	if self.stayOpen then
+		return
+	end
 	self.opened = false
 	self:redraw()
 	self.animator = gfx.animator.new(
@@ -107,10 +113,17 @@ function Sidebar:update()
 	if self.animator then
 		if self.animator:ended() then
 			self:moveTo(self.opened and 0 or SEPARATOR_WIDTH - SIDEBAR_WIDTH, 0)
+			self.playerAvatar:moveTo(self.opened and AVATAR_OFFSET or -1, -1)
+			self.creatorAvatar:moveTo(self.opened and AVATAR_OFFSET or -1, 240 - 25)
 		else
 			self:moveTo(math.floor(self.animator:currentValue()), 0)
+			self.playerAvatar:moveTo(AVATAR_OFFSET + math.floor(self.animator:currentValue()), -1)
+			self.creatorAvatar:moveTo(AVATAR_OFFSET + math.floor(self.animator:currentValue()), 240 - 25)
 		end
 	end
+end
+
+function Sidebar:onCranked()
 end
 
 function Sidebar:onNavigated_()
@@ -141,13 +154,11 @@ function Sidebar:redraw()
 		-- player avatar
 		if self.player then
 			drawRightTextRect(-1, -1, SIDEBAR_WIDTH - 23, 26, "Player")
-			drawAvatar(SIDEBAR_WIDTH - 25, -1, self.player)
 		end
 
 		-- creator avatar
 		if self.creator then
 			drawRightTextRect(-1, 240 - 25, SIDEBAR_WIDTH - 23, 26, "Creator")
-			drawAvatar(SIDEBAR_WIDTH - 25, 240 - 25, self.creator)
 		end
 
 		-- menu

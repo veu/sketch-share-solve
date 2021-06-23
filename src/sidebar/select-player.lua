@@ -11,14 +11,17 @@ function SelectPlayerSidebar:enter(context)
 		menuItems = {},
 		menuTitle = "Who is playing?"
 	}
+
+	local player = nil
 	for _, id in pairs(context.save.profileList) do
 		local profile = Player.load(context, id)
 		if not profile.hidden then
-			if not self.player then
-				self.player = profile
+			if not player then
+				player = profile
 			end
 			table.insert(config.menuItems, {
 				text = profile.name,
+				avatar = profile.avatar,
 				ref = profile
 			})
 		end
@@ -26,23 +29,26 @@ function SelectPlayerSidebar:enter(context)
 
 	table.insert(config.menuItems, {
 		text = "New player",
+		avatar = imgAvatars:getImage(AVATAR_ID_NIL),
 		exec = function()
 			self.onNewPlayer()
 		end
 	})
 
+	local avatar = config.menuItems[1].avatar
 	SelectPlayerSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
-		not playdate.isCrankDocked() and imgAvatars:getImage(1) or nil
+		not playdate.isCrankDocked() and avatar or nil
 	)
 end
 
-function SelectPlayerSidebar:onNavigated_(player)
-	self.player = player
-	local avatar = player and player.avatar or imgAvatars:getImage(AVATAR_ID_NIL)
-	self:setPlayer(avatar)
+function SelectPlayerSidebar:onCranked()
+	self.playerAvatar:change(self.cursorRaw)
+end
+
+function SelectPlayerSidebar:onNavigated_(player, i)
+	self:redraw()
 end
 
 function SelectPlayerSidebar:open()

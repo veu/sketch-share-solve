@@ -12,21 +12,13 @@ function SaveGridSidebar:enter(context)
 				text = context.level.title,
 				img = createLevelPreview(context.level)
 			}
-		}
+		},
+		stayOpen = true
 	}
 
 	SaveGridSidebar.super.enter(
 		self,
 		config,
-		true,
 		context.player.avatar
 	)
-end
-
-function SaveGridSidebar:open()
-	-- needs to stay open until keyboard is closed
-end
-
-function SaveGridSidebar:close()
-	-- needs to stay open until keyboard is closed
 end

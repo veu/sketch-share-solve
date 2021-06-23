@@ -33,6 +33,7 @@ import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/test-grid"
 
+import "ui/avatar"
 import "ui/board"
 import "ui/board-numbers"
 import "ui/cursor"

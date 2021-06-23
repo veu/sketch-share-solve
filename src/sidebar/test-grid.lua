@@ -26,7 +26,6 @@ function TestGridSidebar:enter(context)
 	TestGridSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		context.player.avatar
 	)
 end

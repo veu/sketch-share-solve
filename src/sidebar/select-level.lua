@@ -35,7 +35,6 @@ function SelectLevelSidebar:enter(context)
 	SelectLevelSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		context.player.avatar,
 		context.creator.avatar
 	)

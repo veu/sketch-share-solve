@@ -19,6 +19,7 @@ function SelectCreatorSidebar:enter(context)
 			end
 			table.insert(config.menuItems, {
 				text = profile.name,
+				avatar = profile.avatar,
 				ref = profile
 			})
 		end
@@ -27,12 +28,11 @@ function SelectCreatorSidebar:enter(context)
 	SelectCreatorSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		context.player.avatar,
 		creator.avatar
 	)
 end
 
-function SelectCreatorSidebar:onNavigated_(creator)
-	self:setCreator(creator.avatar)
+function SelectCreatorSidebar:onCranked()
+	self.creatorAvatar:change(self.cursorRaw)
 end

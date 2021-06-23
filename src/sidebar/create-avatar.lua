@@ -25,7 +25,6 @@ function CreateAvatarSidebar:enter(context)
 	CreateAvatarSidebar.super.enter(
 		self,
 		config,
-		not playdate.isCrankDocked(),
 		createAvatarPreview(context.level)
 	)
 end
