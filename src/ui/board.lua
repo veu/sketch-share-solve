@@ -37,6 +37,7 @@ function Board:enter(level, mode)
 	self.cursor:enter(level)
 
 	self:redraw()
+	self.onUpdateSolution(self.solution, self.crossed)
 end
 
 function Board:leave()
@@ -49,7 +50,7 @@ function Board:toggle(index, isStart)
 		self.solution[index] = self.solution[index] == 1 and 0 or 1
 		self.last = self.solution[index]
 		self:redraw()
-		self.onUpdateSolution(self.solution)
+		self.onUpdateSolution(self.solution, self.crossed)
 	end
 end
 
@@ -58,6 +59,7 @@ function Board:toggleCross(index, isStart)
 		self.crossed[index] = self.crossed[index] == 1 and 0 or 1
 		self.last = self.crossed[index]
 		self:redraw()
+		self.onUpdateSolution(self.solution, self.crossed)
 	end
 end
 
@@ -65,7 +67,7 @@ function Board:invert()
 	for i = 1, #self.solution do
 		self.solution[i] = self.solution[i] == 1 and 0 or 1
 	end
-	self.onUpdateSolution(self.solution)
+	self.onUpdateSolution(self.solution, self.crossed)
 	self:redraw()
 end
 

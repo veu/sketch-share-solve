@@ -1,55 +1,54 @@
 class("Numbers").extends()
 
-function Numbers:init(level)
-	self.topNumbers = self:calcTopNumbers(level)
-	self.leftNumbers = self:calcLeftNumbers(level)
+function Numbers:init(level, grid)
+	self.level = level
+	self.grid = grid
+
+	self:calcTopNumbers()
+	self:calcLeftNumbers()
 end
 
-function Numbers:calcTopNumbers(level)
-	local topNumbers = {}
-	for x = 1, level.width do
-		topNumbers[x] = {}
+function Numbers:calcTopNumbers()
+	self.top = {}
+	for x = 1, self.level.width do
+		local numbers = { 0 }
 		local i = 1
-		local numbers = {}
-		for y = 1, level.height do
-			local index = x - 1 + (y - 1) * level.width + 1
-			if level.grid[index] == 1 then
-				if not topNumbers[x][i] then
-					topNumbers[x][i] = 1
-				else
-					topNumbers[x][i] += 1
-				end
-			elseif topNumbers[x][i] then
-				i += 1
-			end
+		for y = 1, self.level.height do
+			i = self:addCellNumber(numbers, x, y, i)
 		end
-		if rawlen(topNumbers[x]) == 0 then
-			topNumbers[x][1] = 0
+		if #numbers > 1 then
+			table.remove(numbers)
 		end
+		self.top[x] = numbers
 	end
-	return topNumbers
 end
 
-function Numbers:calcLeftNumbers(level)
-local leftNumbers = {}
-for y = 1, level.height do
-	leftNumbers[y] = {}
-	local i = 1
-	for x = 1, level.width do
-		local index = x - 1 + (y - 1) * level.width + 1
-		if level.grid[index] == 1 then
-			if not leftNumbers[y][i] then
-				leftNumbers[y][i] = 1
-			else
-				leftNumbers[y][i] += 1
-			end
-		elseif leftNumbers[y][i] then
-			i += 1
+function Numbers:calcLeftNumbers()
+	self.left = {}
+	for y = 1, self.level.height do
+		local numbers = { 0 }
+		local i = 1
+		for x = 1, self.level.width do
+			i = self:addCellNumber(numbers, x, y, i)
 		end
-	end
-	if rawlen(leftNumbers[y]) == 0 then
-		leftNumbers[y][1] = 0
+		if rawlen(numbers) > 1 then
+			table.remove(numbers)
+		end
+		self.left[y] = numbers
 	end
 end
-return leftNumbers
+
+function Numbers:addCellNumber(numbers, x, y, i)
+	local index = x - 1 + (y - 1) * self.level.width + 1
+	if self.grid[index] == 1 then
+		numbers[i] += 1
+		return i
+	end
+
+	if numbers[i] > 0 then
+		numbers[i + 1] = 0
+		return i + 1
+	end
+
+	return i
 end

@@ -11,6 +11,8 @@ import "constants"
 import "input"
 import "levels"
 import "utils"
+
+import "model/done-numbers"
 import "model/level"
 import "model/numbers"
 import "model/player"

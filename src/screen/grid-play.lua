@@ -13,7 +13,7 @@ end
 function GridPlay:enter(context)
 	self.level = context.level
 	self.mode = context.mode
-	self.board.onUpdateSolution = function (solution)
+	self.board.onUpdateSolution = function (solution, crossed)
 		if self.level:isSolved(solution) then
 			self.numbers:leave()
 			self.board:hideCursor()
@@ -24,9 +24,10 @@ function GridPlay:enter(context)
 				self.onPlayed(self.level)
 				self.dialog:enter(self.level.title and "Solved: " .. self.level.title or "Solved!")
 			end
+		else
+			self.numbers:enter(self.level, solution, crossed)
 		end
 	end
-	self.numbers:enter(Numbers(self.level))
 
 	self.board:enter(self.level, MODE_PLAY)
 end
