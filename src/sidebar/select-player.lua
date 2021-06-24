@@ -53,5 +53,9 @@ end
 
 function SelectPlayerSidebar:open()
 	SelectPlayerSidebar.super.open(self)
-	self:onNavigated_(self.menuItems[self.cursor].ref)
+	if not self.playerAvatar:isVisible() then
+		self.playerAvatar:enter(self.config, self.menuItems[1].avatar)
+	end
+
+	self:redraw()
 end

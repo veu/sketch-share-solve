@@ -2,10 +2,11 @@ local gfx <const> = playdate.graphics
 
 class("Avatar").extends(gfx.sprite)
 
-function Avatar:init()
+function Avatar:init(text)
 	Avatar.super.init(self)
 
-	self.image = gfx.image.new(26, 26, gfx.kColorClear)
+	self.text = text
+	self.image = gfx.image.new(SIDEBAR_WIDTH + 1, 26, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_AVATAR)
@@ -14,10 +15,12 @@ end
 function Avatar:enter(config, avatar)
 	self.menuItems = config.menuItems
 
+	self:setVisible(not not avatar)
 	if avatar then
 		self:draw(avatar)
-		self:add()
 	end
+
+	self:add()
 end
 
 function Avatar:leave()
@@ -49,8 +52,10 @@ function Avatar:setPosition(position)
 	end
 
 	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	gfx.pushContext(self.image)
 	do
+		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
+		gfx.setDrawOffset(AVATAR_OFFSET, 0)
 		self.slide:draw(3, 3 - math.floor((position - 1) * 23 + 0.5))
 
 		gfx.setColor(gfx.kColorBlack)
@@ -59,14 +64,16 @@ function Avatar:setPosition(position)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawRect(1, 1, 24, 24)
 	end
-	gfx.unlockFocus()
+	gfx.popContext()
 	self:markDirty()
 end
 
 function Avatar:draw(avatar)
 	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	gfx.pushContext(self.image)
 	do
+		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
+		gfx.setDrawOffset(AVATAR_OFFSET, 0)
 		avatar:drawScaled(3, 3, 2)
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawRect(0, 0, 26, 26)
@@ -74,7 +81,7 @@ function Avatar:draw(avatar)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawRect(1, 1, 24, 24)
 	end
-	gfx.unlockFocus()
+	gfx.popContext()
 	self:markDirty()
 end
 
