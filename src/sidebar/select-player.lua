@@ -47,6 +47,10 @@ function SelectPlayerSidebar:onCranked()
 	self.playerAvatar:change(self.cursorRaw)
 end
 
+function SelectPlayerSidebar:onMoved()
+	self.playerAvatar:setTarget(self.cursorRaw)
+end
+
 function SelectPlayerSidebar:onNavigated_(player, i)
 	self:redraw()
 end

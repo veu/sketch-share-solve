@@ -297,6 +297,18 @@ function playdate.cranked(change, acceleratedChange)
 	sidebar:cranked(-change, -acceleratedChange)
 end
 
+function playdate.downButtonDown()
+	if not playdate.isCrankDocked() then
+		sidebar:downButtonDown()
+	end
+end
+
+function playdate.upButtonDown()
+	if not playdate.isCrankDocked() then
+		sidebar:upButtonDown()
+	end
+end
+
 function playdate.AButtonDown()
 	if playdate.isCrankDocked() then
 		context.screen:AButtonDown()

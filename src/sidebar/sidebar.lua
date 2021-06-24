@@ -68,8 +68,34 @@ function Sidebar:cranked(change, acceleratedChange)
 	self:onCranked()
 end
 
+function Sidebar:downButtonDown()
+	local newCursor = math.min(rawlen(self.menuItems), self.cursor + 1)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:redraw()
+		self:onMoved()
+	end
+end
+
+function Sidebar:upButtonDown()
+	local newCursor = math.max(1, self.cursor - 1)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:redraw()
+		self:onMoved()
+	end
+end
+
 function Sidebar:AButtonDown()
-	if not self.opened or self.menuItems[self.cursor].disabled then
+	if self.menuItems[self.cursor].disabled then
 		return
 	end
 	if self.menuItems[self.cursor].exec then
@@ -80,9 +106,6 @@ function Sidebar:AButtonDown()
 end
 
 function Sidebar:BButtonDown()
-	if not self.opened then
-		return
-	end
 	self.onAbort()
 end
 
@@ -126,6 +149,9 @@ function Sidebar:update()
 end
 
 function Sidebar:onCranked()
+end
+
+function Sidebar:onMoved()
 end
 
 function Sidebar:onNavigated_()

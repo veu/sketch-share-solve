@@ -36,3 +36,7 @@ end
 function SelectCreatorSidebar:onCranked()
 	self.creatorAvatar:change(self.cursorRaw)
 end
+
+function SelectCreatorSidebar:onMoved()
+	self.creatorAvatar:setTarget(self.cursorRaw)
+end
