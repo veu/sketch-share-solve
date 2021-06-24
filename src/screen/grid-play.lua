@@ -17,6 +17,7 @@ function GridPlay:enter(context)
 		if self.level:isSolved(solution) then
 			self.numbers:leave()
 			self.board:hideCursor()
+			self.showCrank = true
 			if self.mode == MODE_CREATE then
 				self.onReadyToSave()
 				self.dialog:enter("Solved! Ready to save.")
@@ -28,6 +29,8 @@ function GridPlay:enter(context)
 			self.numbers:enter(self.level, solution, crossed)
 		end
 	end
+
+	self.showCrank = false
 
 	self.board:enter(self.level, MODE_PLAY)
 end
