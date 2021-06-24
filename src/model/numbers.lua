@@ -16,7 +16,7 @@ function Numbers:calcTopNumbers()
 		for y = 1, self.level.height do
 			i = self:addCellNumber(numbers, x, y, i)
 		end
-		if #numbers > 1 then
+		if #numbers > 1 and numbers[#numbers] == 0 then
 			table.remove(numbers)
 		end
 		self.top[x] = numbers
@@ -31,7 +31,7 @@ function Numbers:calcLeftNumbers()
 		for x = 1, self.level.width do
 			i = self:addCellNumber(numbers, x, y, i)
 		end
-		if rawlen(numbers) > 1 then
+		if #numbers > 1 and numbers[#numbers] == 0 then
 			table.remove(numbers)
 		end
 		self.left[y] = numbers
