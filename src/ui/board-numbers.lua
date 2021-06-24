@@ -57,7 +57,7 @@ function BoardNumbers:drawLeft()
 	for y, numbers in pairs(self.level.leftNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(
-				numMap[v],
+				v == 0 and numMap[v] or "*" .. numMap[v] .. "*",
 				CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)),
 				CELL * (y + BOARD_OFFSET_Y - 1) + 1
 			)
@@ -76,7 +76,7 @@ function BoardNumbers:drawTop()
 	for x, numbers in pairs(self.level.topNumbers) do
 		for i, v in pairs(numbers) do
 			gfx.drawText(
-				numMap[v],
+				v == 0 and numMap[v] or "*" .. numMap[v] .. "*",
 				CELL * (x + BOARD_OFFSET_X - 1) + 1,
 				CELL * BOARD_OFFSET_Y + 14 * (i - 1 - rawlen(numbers)) - 1
 				)

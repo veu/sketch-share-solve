@@ -44,8 +44,12 @@ import "utils/ui"
 
 local gfx <const> = playdate.graphics
 
-fontGrid = gfx.font.new("font/grid")
+fontGrid = gfx.font.newFamily({
+	[playdate.graphics.font.kVariantNormal] = "font/grid",
+	[playdate.graphics.font.kVariantBold] = "font/grid-bold"
+})
 assert(fontGrid)
+
 fontText = gfx.font.new("font/text")
 assert(fontText)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
