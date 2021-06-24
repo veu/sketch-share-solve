@@ -65,8 +65,8 @@ function GridPlay:update()
 
 	handleFill(fill)
 	handleCross(cross)
-	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.board:moveBy(1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.board:moveBy(0, 1) end)
-	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.board:moveBy(-1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonUp, function () self.board:moveBy(0, -1) end)
+	handleCursorDir(fill, cross, playdate.kButtonRight, function (pressed) self.board:moveBy(1, 0, pressed) end)
+	handleCursorDir(fill, cross, playdate.kButtonDown, function (pressed) self.board:moveBy(0, 1, pressed) end)
+	handleCursorDir(fill, cross, playdate.kButtonLeft, function (pressed) self.board:moveBy(-1, 0, pressed) end)
+	handleCursorDir(fill, cross, playdate.kButtonUp, function (pressed) self.board:moveBy(0, -1, pressed) end)
 end

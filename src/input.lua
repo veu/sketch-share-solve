@@ -4,7 +4,7 @@ local PRESSED = {}
 function handleCursorDir(fill, cross, button, update)
 	if playdate.buttonJustPressed(button) then
 		pressCounter = 0
-		update()
+		update(false)
 		if PRESSED[playdate.kButtonA] then
 			fill(false)
 		elseif PRESSED[playdate.kButtonB] then
@@ -13,7 +13,7 @@ function handleCursorDir(fill, cross, button, update)
 	elseif playdate.buttonIsPressed(button) then
 		pressCounter += 1
 		if pressCounter > 3 and pressCounter % 3 == 0 then
-			update()
+			update(PRESSED[playdate.kButtonA] or PRESSED[playdate.kButtonB])
 			if PRESSED[playdate.kButtonA] then
 				fill(false)
 			elseif PRESSED[playdate.kButtonB] then

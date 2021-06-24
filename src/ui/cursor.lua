@@ -43,9 +43,14 @@ function Cursor:getIndex()
 	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
 end
 
-function Cursor:moveBy(dx, dy)
-	self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
-	self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
+function Cursor:moveBy(dx, dy, pressed)
+	if pressed then
+		self.gridX = math.max(1, math.min(self.level.width, self.gridX + dx))
+		self.gridY = math.max(1, math.min(self.level.height, self.gridY + dy))
+	else
+		self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
+		self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
+	end
 	self:redraw()
 end
 

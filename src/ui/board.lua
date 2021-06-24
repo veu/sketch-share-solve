@@ -75,8 +75,8 @@ function Board:getCursor()
 	return self.cursor:getIndex()
 end
 
-function Board:moveBy(dx, dy)
-	self.cursor:moveBy(dx, dy)
+function Board:moveBy(dx, dy, pressed)
+	self.cursor:moveBy(dx, dy, pressed)
 	self:redraw()
 end
 
