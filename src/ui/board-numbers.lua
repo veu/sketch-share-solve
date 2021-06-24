@@ -46,40 +46,43 @@ local NUM_MAP = {
 }
 
 function BoardNumbers:drawLeft()
-	for y, numbers in pairs(self.gridNumbers.left) do
-		for i, v in pairs(numbers) do
-			gfx.drawText(
-				self.doneNumbers.left[y][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
-				CELL * (i + BOARD_OFFSET_X - 1 - rawlen(numbers)),
-				CELL * (y + BOARD_OFFSET_Y - 1) + 1
-			)
+	gfx.pushContext()
+	gfx.setDrawOffset(BOARD_OFFSET_X + CELL * (15 - self.level.width), BOARD_OFFSET_Y)
+	do
+		for y, numbers in pairs(self.gridNumbers.left) do
+			for i, v in pairs(numbers) do
+				gfx.drawText(
+					self.doneNumbers.left[y][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
+					CELL * (i - 1 - rawlen(numbers)),
+					CELL * (y - 1) + 1
+				)
+			end
+		end
+		gfx.setDitherPattern(0.9)
+		for y = 0, rawlen(self.gridNumbers.left) do
+			gfx.drawLine(CELL * -8, CELL * y, 0, CELL * y)
 		end
 	end
-	gfx.setDitherPattern(0.9)
-	for y = 0, rawlen(self.gridNumbers.left) do
-		gfx.drawLine(
-			CELL * (BOARD_OFFSET_X - 8), CELL * (y + BOARD_OFFSET_Y),
-			CELL * (BOARD_OFFSET_X), CELL * (y + BOARD_OFFSET_Y))
-	end
-	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
+	gfx.popContext()
 end
 
 function BoardNumbers:drawTop()
-	for x, numbers in pairs(self.gridNumbers.top) do
-		for i, v in pairs(numbers) do
-			gfx.drawText(
-				self.doneNumbers.top[x][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
-				CELL * (x + BOARD_OFFSET_X - 1) + 1,
-				CELL * BOARD_OFFSET_Y + 14 * (i - 1 - rawlen(numbers)) - 1
+	gfx.pushContext()
+	gfx.setDrawOffset(BOARD_OFFSET_X + CELL * (15 - self.level.width), BOARD_OFFSET_Y)
+	do
+		for x, numbers in pairs(self.gridNumbers.top) do
+			for i, v in pairs(numbers) do
+				gfx.drawText(
+					self.doneNumbers.top[x][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
+					CELL * (x - 1) + 1,
+					14 * (i - 1 - rawlen(numbers)) - 1
 				)
+			end
+		end
+		gfx.setDitherPattern(0.8)
+		for x = 0, rawlen(self.gridNumbers.top) do
+			gfx.drawLine(CELL * x, CELL * -5, CELL * x, 0)
 		end
 	end
-	gfx.setDitherPattern(0.8)
-	for x = 0, rawlen(self.gridNumbers.top) do
-		gfx.drawLine(
-			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y - 5),
-			CELL * (x + BOARD_OFFSET_X), CELL * (BOARD_OFFSET_Y)
-		)
-	end
-	gfx.setDitherPattern(gfx.image.kDitherTypeNone)
+	gfx.popContext()
 end

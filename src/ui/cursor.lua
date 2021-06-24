@@ -27,8 +27,8 @@ function Cursor:enter(level)
 	self.gridX = math.floor(level.width / 2)
 	self.gridY = 4
 	self:moveTo(
-		CELL * (BOARD_OFFSET_X - 1 + self.gridX) - 2,
-		CELL * (BOARD_OFFSET_Y - 1 + self.gridY) - 2
+		BOARD_OFFSET_X + CELL * (15 - level.width) + CELL * (self.gridX - 1) - 2,
+		BOARD_OFFSET_Y - CELL * (self.gridY - 1) - 2
 	)
 	self.level = level
 	self:redraw()
@@ -56,7 +56,7 @@ end
 
 function Cursor:redraw()
 	self:moveTo(
-		CELL * (BOARD_OFFSET_X - 1 + self.gridX) - 2,
-		CELL * (BOARD_OFFSET_Y - 1 + self.gridY) - 2
+		BOARD_OFFSET_X + CELL * (15 - self.level.width) + CELL * (self.gridX - 1) - 2,
+		BOARD_OFFSET_Y + CELL * (self.gridY - 1) - 2
 	)
 end

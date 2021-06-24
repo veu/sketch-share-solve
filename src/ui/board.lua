@@ -8,7 +8,6 @@ function Board:init()
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
-	self:moveTo(CELL * BOARD_OFFSET_X, CELL * BOARD_OFFSET_Y)
 	self:setZIndex(Z_INDEX_BOARD)
 
 	self.onUpdateSolution = function() end
@@ -37,6 +36,7 @@ function Board:enter(level, mode)
 	self.cursor:enter(level)
 
 	self:redraw()
+	self:moveTo(BOARD_OFFSET_X + CELL * (15 - level.width), BOARD_OFFSET_Y)
 	self.onUpdateSolution(self.solution, self.crossed)
 end
 
