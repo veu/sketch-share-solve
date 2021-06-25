@@ -176,14 +176,14 @@ function Sidebar:redraw()
 
 		local height = 240 - (
 			self.creatorAvatar:isVisible() and 48 or (
-				self.playerAvatar:isVisible() and 23 or 0
+				self.playerAvatar:isVisible() and 23 or -2
 			)
 		)
 
 		-- draw sidebar
 		drawPaddedRect(
 			SIDEBAR_WIDTH - 25,
-			self.playerAvatar:isVisible() and 24 or 0,
+			self.playerAvatar:isVisible() and 24 or -1,
 			26,
 			height
 		)
