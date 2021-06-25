@@ -21,6 +21,8 @@ function Cursor:init()
 		gfx.fillRoundRect(3, 3, CELL - 1, CELL - 1, 2)
 	end
 	gfx.popContext()
+
+	self.onMove = function () end
 end
 
 function Cursor:enter(level)
@@ -33,6 +35,7 @@ function Cursor:enter(level)
 	self.level = level
 	self:redraw()
 	self:add()
+	self.onMove(self.gridX, self.gridY)
 end
 
 function Cursor:leave()
@@ -52,6 +55,7 @@ function Cursor:moveBy(dx, dy, pressed)
 		self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
 	end
 	self:redraw()
+	self.onMove(self.gridX, self.gridY)
 end
 
 function Cursor:redraw()

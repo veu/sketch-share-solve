@@ -17,6 +17,7 @@ function GridPlay:enter(context)
 		if self.level:isSolved(solution) then
 			self.numbers:leave()
 			self.board:hideCursor()
+			self.board.onCursorMove = function () end
 			self.showCrank = true
 			if self.mode == MODE_CREATE then
 				self.onReadyToSave()
@@ -26,7 +27,16 @@ function GridPlay:enter(context)
 				self.dialog:enter(self.level.title and "Solved: " .. self.level.title or "Solved!")
 			end
 		else
-			self.numbers:enter(self.level, solution, crossed)
+			self.numbers:enter(
+				self.level,
+				solution,
+				crossed,
+				self.board.cursor.gridX,
+				self.board.cursor.gridY
+			)
+			self.board.onCursorMove = function (x, y)
+				self.numbers:setCursor(x, y)
+			end
 		end
 	end
 

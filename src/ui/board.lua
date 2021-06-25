@@ -13,6 +13,8 @@ function Board:init()
 	self.onUpdateSolution = function() end
 
 	self.cursor = Cursor()
+
+	self.onCursorMove = function () end
 end
 
 function Board:enter(level, mode)
@@ -33,6 +35,9 @@ function Board:enter(level, mode)
 	end
 
 	self:add()
+	self.cursor.onMove = function (x, y)
+		self.onCursorMove(x, y)
+	end
 	self.cursor:enter(level)
 
 	self:redraw()

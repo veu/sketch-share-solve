@@ -12,11 +12,13 @@ function BoardNumbers:init()
 	self:setZIndex(Z_INDEX_BOARD_NUMBERS)
 end
 
-function BoardNumbers:enter(level, solution, crossed)
+function BoardNumbers:enter(level, solution, crossed, x, y)
 	self.level = level
 	self.gridNumbers = Numbers(level, level.grid)
 	self.solutionNumbers = Numbers(level, solution)
 	self.doneNumbers = DoneNumbers(level, self.gridNumbers, self.solutionNumbers, crossed)
+	self.x = x
+	self.y = y
 
 	self:add()
 	self:redraw()
@@ -24,6 +26,12 @@ end
 
 function BoardNumbers:leave()
 	self:remove()
+end
+
+function BoardNumbers:setCursor(x, y)
+	self.x = x
+	self.y = y
+	self:redraw()
 end
 
 function BoardNumbers:redraw()
@@ -58,9 +66,12 @@ function BoardNumbers:drawLeft()
 				)
 			end
 		end
-		gfx.setDitherPattern(0.9)
 		for y = 0, rawlen(self.gridNumbers.left) do
-			gfx.drawLine(CELL * -8, CELL * y, 0, CELL * y)
+			gfx.setColor(gfx.kColorBlack)
+			if y ~= self.y and y ~= self.y - 1 then
+				gfx.setDitherPattern(0.9)
+			end
+			gfx.drawLine(CELL * -8 + 3, CELL * y, -2, CELL * y)
 		end
 	end
 	gfx.popContext()
@@ -75,13 +86,16 @@ function BoardNumbers:drawTop()
 				gfx.drawText(
 					self.doneNumbers.top[x][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
 					CELL * (x - 1) + 1,
-					14 * (i - 1 - rawlen(numbers)) - 1
+					14 * (i - 1 - rawlen(numbers)) - 2
 				)
 			end
 		end
-		gfx.setDitherPattern(0.8)
 		for x = 0, rawlen(self.gridNumbers.top) do
-			gfx.drawLine(CELL * x, CELL * -5, CELL * x, 0)
+			gfx.setColor(gfx.kColorBlack)
+			if x ~= self.x and x ~= self.x - 1 then
+				gfx.setDitherPattern(0.85)
+			end
+			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -2)
 		end
 	end
 	gfx.popContext()
