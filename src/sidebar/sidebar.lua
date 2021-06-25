@@ -28,8 +28,16 @@ function Sidebar:enter(config, player, creator)
 	self.menuTitle = config.menuTitle
 	self.stayOpen = config.stayOpen
 	self.opened = self.stayOpen or not playdate.isCrankDocked()
+
 	self.cursor = 1
 	self.cursorRaw = 1
+	for i, item in pairs(self.menuItems) do
+		if item.selected then
+			self.cursor = i
+			self.cursorRaw = i
+		end
+	end
+
 	self:add()
 	self.playerAvatar:enter(config, player)
 	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, -1)
@@ -37,6 +45,7 @@ function Sidebar:enter(config, player, creator)
 	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 240 - 25)
 	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(self.menuItems, self.menuTitle)
+	self.list:select(self.cursor)
 	self:redraw()
 
 	if opened then

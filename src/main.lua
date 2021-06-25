@@ -157,10 +157,10 @@ function switchToScreen(newScreen)
 	context.screen:enter(context)
 end
 
-function switchToSidebar(newSidebar)
+function switchToSidebar(newSidebar, selected)
 	sidebar:leave()
 	sidebar = newSidebar
-	sidebar:enter(context)
+	sidebar:enter(context, selected)
 end
 
 avatarCreate.onChanged = function()
@@ -176,8 +176,6 @@ gridPlay.onPlayed = function (level)
 	context.player.played[level.id] = true
 
 	context.player:save(context)
-
-	switchToSidebar(selectLevelSidebar)
 end
 
 gridPlay.onReadyToSave = function ()
@@ -239,7 +237,7 @@ end
 
 selectLevelSidebar.onAbort = function()
 	switchToScreen(title)
-	switchToSidebar(selectCreatorSidebar)
+	switchToSidebar(selectCreatorSidebar, context.creator.id)
 end
 
 selectLevelSidebar.onSelected = function (level)
@@ -248,7 +246,7 @@ selectLevelSidebar.onSelected = function (level)
 end
 
 selectModeSidebar.onAbort = function()
-	switchToSidebar(selectPlayerSidebar)
+	switchToSidebar(selectPlayerSidebar, context.player.id)
 end
 
 selectModeSidebar.onSelected = function(selectedMode)

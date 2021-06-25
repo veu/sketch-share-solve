@@ -6,24 +6,27 @@ function SelectPlayerSidebar:init()
 	self.onNewPlayer = function () end
 end
 
-function SelectPlayerSidebar:enter(context)
+function SelectPlayerSidebar:enter(context, selected)
 	local config = {
 		menuItems = {},
 		menuTitle = "Who is playing?"
 	}
 
-	local player = nil
+	local selectedIndex = 1
+	local i = 1
 	for _, id in pairs(context.save.profileList) do
 		local profile = Player.load(context, id)
 		if not profile.hidden then
-			if not player then
-				player = profile
+			if profile.id == selected then
+				selectedIndex = i
 			end
 			table.insert(config.menuItems, {
 				text = profile.name,
 				avatar = profile.avatar,
-				ref = profile
+				ref = profile,
+				selected = profile.id == selected,
 			})
+			i += 1
 		end
 	end
 
@@ -35,7 +38,7 @@ function SelectPlayerSidebar:enter(context)
 		end
 	})
 
-	local avatar = config.menuItems[1].avatar
+	local avatar = config.menuItems[selectedIndex].avatar
 	SelectPlayerSidebar.super.enter(
 		self,
 		config,
@@ -51,14 +54,14 @@ function SelectPlayerSidebar:onMoved()
 	self.playerAvatar:setTarget(self.cursorRaw)
 end
 
-function SelectPlayerSidebar:onNavigated_(player, i)
+function SelectPlayerSidebar:onNavigated_()
 	self:redraw()
 end
 
 function SelectPlayerSidebar:open()
 	SelectPlayerSidebar.super.open(self)
 	if not self.playerAvatar:isVisible() then
-		self.playerAvatar:enter(self.config, self.menuItems[1].avatar)
+		self.playerAvatar:enter(self.config, self.menuItems[self.cursor].avatar)
 	end
 
 	self:redraw()

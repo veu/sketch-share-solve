@@ -15,6 +15,7 @@ end
 
 function Avatar:enter(config, avatar)
 	self.menuItems = config.menuItems
+	self.avatar = avatar
 	self.idleCounter = 0
 	self.position = 1
 	self.slide = nil
@@ -91,6 +92,9 @@ function Avatar:initSlide()
 		self.slide = gfx.image.new(20, 23 * #self.menuItems, gfx.kColorClear)
 		gfx.lockFocus(self.slide)
 		for i, item in pairs(self.menuItems) do
+			if item.avatar == self.avatar then
+				self.position = i
+			end
 			item.avatar:drawScaled(0, (i - 1) * 23, 2)
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawRect(0, (i - 1) * 23 + 20, 20, 3)

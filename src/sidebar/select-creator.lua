@@ -4,24 +4,29 @@ function SelectCreatorSidebar:init()
 	SelectCreatorSidebar.super.init(self)
 end
 
-function SelectCreatorSidebar:enter(context)
+function SelectCreatorSidebar:enter(context, selected)
 	local config = {
 		menuItems = {},
 		menuTitle = "Choose creator"
 	}
 
+	local selectedIndex = nil
+	local i = 1
 	local creator = nil
 	for _, id in pairs(context.save.profileList) do
 		local profile = Player.load(context, id)
 		if #profile.created > 0 then
-			if not creator then
+			if profile.id == selected or not creator then
+				selectedIndex = i
 				creator = profile
 			end
 			table.insert(config.menuItems, {
 				text = profile.name,
 				avatar = profile.avatar,
-				ref = profile
+				ref = profile,
+				selected = profile.id == selected,
 			})
+			i += 1
 		end
 	end
 
