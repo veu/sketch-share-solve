@@ -8,16 +8,16 @@ function TestGridSidebar:enter(context)
 	local config = {
 		menuItems = {
 			{
-				text = "Edit",
-				exec = function()
-					self.onAbort()
-				end
-			},
-			{
 				text = "Save",
 				disabled = not context.level.hasBeenSolved,
 				exec = function()
 					self.onSave()
+				end
+			},
+			{
+				text = "Edit",
+				exec = function()
+					self.onAbort()
 				end
 			}
 		}
