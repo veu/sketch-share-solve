@@ -42,6 +42,8 @@ import "ui/cursor"
 import "ui/dialog"
 import "ui/list"
 import "ui/title"
+
+import "utils/numbers"
 import "utils/ui"
 
 local gfx <const> = playdate.graphics

@@ -16,7 +16,13 @@ function BoardNumbers:enter(level, solution, crossed, x, y)
 	self.level = level
 	self.gridNumbers = Numbers(level, level.grid)
 	self.solutionNumbers = Numbers(level, solution)
-	self.doneNumbers = DoneNumbers(level, self.gridNumbers, self.solutionNumbers, crossed)
+	self.doneNumbers = DoneNumbers(
+		level,
+		self.gridNumbers,
+		self.solutionNumbers,
+		crossed,
+		solution
+	)
 	self.x = x
 	self.y = y
 
