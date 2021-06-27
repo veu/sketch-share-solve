@@ -17,18 +17,31 @@ function DoneNumbers:init(level, gridNumbers, solutionNumbers, crossed, solution
 	self:calcTopNumbers()
 end
 
+function DoneNumbers:updatePosition(solutionNumbers, crossed, solution, x, y)
+	self.solutionNumbers = solutionNumbers
+	self.crossed = crossed
+	self.solution = solution
+
+	self:calcLeftNumbersForRow(y)
+	self:calcTopNumbersForColumn(x)
+end
+
 function DoneNumbers:calcLeftNumbers()
 	self.left = {}
 	for y = 1, self.level.height do
-		self.left[y] = {}
+		self:calcLeftNumbersForRow(y)
+	end
+end
 
-		-- layout blocks from left and right
-		indexLeft, indexRight = self:matchLeft(y)
+function DoneNumbers:calcLeftNumbersForRow(y)
+	self.left[y] = {}
 
-		-- identify laid out blocks in partial solution
-		if indexLeft then
-			self:tapBlocksLeft(y, indexLeft, indexRight)
-		end
+	-- layout blocks from left and right
+	indexLeft, indexRight = self:matchLeft(y)
+
+	-- identify laid out blocks in partial solution
+	if indexLeft then
+		self:tapBlocksLeft(y, indexLeft, indexRight)
 	end
 end
 
@@ -89,13 +102,19 @@ function DoneNumbers:calcTopNumbers()
 	for x = 1, self.level.width do
 		self.top[x] = {}
 
-		-- layout blocks from both top and bottom
-		indexTop, indexBottom = self:matchTop(x)
+		self:calcTopNumbersForColumn(x)
+	end
+end
 
-		-- identify laid out blocks in partial solution
-		if indexTop then
-			self:tapBlocksTop(x, indexTop, indexBottom)
-		end
+function DoneNumbers:calcTopNumbersForColumn(x)
+	self.top[x] = {}
+
+	-- layout blocks from both top and bottom
+	indexTop, indexBottom = self:matchTop(x)
+
+	-- identify laid out blocks in partial solution
+	if indexTop then
+		self:tapBlocksTop(x, indexTop, indexBottom)
 	end
 end
 

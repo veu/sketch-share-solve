@@ -27,13 +27,7 @@ function GridPlay:enter(context)
 				self.dialog:enter(self.level.title and "Solved: " .. self.level.title or "Solved!")
 			end
 		else
-			self.numbers:enter(
-				self.level,
-				solution,
-				crossed,
-				self.board.cursor.gridX,
-				self.board.cursor.gridY
-			)
+			self.numbers:updateForPosition(solution, crossed)
 			self.board.onCursorMove = function (x, y)
 				self.numbers:setCursor(x, y)
 			end
@@ -43,6 +37,13 @@ function GridPlay:enter(context)
 	self.showCrank = false
 
 	self.board:enter(self.level, MODE_PLAY)
+	self.numbers:enter(
+		self.level,
+		self.board.solution,
+		self.board.crossed,
+		self.board.cursor.gridX,
+		self.board.cursor.gridY
+	)
 end
 
 function GridPlay:leave()

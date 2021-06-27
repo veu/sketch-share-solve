@@ -30,6 +30,19 @@ function BoardNumbers:enter(level, solution, crossed, x, y)
 	self:redraw()
 end
 
+function BoardNumbers:updateForPosition(solution, crossed)
+	self.solutionNumbers = Numbers(self.level, solution)
+	self.doneNumbers:updatePosition(
+		self.solutionNumbers,
+		crossed,
+		solution,
+		self.x,
+		self.y
+	)
+
+	self:redraw()
+end
+
 function BoardNumbers:leave()
 	self:remove()
 end

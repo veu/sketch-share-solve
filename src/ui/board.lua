@@ -42,7 +42,6 @@ function Board:enter(level, mode)
 
 	self:redraw()
 	self:moveTo(BOARD_OFFSET_X + CELL * (15 - level.width), BOARD_OFFSET_Y)
-	self.onUpdateSolution(self.solution, self.crossed)
 end
 
 function Board:leave()
