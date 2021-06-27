@@ -21,6 +21,7 @@ import "screen/screen"
 import "screen/avatar-create"
 import "screen/grid-create"
 import "screen/grid-play"
+import "screen/grid-solved"
 import "screen/title"
 
 import "sidebar/sidebar"
@@ -65,6 +66,7 @@ assert(imgBoard, err)
 local avatarCreate = AvatarCreate()
 local gridCreate = GridCreate()
 local gridPlay = GridPlay()
+local gridSolved = GridSolved()
 local title = TitleScreen()
 
 -- sidebars
@@ -174,16 +176,16 @@ gridCreate.onChanged = function ()
 	switchToSidebar(createGridSidebar)
 end
 
-gridPlay.onPlayed = function (level)
-	context.player.played[level.id] = true
+gridPlay.onPlayed = function ()
+	switchToScreen(gridSolved)
+	if context.mode == MODE_CREATE then
+		switchToSidebar(testGridSidebar)
+	else
+		context.player.played[context.level.id] = true
+		context.player:save(context)
 
-	context.player:save(context)
-
-	switchToSidebar(selectLevelSidebar, level.id)
-end
-
-gridPlay.onReadyToSave = function ()
-	switchToSidebar(testGridSidebar)
+		switchToSidebar(selectLevelSidebar, context.level.id)
+	end
 end
 
 createAvatarSidebar.onAbort = function ()

@@ -88,6 +88,10 @@ function Board:hideCursor()
 	self.cursor:leave()
 end
 
+function Board:moveTowardsTop(step)
+	self:moveTo(self.x, math.floor(BOARD_OFFSET_Y * (1 - step) + 8 * step + 0.5))
+end
+
 function Board:redraw()
 	local isSolved = self.mode == MODE_PLAY and self.level:isSolved(self.solution)
 	self.image:clear(gfx.kColorClear)

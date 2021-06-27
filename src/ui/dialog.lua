@@ -13,20 +13,12 @@ function Dialog:init()
 	self:setVisible(false)
 end
 
-function Dialog:enter(message, callback)
+function Dialog:enter(message)
 	self.message = message
-	self.callback = callback
 
 	self:setVisible(true)
 	self:redraw()
 	self:add()
-end
-
-function Dialog:AButtonDown()
-	if self.callback then
-		self.callback()
-		self:setVisible(false)
-	end
 end
 
 function Dialog:leave()
@@ -36,25 +28,21 @@ end
 
 function Dialog:redraw()
 	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	gfx.pushContext(self.image)
 	do
-		local width = 300
+		gfx.setDrawOffset(40, 179)
+		local width = 260
 		gfx.setColor(gfx.kColorBlack)
 		gfx.setDitherPattern(0.5)
-		gfx.fillRect(400 - 7 - width + 2, 7 + 2, width, 54)
+		gfx.fillRoundRect(2, 2, width, 54, 7)
 		gfx.setColor(gfx.kColorBlack)
-		gfx.fillRect(400 - 7 - width, 7, width, 54)
+		gfx.fillRoundRect(0, 0, width, 54, 7)
 		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(400 - 6 - width, 8, width - 2, 52)
+		gfx.fillRoundRect(1, 1, width - 2, 52, 7)
 
 		gfx.setFont(fontText)
-		gfx.drawText(self.message, 400 - 6 - width + 8, 8 + 8)
-
-		if self.callback then
-			local size = gfx.getTextSize("(A) Confirm")
-			gfx.drawText("(A) Confirm", 400 - 8 - 8 - size, 8 + 8 + 22)
-		end
+		gfx.drawText(self.message, 9, 9)
 	end
-	gfx.unlockFocus()
+	gfx.popContext()
 	self:markDirty()
 end
