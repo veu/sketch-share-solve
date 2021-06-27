@@ -176,6 +176,8 @@ gridPlay.onPlayed = function (level)
 	context.player.played[level.id] = true
 
 	context.player:save(context)
+
+	switchToSidebar(selectLevelSidebar, level.id)
 end
 
 gridPlay.onReadyToSave = function ()

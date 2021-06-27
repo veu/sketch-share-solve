@@ -6,10 +6,14 @@ function SelectLevelSidebar:init()
 	SelectLevelSidebar.super.init(self)
 end
 
-function SelectLevelSidebar:enter(context)
+function SelectLevelSidebar:enter(context, selected)
+	local config = {
+		menuItems = {},
+		menuTitle = "Choose level"
+	}
+
 	local player = context.player
 	local creator = context.creator
-	local menuItems = {}
 	for i, id in pairs(creator.created) do
 		local level = Level.load(context, id)
 		local revealed = creator.id == player.id or player.played[level.id]
@@ -20,17 +24,13 @@ function SelectLevelSidebar:enter(context)
 			image = createLevelPreview(level)
 		end
 
-		table.insert(menuItems, {
+		table.insert(config.menuItems, {
 			text = text,
 			ref = level,
-			img = image
+			img = image,
+			selected = level.id == selected
 		})
 	end
-
-	local config = {
-		menuItems = menuItems,
-		menuTitle = "Choose level"
-	}
 
 	SelectLevelSidebar.super.enter(
 		self,
