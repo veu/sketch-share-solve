@@ -7,8 +7,8 @@ end
 function SelectModeSidebar:enter(context)
 	local config = {
 		menuItems = {
-			{ text = "Play", ref = MODE_PLAY },
-			{ text = "Create", ref = MODE_CREATE },
+			{ text = "Solve", ref = MODE_PLAY },
+			{ text = "Sketch", ref = MODE_CREATE },
 		}
 	}
 

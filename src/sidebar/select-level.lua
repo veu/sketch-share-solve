@@ -9,7 +9,7 @@ end
 function SelectLevelSidebar:enter(context, selected)
 	local config = {
 		menuItems = {},
-		menuTitle = "Choose level"
+		menuTitle = "Choose puzzle"
 	}
 
 	local player = context.player
@@ -17,7 +17,7 @@ function SelectLevelSidebar:enter(context, selected)
 	for i, id in pairs(creator.created) do
 		local level = Level.load(context, id)
 		local revealed = creator.id == player.id or player.played[level.id]
-		local text = revealed and level.title or "Level " .. i
+		local text = revealed and level.title or "Puzzle " .. i
 
 		local image = nil
 		if revealed then
