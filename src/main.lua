@@ -1,5 +1,6 @@
 import "CoreLibs/graphics"
 import "CoreLibs/keyboard"
+import "CoreLibs/nineslice"
 import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/string"
@@ -61,6 +62,7 @@ imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 imgBoard, err = gfx.imagetable.new("img/board")
 assert(imgBoard, err)
+imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 
 -- screens
 local avatarCreate = AvatarCreate()

@@ -30,18 +30,12 @@ function Dialog:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.pushContext(self.image)
 	do
-		gfx.setDrawOffset(40, 179)
-		local width = 260
-		gfx.setColor(gfx.kColorBlack)
-		gfx.setDitherPattern(0.5)
-		gfx.fillRoundRect(2, 2, width, 54, 7)
-		gfx.setColor(gfx.kColorBlack)
-		gfx.fillRoundRect(0, 0, width, 54, 7)
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRoundRect(1, 1, width - 2, 52, 7)
+		gfx.setDrawOffset(30, 179)
+
+		imgDialog:drawInRect(0, 0, 274, 54)
 
 		gfx.setFont(fontText)
-		gfx.drawText(self.message, 9, 9)
+		gfx.drawText(self.message, 18, 19)
 	end
 	gfx.popContext()
 	self:markDirty()

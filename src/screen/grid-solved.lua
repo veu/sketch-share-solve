@@ -11,6 +11,7 @@ end
 
 function GridSolved:enter(context)
 	self.level = context.level
+	self.mode = context.mode
 
 	self.board:enter(self.level, MODE_CREATE)
 	self.board:hideCursor()

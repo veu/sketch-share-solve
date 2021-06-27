@@ -6,7 +6,7 @@ end
 
 function NamePlayerSidebar:enter(context)
 	local config = {
-		menuTitle = "Choose name",
+		menuTitle = "Choose a name",
 		menuItems = {
 			{
 				text = context.player.name
