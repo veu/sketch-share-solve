@@ -3,8 +3,7 @@ class("GridPlay").extends(Screen)
 function GridPlay:init()
 	GridPlay.super.init(self)
 
-	self.board = Board()
-	self.numbers = BoardNumbers()
+	self.board = Board(true)
 
 	self.onPlayed = function () end
 end
@@ -12,25 +11,13 @@ end
 function GridPlay:enter(context)
 	self.level = context.level
 	self.mode = context.mode
-	self.board.onUpdateSolution = function (solution, crossed)
+	self.board.onUpdateSolution = function (solution)
 		if self.level:isSolved(solution) then
 			self.onPlayed()
-		else
-			self.numbers:updateForPosition(solution, crossed)
-			self.board.onCursorMove = function (x, y)
-				self.numbers:setCursor(x, y)
-			end
 		end
 	end
 
 	self.board:enter(self.level, MODE_PLAY)
-	self.numbers:enter(
-		self.level,
-		self.board.solution,
-		self.board.crossed,
-		self.board.cursor.gridX,
-		self.board.cursor.gridY
-	)
 end
 
 function GridPlay:leave()
@@ -38,7 +25,6 @@ function GridPlay:leave()
 	menu:removeAllMenuItems()
 
 	self.board:leave()
-	self.numbers:leave()
 end
 
 function GridPlay:update()

@@ -2,7 +2,7 @@ local gfx <const> = playdate.graphics
 
 class("Board").extends(gfx.sprite)
 
-function Board:init()
+function Board:init(withNumbers)
 	Board.super.init(self)
 
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
@@ -14,7 +14,9 @@ function Board:init()
 
 	self.cursor = Cursor()
 
-	self.onCursorMove = function () end
+	if withNumbers then
+		self.numbers = BoardNumbers()
+	end
 end
 
 function Board:enter(level, mode)
@@ -35,26 +37,38 @@ function Board:enter(level, mode)
 	end
 
 	self:add()
-	self.cursor.onMove = function (x, y)
-		self.onCursorMove(x, y)
-	end
 	self.cursor:enter(level)
 
 	self:redraw()
 	self:moveTo(BOARD_OFFSET_X + CELL * (15 - level.width), BOARD_OFFSET_Y)
+
+	if self.numbers then
+		self.numbers:enter(
+			level,
+			self.solution,
+			self.crossed,
+			self.cursor.gridX,
+			self.cursor.gridY
+		)
+		self.cursor.onMove = function (x, y)
+			self.numbers:setCursor(x, y)
+		end
+	end
 end
 
 function Board:leave()
 	self:remove()
 	self.cursor:leave()
+	if self.numbers then
+		self.numbers:leave()
+	end
 end
 
 function Board:toggle(index, isStart)
 	if self.crossed[index] == 0 and (isStart or self.solution[index] ~= self.last) then
 		self.solution[index] = self.solution[index] == 1 and 0 or 1
 		self.last = self.solution[index]
-		self:redraw()
-		self.onUpdateSolution(self.solution, self.crossed)
+		self:onUpdateSolution_()
 	end
 end
 
@@ -62,8 +76,7 @@ function Board:toggleCross(index, isStart)
 	if self.solution[index] == 0 and (isStart or self.crossed[index] ~= self.last) then
 		self.crossed[index] = self.crossed[index] == 1 and 0 or 1
 		self.last = self.crossed[index]
-		self:redraw()
-		self.onUpdateSolution(self.solution, self.crossed)
+		self:onUpdateSolution_()
 	end
 end
 
@@ -71,8 +84,7 @@ function Board:invert()
 	for i = 1, #self.solution do
 		self.solution[i] = self.solution[i] == 1 and 0 or 1
 	end
-	self.onUpdateSolution(self.solution, self.crossed)
-	self:redraw()
+	self:onUpdateSolution_()
 end
 
 function Board:getCursor()
@@ -90,6 +102,15 @@ end
 
 function Board:moveTowardsTop(step)
 	self:moveTo(self.x, math.floor(BOARD_OFFSET_Y * (1 - step) + 8 * step + 0.5))
+end
+
+function Board:onUpdateSolution_()
+	if self.numbers then
+		self.numbers:updateForPosition(self.solution, self.crossed)
+	end
+
+	self:redraw()
+	self.onUpdateSolution(self.solution)
 end
 
 function Board:redraw()
