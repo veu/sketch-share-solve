@@ -9,11 +9,12 @@ end
 function SelectLevelSidebar:enter(context, selected)
 	local config = {
 		menuItems = {},
-		menuTitle = "Choose puzzle"
+		menuTitle = selected == LEVEL_ID_SHOW_NAME and "Name your puzzle" or "Choose puzzle",
+		stayOpen = selected == LEVEL_ID_SHOW_NAME
 	}
 
 	local player = context.player
-	local creator = context.creator
+	local creator = selected == LEVEL_ID_SHOW_NAME and player or context.creator
 	for i, id in pairs(creator.created) do
 		local level = Level.load(context, id)
 		local revealed = creator.id == player.id or player.played[level.id]
@@ -32,10 +33,18 @@ function SelectLevelSidebar:enter(context, selected)
 		})
 	end
 
+	if selected == LEVEL_ID_SHOW_NAME then
+		table.insert(config.menuItems, {
+			text = context.level.title,
+			img = createLevelPreview(context.level),
+			selected = true,
+		})
+	end
+
 	SelectLevelSidebar.super.enter(
 		self,
 		config,
 		context.player.avatar,
-		context.creator.avatar
+		creator.avatar
 	)
 end

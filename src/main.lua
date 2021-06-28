@@ -27,7 +27,6 @@ import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-avatar"
 import "sidebar/create-grid"
-import "sidebar/save-grid"
 import "sidebar/select-avatar"
 import "sidebar/select-creator"
 import "sidebar/select-level"
@@ -73,7 +72,6 @@ local title = TitleScreen()
 local createAvatarSidebar = CreateAvatarSidebar()
 local createGridSidebar = CreateGridSidebar()
 local testGridSidebar = TestGridSidebar()
-local saveGridSidebar = SaveGridSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
 local selectLevelSidebar = SelectLevelSidebar()
@@ -145,7 +143,7 @@ function showLevelKeyboard()
 		local size = gfx.getTextSize(text)
 		if size <= MAX_LEVEL_NAME_SIZE then
 			context.level.title = text
-			switchToSidebar(saveGridSidebar)
+			switchToSidebar(selectLevelSidebar, LEVEL_ID_SHOW_NAME)
 		else
 			playdate.keyboard.text = context.level.title
 		end
@@ -280,7 +278,7 @@ end
 
 testGridSidebar.onSave = function ()
 	context.level.title = ""
-	switchToSidebar(saveGridSidebar)
+	switchToSidebar(selectLevelSidebar, LEVEL_ID_SHOW_NAME)
 	showLevelKeyboard()
 end
 
