@@ -28,7 +28,6 @@ import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-avatar"
 import "sidebar/create-grid"
-import "sidebar/name-player"
 import "sidebar/save-grid"
 import "sidebar/select-avatar"
 import "sidebar/select-creator"
@@ -74,7 +73,6 @@ local title = TitleScreen()
 -- sidebars
 local createAvatarSidebar = CreateAvatarSidebar()
 local createGridSidebar = CreateGridSidebar()
-local namePlayerSidebar = NamePlayerSidebar()
 local testGridSidebar = TestGridSidebar()
 local saveGridSidebar = SaveGridSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
@@ -101,7 +99,7 @@ function showPlayerKeyboard()
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
 		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
-			switchToSidebar(selectAvatarSidebar)
+			switchToSidebar(selectPlayerSidebar)
 			return
 		end
 
@@ -116,7 +114,7 @@ function showPlayerKeyboard()
 		local size = gfx.getTextSize(text)
 		if size <= MAX_LEVEL_NAME_SIZE then
 			context.player.name = text
-			switchToSidebar(namePlayerSidebar)
+			switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
 		else
 			playdate.keyboard.text = context.player.name
 		end
@@ -199,7 +197,7 @@ createAvatarSidebar.onSave = function()
 	context.player.avatar = createAvatarPreview(context.level)
 
 	switchToScreen(title)
-	switchToSidebar(namePlayerSidebar)
+	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard()
 end
 
@@ -211,10 +209,6 @@ end
 createGridSidebar.onTestAndSave = function ()
 	switchToScreen(gridPlay)
 	switchToSidebar(testGridSidebar)
-end
-
-namePlayerSidebar.onAbort = function()
-	switchToSidebar(selectAvatarSidebar)
 end
 
 selectAvatarSidebar.onAbort = function()
@@ -230,7 +224,7 @@ selectAvatarSidebar.onSelected = function(avatar)
 	local player = context.player
 	player.avatar = imgAvatars:getImage(avatar)
 
-	switchToSidebar(namePlayerSidebar)
+	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard()
 end
 

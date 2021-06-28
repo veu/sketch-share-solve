@@ -9,7 +9,8 @@ end
 function SelectPlayerSidebar:enter(context, selected)
 	local config = {
 		menuItems = {},
-		menuTitle = "Who is playing?"
+		menuTitle = selected == PLAYER_ID_SHOW_NAME and "Choose a name" or "Who is playing?",
+		stayOpen = selected == PLAYER_ID_SHOW_NAME
 	}
 
 	local selectedIndex = 1
@@ -30,13 +31,22 @@ function SelectPlayerSidebar:enter(context, selected)
 		end
 	end
 
-	table.insert(config.menuItems, {
-		text = "New player",
-		avatar = imgAvatars:getImage(AVATAR_ID_NIL),
-		exec = function()
-			self.onNewPlayer()
-		end
-	})
+	if selected == PLAYER_ID_SHOW_NAME then
+		table.insert(config.menuItems, {
+			text = context.player.name,
+			avatar = context.player.avatar,
+			selected = true,
+		})
+		selectedIndex = #config.menuItems
+	else
+		table.insert(config.menuItems, {
+			text = "New player",
+			avatar = imgAvatars:getImage(AVATAR_ID_NIL),
+			exec = function()
+				self.onNewPlayer()
+			end
+		})
+	end
 
 	local avatar = config.menuItems[selectedIndex].avatar
 	SelectPlayerSidebar.super.enter(
