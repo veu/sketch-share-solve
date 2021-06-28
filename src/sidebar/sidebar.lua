@@ -43,6 +43,7 @@ function Sidebar:enter(config, player, creator)
 	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, -1)
 	self.creatorAvatar:enter(config, creator)
 	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 240 - 25)
+	self.list:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(self.menuItems, self.menuTitle)
 	self.list:select(self.cursor)
@@ -57,6 +58,7 @@ end
 function Sidebar:leave()
 	self.playerAvatar:leave()
 	self.creatorAvatar:leave()
+	self.list:leave()
 	self:remove()
 end
 
@@ -144,6 +146,7 @@ function Sidebar:update()
 		self:moveTo(currentValue, 0)
 		self.playerAvatar:moveTo(currentValue, -1)
 		self.creatorAvatar:moveTo(currentValue, 240 - 25)
+		self.list:moveTo(currentValue, 0)
 
 		if self.animator:ended() then
 			self.animator = nil
@@ -199,7 +202,6 @@ function Sidebar:redraw()
 
 		-- menu
 		drawStripedRect(-1, 24, SIDEBAR_WIDTH - 23, height)
-		self.list:draw()
 	end
 
 	gfx.unlockFocus()

@@ -6,7 +6,6 @@ import "CoreLibs/sprites"
 import "CoreLibs/string"
 import "CoreLibs/timer"
 import "CoreLibs/ui/crankIndicator"
-import "CoreLibs/ui/gridview"
 
 import "constants"
 import "input"

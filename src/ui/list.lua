@@ -3,64 +3,148 @@ local gfx <const> = playdate.graphics
 class("List").extends(gfx.sprite)
 
 function List:init()
+	List.super.init(self)
+
+	self.image = gfx.image.new(400, 240, gfx.kColorClear)
+	self:setImage(self.image)
+	self:setCenter(0, 0)
+	self:setZIndex(Z_INDEX_BOARD + 1000)
 end
 
 function List:enter(menuItems, menuTitle)
-	local items = {}
-	for i = 1, #menuItems do
-		table.insert(items, menuItems[i].text)
-	end
-	self.listview = playdate.ui.gridview.new(0, 20)
-	self.listview:setNumberOfRows(#items)
-	self.listview:setSectionHeaderHeight(menuTitle and 22 or 0)
-	self.listview:setContentInset(4, 0, 3, 0)
-	self.listview:setCellPadding(0, 0, 4, 0)
+	self.menuTitle = menuTitle
+	self.menuItems = menuItems
+	self.idleCounter = 0
 
-	function self.listview:drawSectionHeader(section, x, y, width, height)
-		gfx.setFont(fontText)
-		gfx.setColor(gfx.kColorWhite)
-		local width = gfx.getTextSize(menuTitle)
-		gfx.fillRect(x + 1, y + 2, width + 4, 18)
-		gfx.drawText(menuTitle, x + 3, y + 4)
-	end
-
-	function self.listview:drawCell(section, row, column, selected, x, y, width, height)
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(x, y - 1, 19, 19)
-		gfx.setColor(gfx.kColorBlack)
-		if not selected then
-			gfx.setDitherPattern(.5, playdate.graphics.image.kDitherTypeFloydSteinberg)
-		end
-		gfx.fillRect(x + 1, y, 17, 17)
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(x + 2, y + 1, 15, 15)
-
-		if selected then
-			local image = menuItems[row].img or imgBoard:getImage(2)
-			image:draw(x + 2, y + 1)
-		end
-
-		local cellText = items[row]
-		gfx.setFont(fontText)
-		gfx.setColor(gfx.kColorWhite)
-		local width = gfx.getTextSize(cellText)
-		gfx.fillRect(x + 23, y, width + 4, 18)
-		gfx.drawText(cellText, x + 25, y + 2)
-		if menuItems[row].disabled then
-			gfx.setColor(gfx.kColorBlack)
-			gfx.drawLine(x + 25, y + 2 + 7, x + 25 + width, y + 2 + 7)
+	local selected = 1
+	for i, item in pairs(menuItems) do
+		if item.selected then
+			selected = i
 		end
 	end
+
+	self.cursor = selected
+	self.position = math.max(1, math.min(#menuItems - 4, selected - 2))
+	self.target = self.position
+
+	self:redraw()
+	self:add()
 end
 
 function List:leave()
+	self:remove()
 end
 
 function List:select(index)
-	self.listview:setSelectedRow(index)
-	self.listview:scrollToRow(index)
+	self.cursor = index
+	self:redraw()
 end
 
-function List:draw()
-	self.listview:drawInRect(0, 25, 200, 205)
+function List:setPosition(position)
+	self.position = position
+
+	self:redraw()
+	self:markDirty()
+end
+
+function List:setTarget(position)
+	if self.target ~= position then
+		self.target = position
+		self.animator = nil
+		self.idleCounter = 5
+	end
+end
+
+function List:redraw()
+	self.image:clear(gfx.kColorClear)
+	gfx.lockFocus(self.image)
+	do
+		-- draw header
+		gfx.setFont(fontText)
+		gfx.setColor(gfx.kColorWhite)
+		local x = 4
+		local y = self.menuTitle and 42 - 9 or -3
+
+		if self.menuTitle then
+			local width = gfx.getTextSize(self.menuTitle)
+			gfx.fillRect(x + 1, y + 2, width + 4, 18)
+			gfx.drawText(self.menuTitle, x + 3, y + 4)
+		end
+
+		-- draw arrows
+		if self.position > 1 or self.target > 1 then
+			imgBoard:drawImage(4, x + 2, y + 16)
+		end
+		if self.position < #self.menuItems - 4 or self.target < #self.menuItems - 4 then
+			imgBoard:drawImage(5, x + 2, y + 157)
+		end
+
+		-- draw list
+		gfx.setClipRect(x, y + 24 + 8, 188, 24 * 5 + 5)
+		gfx.setDrawOffset(x, y + 30 + 8 - 24 * self.position)
+		for i, item in pairs(self.menuItems) do
+			local y = 24 * i
+			gfx.setColor(gfx.kColorWhite)
+			gfx.fillRect(0, y - 1, 19, 19)
+			gfx.setColor(gfx.kColorBlack)
+			if self.cursor ~= i then
+				gfx.setDitherPattern(.5, playdate.graphics.image.kDitherTypeFloydSteinberg)
+			end
+			gfx.fillRect(1, y, 17, 17)
+			gfx.setColor(gfx.kColorWhite)
+			gfx.fillRect(2, y + 1, 15, 15)
+
+			if self.cursor == i then
+				local image = item.img or imgBoard:getImage(2)
+				image:draw(2, y + 1)
+			end
+
+			local cellText = item.text
+			gfx.setFont(fontText)
+			gfx.setColor(gfx.kColorWhite)
+			local width = gfx.getTextSize(cellText)
+			gfx.fillRect(23, y, width + 4, 18)
+			gfx.drawText(cellText, 25, y + 2)
+			if item.disabled then
+				gfx.setColor(gfx.kColorBlack)
+				gfx.drawLine(25, y + 2 + 7, 25 + width, y + 2 + 7)
+			end
+		end
+	end
+	gfx.unlockFocus()
+	self:markDirty()
+end
+
+function List:update()
+	local ideal = self.target + 2
+	if self.cursor <= 2 then
+		if self.target > 1 then
+			self:setTarget(1)
+		end
+	elseif self.cursor >= #self.menuItems - 1 then
+		if self.target < #self.menuItems - 4 then
+			self:setTarget(#self.menuItems - 4)
+		end
+	elseif self.cursor <= ideal - 2 then
+		self:setTarget(self.target - 1)
+	elseif self.cursor >= ideal + 2 then
+		self:setTarget(self.target + 1)
+	end
+
+	if self.position ~= self.target then
+		self.idleCounter += 1
+		if self.animator then
+			self:setPosition(self.animator:currentValue())
+			if self.animator:ended() then
+				self.animator = nil
+			end
+		elseif self.idleCounter >= 5 then
+			self.animator = gfx.animator.new(
+				200,
+				self.position,
+				self.target,
+				playdate.easingFunctions.inOutSine
+			)
+		end
+	end
 end
