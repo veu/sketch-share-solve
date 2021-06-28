@@ -36,12 +36,16 @@ end
 function DoneNumbers:calcLeftNumbersForRow(y)
 	self.left[y] = {}
 
-	-- layout blocks from left and right
-	indexLeft, indexRight = self:matchLeft(y)
+	if self.gridNumbers.left[y][1] == 0 then
+		self.left[y][1] = self.solutionNumbers.left[y][1] == 0
+	else
+		-- layout blocks from left and right
+		indexLeft, indexRight = self:matchLeft(y)
 
-	-- identify laid out blocks in partial solution
-	if indexLeft then
-		self:tapBlocksLeft(y, indexLeft, indexRight)
+		-- identify laid out blocks in partial solution
+		if indexLeft then
+			self:tapBlocksLeft(y, indexLeft, indexRight)
+		end
 	end
 end
 
@@ -109,12 +113,16 @@ end
 function DoneNumbers:calcTopNumbersForColumn(x)
 	self.top[x] = {}
 
-	-- layout blocks from both top and bottom
-	indexTop, indexBottom = self:matchTop(x)
+	if self.gridNumbers.top[x][1] == 0 then
+		self.top[x][1] = self.solutionNumbers.top[x][1] == 0
+	else
+		-- layout blocks from both top and bottom
+		indexTop, indexBottom = self:matchTop(x)
 
-	-- identify laid out blocks in partial solution
-	if indexTop then
-		self:tapBlocksTop(x, indexTop, indexBottom)
+		-- identify laid out blocks in partial solution
+		if indexTop then
+			self:tapBlocksTop(x, indexTop, indexBottom)
+		end
 	end
 end
 
