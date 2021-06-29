@@ -99,15 +99,16 @@ function showPlayerKeyboard(mode)
 		return true
 	end
 
-	playdate.keyboard.keyboardWillHideCallback = function (ok)
-		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
+	local invalid = mode == PLAYER_ID_SHOW_NAME
+
+	playdate.keyboard.keyboardWillHideCallback = function ()
+		if invalid then
 			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar)
-			return
+		else
+			context.player:save(context)
+
+			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectModeSidebar)
 		end
-
-		context.player:save(context)
-
-		switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectModeSidebar)
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
@@ -115,6 +116,7 @@ function showPlayerKeyboard(mode)
 		gfx.setFont(fontText)
 		local size = gfx.getTextSize(text)
 		if size <= MAX_LEVEL_NAME_SIZE then
+			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.player.name = text
 			switchToSidebar(selectPlayerSidebar, mode)
 		else
@@ -129,17 +131,19 @@ function showLevelKeyboard()
 	playdate.keyboard.canDismiss = function ()
 		return true
 	end
-	playdate.keyboard.keyboardWillHideCallback = function (ok)
-		if not ok or rawlen(playdate.string.trimWhitespace(context.level.title)) == 0 then
-			switchToScreen(gridCreate)
-			switchToSidebar(createGridSidebar)
-			return
+
+	local invalid = true
+
+	playdate.keyboard.keyboardWillHideCallback = function ()
+		if invalid then
+			switchToScreen(gridSolved)
+			switchToSidebar(testGridSidebar)
+		else
+			context.level:save(context)
+
+			switchToScreen(title)
+			switchToSidebar(selectModeSidebar)
 		end
-
-		context.level:save(context)
-
-		switchToScreen(title)
-		switchToSidebar(selectModeSidebar)
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
@@ -147,6 +151,7 @@ function showLevelKeyboard()
 		gfx.setFont(fontText)
 		local size = gfx.getTextSize(text)
 		if size <= MAX_LEVEL_NAME_SIZE then
+			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.level.title = text
 			switchToSidebar(selectLevelSidebar, LEVEL_ID_SHOW_NAME)
 		else
