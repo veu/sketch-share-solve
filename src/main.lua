@@ -120,7 +120,7 @@ function showPlayerKeyboard()
 		end
 	end
 
-	playdate.keyboard.show()
+	playdate.keyboard.show(context.player.name)
 end
 
 function showLevelKeyboard()
@@ -213,6 +213,11 @@ end
 
 optionsSidebar.onAbort = function ()
 	switchToSidebar(selectModeSidebar)
+end
+
+optionsSidebar.onRename = function ()
+	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
+	showPlayerKeyboard()
 end
 
 optionsSidebar.onToggleHints = function ()

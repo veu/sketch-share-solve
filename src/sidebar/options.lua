@@ -16,6 +16,12 @@ function OptionsSidebar:enter(context)
 					self.onToggleHints()
 				end
 			},
+			{
+				text = "Rename profile",
+				exec = function ()
+					self.onRename()
+				end
+			},
 		}
 	}
 
