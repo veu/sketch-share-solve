@@ -12,17 +12,18 @@ function BoardNumbers:init()
 	self:setZIndex(Z_INDEX_BOARD_NUMBERS)
 end
 
-function BoardNumbers:enter(level, solution, crossed, x, y)
+function BoardNumbers:enter(level, solution, crossed, x, y, withHints)
 	self.level = level
 	self.gridNumbers = Numbers(level, level.grid)
 	self.solutionNumbers = Numbers(level, solution)
-	self.doneNumbers = DoneNumbers(
+	self.doneNumbers = withHints and DoneNumbers(
 		level,
 		self.gridNumbers,
 		self.solutionNumbers,
 		crossed,
-		solution
-	)
+		solution,
+		withHints
+	) or DoneNumbersDisabled(level)
 	self.x = x
 	self.y = y
 

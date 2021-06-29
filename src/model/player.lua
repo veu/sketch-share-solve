@@ -6,6 +6,7 @@ function Player:init(player)
 	self.name = player.name
 	self.created = player.created
 	self.played = player.played
+	self.options = player.options or {}
 
 	local avatar = playdate.datastore.readImage(AVATAR_FOLDER_NAME .. self.id)
 	if avatar then
@@ -21,7 +22,8 @@ function Player:save(context)
 		id = self.id,
 		name = self.name,
 		created = self.created,
-		played = self.played
+		played = self.played,
+		options = self.options
 	}
 
 	context.save.profiles[self.id] = player

@@ -19,7 +19,7 @@ function Board:init(withNumbers)
 	end
 end
 
-function Board:enter(level, mode)
+function Board:enter(level, mode, withHints)
 	self.last = 0
 	self.level = level
 	self.mode = mode
@@ -48,7 +48,8 @@ function Board:enter(level, mode)
 			self.solution,
 			self.crossed,
 			self.cursor.gridX,
-			self.cursor.gridY
+			self.cursor.gridY,
+			withHints
 		)
 		self.cursor.onMove = function (x, y)
 			self.numbers:setCursor(x, y)

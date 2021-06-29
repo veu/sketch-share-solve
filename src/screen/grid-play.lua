@@ -17,7 +17,7 @@ function GridPlay:enter(context)
 		end
 	end
 
-	self.board:enter(self.level, MODE_PLAY)
+	self.board:enter(self.level, MODE_PLAY, not context.player.options.hintsDisabled)
 end
 
 function GridPlay:leave()

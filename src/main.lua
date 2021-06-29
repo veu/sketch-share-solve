@@ -13,6 +13,7 @@ import "levels"
 import "utils"
 
 import "model/done-numbers"
+import "model/done-numbers-disabled"
 import "model/level"
 import "model/numbers"
 import "model/player"
@@ -27,6 +28,7 @@ import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-avatar"
 import "sidebar/create-grid"
+import "sidebar/options"
 import "sidebar/select-avatar"
 import "sidebar/select-creator"
 import "sidebar/select-level"
@@ -72,6 +74,7 @@ local title = TitleScreen()
 local createAvatarSidebar = CreateAvatarSidebar()
 local createGridSidebar = CreateGridSidebar()
 local testGridSidebar = TestGridSidebar()
+local optionsSidebar = OptionsSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
 local selectLevelSidebar = SelectLevelSidebar()
@@ -208,6 +211,16 @@ createGridSidebar.onTestAndSave = function ()
 	switchToSidebar(testGridSidebar)
 end
 
+optionsSidebar.onAbort = function ()
+	switchToSidebar(selectModeSidebar)
+end
+
+optionsSidebar.onToggleHints = function ()
+	context.player.options.hintsDisabled = not context.player.options.hintsDisabled
+	context.player:save(context)
+	switchToSidebar(optionsSidebar)
+end
+
 selectAvatarSidebar.onAbort = function()
 	switchToSidebar(selectPlayerSidebar)
 end
@@ -252,10 +265,12 @@ selectModeSidebar.onSelected = function(selectedMode)
 	context.mode = selectedMode
 	if context.mode == MODE_PLAY then
 		switchToSidebar(selectCreatorSidebar)
-	else
+	elseif context.mode == MODE_CREATE then
 		context.level = Level.createEmpty()
 		switchToScreen(gridCreate)
 		switchToSidebar(createGridSidebar)
+	else
+		switchToSidebar(optionsSidebar)
 	end
 end
 

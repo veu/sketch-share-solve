@@ -9,6 +9,7 @@ function SelectModeSidebar:enter(context)
 		menuItems = {
 			{ text = "Solve", ref = MODE_PLAY },
 			{ text = "Sketch", ref = MODE_CREATE },
+			{ text = "Options", ref = MODE_OPTIONS },
 		}
 	}
 
