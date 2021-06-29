@@ -7,10 +7,11 @@ function SelectPlayerSidebar:init()
 end
 
 function SelectPlayerSidebar:enter(context, selected)
+	local isNaming = selected == PLAYER_ID_SHOW_NAME or selected == PLAYER_ID_SHOW_RENAME
 	local config = {
 		menuItems = {},
-		menuTitle = selected == PLAYER_ID_SHOW_NAME and "Choose a name" or "Who is playing?",
-		stayOpen = selected == PLAYER_ID_SHOW_NAME
+		menuTitle = isNaming and "Choose a name" or "Who is playing?",
+		stayOpen = isNaming
 	}
 
 	local selectedIndex = 1
@@ -21,11 +22,14 @@ function SelectPlayerSidebar:enter(context, selected)
 			if profile.id == selected then
 				selectedIndex = i
 			end
+			local isRenamedPlayer =
+				selected == PLAYER_ID_SHOW_RENAME and profile.id == context.player.id
 			table.insert(config.menuItems, {
-				text = profile.name,
+				text = isRenamedPlayer and context.player.name or profile.name,
 				avatar = profile.avatar,
 				ref = profile,
-				selected = profile.id == selected,
+				selected = profile.id == selected or isRenamedPlayer,
+				showCursor = isRenamedPlayer,
 			})
 			i += 1
 		end

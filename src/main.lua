@@ -94,20 +94,20 @@ local context = {
 
 local sidebar = selectPlayerSidebar
 
-function showPlayerKeyboard()
+function showPlayerKeyboard(mode)
 	playdate.keyboard.canDismiss = function ()
 		return true
 	end
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
 		if not ok or rawlen(playdate.string.trimWhitespace(context.player.name)) == 0 then
-			switchToSidebar(selectPlayerSidebar)
+			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar)
 			return
 		end
 
 		context.player:save(context)
 
-		switchToSidebar(selectModeSidebar)
+		switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectModeSidebar)
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
@@ -116,7 +116,7 @@ function showPlayerKeyboard()
 		local size = gfx.getTextSize(text)
 		if size <= MAX_LEVEL_NAME_SIZE then
 			context.player.name = text
-			switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
+			switchToSidebar(selectPlayerSidebar, mode)
 		else
 			playdate.keyboard.text = context.player.name
 		end
@@ -200,7 +200,7 @@ createAvatarSidebar.onSave = function()
 
 	switchToScreen(title)
 	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
-	showPlayerKeyboard()
+	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
 createGridSidebar.onAbort = function()
@@ -218,8 +218,8 @@ optionsSidebar.onAbort = function ()
 end
 
 optionsSidebar.onRename = function ()
-	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
-	showPlayerKeyboard()
+	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_RENAME)
+	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
 end
 
 optionsSidebar.onToggleHints = function ()
@@ -242,7 +242,7 @@ selectAvatarSidebar.onSelected = function(avatar)
 	player.avatar = imgAvatars:getImage(avatar)
 
 	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
-	showPlayerKeyboard()
+	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
 selectCreatorSidebar.onAbort = function()
