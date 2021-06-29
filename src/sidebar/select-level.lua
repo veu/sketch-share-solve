@@ -38,6 +38,7 @@ function SelectLevelSidebar:enter(context, selected)
 			text = context.level.title,
 			img = createLevelPreview(context.level),
 			selected = true,
+			showCursor = true,
 		})
 	end
 

@@ -1,3 +1,4 @@
+import "CoreLibs/animation"
 import "CoreLibs/graphics"
 import "CoreLibs/keyboard"
 import "CoreLibs/nineslice"
@@ -42,6 +43,7 @@ import "ui/board-numbers"
 import "ui/cursor"
 import "ui/dialog"
 import "ui/list"
+import "ui/text-cursor"
 import "ui/title"
 
 import "utils/numbers"

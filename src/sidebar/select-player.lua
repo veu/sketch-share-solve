@@ -36,6 +36,7 @@ function SelectPlayerSidebar:enter(context, selected)
 			text = context.player.name,
 			avatar = context.player.avatar,
 			selected = true,
+			showCursor = true,
 		})
 		selectedIndex = #config.menuItems
 	else

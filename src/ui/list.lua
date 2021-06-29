@@ -8,7 +8,7 @@ function List:init()
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
-	self:setZIndex(Z_INDEX_BOARD + 1000)
+	self:setZIndex(Z_INDEX_LIST)
 end
 
 function List:enter(menuItems, menuTitle)
@@ -27,12 +27,15 @@ function List:enter(menuItems, menuTitle)
 	self.position = math.max(1, math.min(#menuItems - 4, selected - 2))
 	self.target = self.position
 
+	self.textCursor = TextCursor()
+
 	self:redraw()
 	self:add()
 end
 
 function List:leave()
 	self:remove()
+	self.textCursor:remove()
 end
 
 function List:select(index)
@@ -103,8 +106,19 @@ function List:redraw()
 			gfx.setFont(fontText)
 			gfx.setColor(gfx.kColorWhite)
 			local width = gfx.getTextSize(cellText)
+			if item.showCursor then
+				width += 2
+			end
 			gfx.fillRect(23, y, width + 4, 18)
 			gfx.drawText(cellText, 25, y + 2)
+			if item.showCursor then
+				gfx.setColor(gfx.kColorBlack)
+				local cursorX, cursorY = gfx.getDrawOffset()
+				self.textCursor:enter(
+					cursorX + 24 + width,
+					cursorY + y + 2
+				)
+			end
 			if item.disabled then
 				gfx.setColor(gfx.kColorBlack)
 				gfx.drawLine(25, y + 2 + 7, 25 + width, y + 2 + 7)
