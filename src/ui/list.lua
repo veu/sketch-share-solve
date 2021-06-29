@@ -24,7 +24,7 @@ function List:enter(menuItems, menuTitle)
 	end
 
 	self.cursor = selected
-	self.position = math.max(1, math.min(#menuItems - 4, selected - 2))
+	self.position = math.max(1, math.min(#menuItems - 5, selected - 2))
 	self.target = self.position
 
 	self.textCursor = TextCursor()
@@ -66,7 +66,7 @@ function List:redraw()
 		gfx.setFont(fontText)
 		gfx.setColor(gfx.kColorWhite)
 		local x = 4
-		local y = self.menuTitle and 42 - 9 or -3
+		local y = self.menuTitle and 33 or 2
 
 		if self.menuTitle then
 			local width = gfx.getTextSize(self.menuTitle)
@@ -78,15 +78,15 @@ function List:redraw()
 		if self.position > 1 or self.target > 1 then
 			imgBoard:drawImage(4, x + 2, y + 16)
 		end
-		if self.position < #self.menuItems - 4 or self.target < #self.menuItems - 4 then
-			imgBoard:drawImage(5, x + 2, y + 157)
+		if self.position < #self.menuItems - NUM_LIST_ITEMS + 1 or self.target < #self.menuItems - NUM_LIST_ITEMS + 1 then
+			imgBoard:drawImage(5, x + 2, y + 152 - 5 + 24)
 		end
 
 		-- draw list
-		gfx.setClipRect(x, y + 24 + 8, 188, 24 * 5 + 5)
-		gfx.setDrawOffset(x, y + 30 + 8 - 24 * self.position)
+		gfx.setClipRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
+		gfx.setDrawOffset(x, y + 33 - 24 * (self.position - 1))
 		for i, item in pairs(self.menuItems) do
-			local y = 24 * i
+			local y = 24 * (i - 1)
 			gfx.setColor(gfx.kColorWhite)
 			gfx.fillRect(0, y - 1, 19, 19)
 			gfx.setColor(gfx.kColorBlack)
@@ -136,8 +136,8 @@ function List:update()
 			self:setTarget(1)
 		end
 	elseif self.cursor >= #self.menuItems - 1 then
-		if self.target < #self.menuItems - 4 then
-			self:setTarget(#self.menuItems - 4)
+		if self.target < #self.menuItems - NUM_LIST_ITEMS + 1 then
+			self:setTarget(#self.menuItems - NUM_LIST_ITEMS + 1)
 		end
 	elseif self.cursor <= ideal - 2 then
 		self:setTarget(self.target - 1)
