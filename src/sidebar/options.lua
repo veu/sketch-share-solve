@@ -22,6 +22,12 @@ function OptionsSidebar:enter(context)
 					self.onRename()
 				end
 			},
+			{
+				text = "Delete profile",
+				exec = function ()
+					self.onDelete()
+				end
+			},
 		}
 	}
 

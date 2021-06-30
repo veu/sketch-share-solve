@@ -222,6 +222,11 @@ optionsSidebar.onAbort = function ()
 	switchToSidebar(selectModeSidebar)
 end
 
+optionsSidebar.onDelete = function ()
+	context.player:delete(context)
+	switchToSidebar(selectPlayerSidebar)
+end
+
 optionsSidebar.onRename = function ()
 	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_RENAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
