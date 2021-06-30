@@ -28,6 +28,10 @@ function GridCreate:invertBoard()
 	self.board:invert()
 end
 
+function GridCreate:resetBoard()
+	self.board:reset()
+end
+
 function GridCreate:update()
 	function cross(isStart)
 		self.board:toggleCross(self.board:getCursor(), isStart)

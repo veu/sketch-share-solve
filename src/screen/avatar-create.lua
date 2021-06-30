@@ -29,6 +29,10 @@ function AvatarCreate:invertBoard()
 	self.board:invert()
 end
 
+function AvatarCreate:resetBoard()
+	self.board:reset()
+end
+
 function AvatarCreate:update()
 	function cross(isStart)
 		self.board:toggleCross(self.board:getCursor(), isStart)

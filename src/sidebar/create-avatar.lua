@@ -18,6 +18,12 @@ function CreateAvatarSidebar:enter(context)
 				exec = function()
 					context.screen:invertBoard()
 				end
+			},
+			{
+				text = "Reset avatar",
+				exec = function()
+					context.screen:resetBoard()
+				end
 			}
 		}
 	}

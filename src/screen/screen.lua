@@ -13,6 +13,9 @@ end
 function Screen:invertBoard()
 end
 
+function Screen:resetBoard()
+end
+
 function Screen:AButtonDown()
 end
 

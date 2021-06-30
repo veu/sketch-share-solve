@@ -88,6 +88,13 @@ function Board:invert()
 	self:onUpdateSolution_()
 end
 
+function Board:reset()
+	for i = 1, #self.solution do
+		self.solution[i] = 0
+	end
+	self:onUpdateSolution_()
+end
+
 function Board:getCursor()
 	return self.cursor:getIndex()
 end
