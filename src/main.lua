@@ -43,6 +43,7 @@ import "ui/board-numbers"
 import "ui/cursor"
 import "ui/dialog"
 import "ui/list"
+import "ui/modal"
 import "ui/text-cursor"
 import "ui/title"
 
@@ -83,6 +84,9 @@ local selectLevelSidebar = SelectLevelSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
 
+-- modal
+local modal = Modal()
+
 local context = {
 	creator = nil,
 	level = nil,
@@ -93,6 +97,10 @@ local context = {
 }
 
 local sidebar = selectPlayerSidebar
+
+function showModal(text)
+	modal:enter(text)
+end
 
 function showPlayerKeyboard(mode)
 	playdate.keyboard.canDismiss = function ()
@@ -223,8 +231,17 @@ optionsSidebar.onAbort = function ()
 end
 
 optionsSidebar.onDelete = function ()
-	context.player:delete(context)
-	switchToSidebar(selectPlayerSidebar)
+	local delete = function ()
+		context.player:delete(context)
+		switchToSidebar(selectPlayerSidebar)
+	end
+
+	if #context.player.created == 0 then
+		delete()
+	else
+		modal.onOK = delete
+		modal:enter("Deleting your profile won’t delete your levels. Continue anyway?", "Delete")
+	end
 end
 
 optionsSidebar.onRename = function ()
@@ -323,23 +340,27 @@ function playdate.crankUndocked()
 end
 
 function playdate.cranked(change, acceleratedChange)
-	sidebar:cranked(-change, -acceleratedChange)
+	if not modal:isVisible() then
+		sidebar:cranked(-change, -acceleratedChange)
+	end
 end
 
 function playdate.downButtonDown()
-	if not playdate.isCrankDocked() then
+	if not modal:isVisible() and not playdate.isCrankDocked() then
 		sidebar:downButtonDown()
 	end
 end
 
 function playdate.upButtonDown()
-	if not playdate.isCrankDocked() then
+	if not modal:isVisible() and not playdate.isCrankDocked() then
 		sidebar:upButtonDown()
 	end
 end
 
 function playdate.AButtonDown()
-	if playdate.isCrankDocked() then
+	if modal:isVisible() then
+		modal:AButtonDown()
+	elseif playdate.isCrankDocked() then
 		context.screen:AButtonDown()
 	else
 		sidebar:AButtonDown()
@@ -347,7 +368,9 @@ function playdate.AButtonDown()
 end
 
 function playdate.BButtonDown()
-	if playdate.isCrankDocked() then
+	if modal:isVisible() then
+		modal:BButtonDown()
+	elseif playdate.isCrankDocked() then
 		context.screen:BButtonDown()
 	else
 		sidebar:BButtonDown()
