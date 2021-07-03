@@ -71,6 +71,24 @@ function Level:save(context)
 	playdate.datastore.write(context.save)
 end
 
+function Level:delete(context)
+	local levelIndex = nil
+	for i, id in pairs(context.creator.created) do
+		if id == self.id then
+			levelIndex = i
+		end
+	end
+
+	if levelIndex then
+		table.remove(context.creator.created, levelIndex)
+		context.creator:save(context)
+	end
+
+	context.save.levels[self.id] = nil
+
+	playdate.datastore.write(context.save)
+end
+
 Level.load = function (context, id)
 	return Level(context.save.levels[id])
 end

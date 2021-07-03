@@ -21,7 +21,7 @@ function CreateGridSidebar:enter(context)
 				end
 			},
 			{
-				text = "Reset puzzle",
+				text = "Reset grid",
 				exec = function()
 					context.screen:resetBoard()
 				end

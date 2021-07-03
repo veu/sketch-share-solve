@@ -30,6 +30,7 @@ import "sidebar/sidebar"
 import "sidebar/create-avatar"
 import "sidebar/create-grid"
 import "sidebar/options"
+import "sidebar/play-grid"
 import "sidebar/select-avatar"
 import "sidebar/select-creator"
 import "sidebar/select-level"
@@ -76,13 +77,14 @@ local title = TitleScreen()
 -- sidebars
 local createAvatarSidebar = CreateAvatarSidebar()
 local createGridSidebar = CreateGridSidebar()
-local testGridSidebar = TestGridSidebar()
 local optionsSidebar = OptionsSidebar()
+local playGridSidebar = PlayGridSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
 local selectLevelSidebar = SelectLevelSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
+local testGridSidebar = TestGridSidebar()
 
 -- modal
 local modal = Modal()
@@ -255,6 +257,24 @@ optionsSidebar.onToggleHints = function ()
 	switchToSidebar(optionsSidebar)
 end
 
+playGridSidebar.onAbort = function ()
+	switchToSidebar(selectLevelSidebar, context.level.id)
+	switchToScreen(title)
+end
+
+playGridSidebar.onDeletePuzzle = function ()
+	modal.onOK = function ()
+		context.level:delete(context)
+		if #context.creator.created > 0 then
+			switchToSidebar(selectLevelSidebar)
+		else
+			switchToSidebar(selectCreatorSidebar)
+		end
+		switchToScreen(title)
+	end
+	modal:enter("Are you sure you want to delete this puzzle?", "Delete")
+end
+
 selectAvatarSidebar.onAbort = function()
 	switchToSidebar(selectPlayerSidebar)
 end
@@ -289,6 +309,7 @@ end
 selectLevelSidebar.onSelected = function (level)
 	context.level = Level(level)
 	switchToScreen(gridPlay)
+	switchToSidebar(playGridSidebar)
 end
 
 selectModeSidebar.onAbort = function()

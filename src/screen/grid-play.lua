@@ -27,6 +27,10 @@ function GridPlay:leave()
 	self.board:leave()
 end
 
+function GridPlay:resetBoard()
+	self.board:reset()
+end
+
 function GridPlay:update()
 	function cross(isStart)
 		self.board:toggleCross(self.board:getCursor(), isStart)
