@@ -272,7 +272,7 @@ playGridSidebar.onDeletePuzzle = function ()
 		end
 		switchToScreen(title)
 	end
-	modal:enter("Are you sure you want to delete this puzzle?", "Delete")
+	modal:enter("Are you sure you want to delete the puzzle \"" .. context.level.title .. "\"?", "Delete")
 end
 
 selectAvatarSidebar.onAbort = function()
