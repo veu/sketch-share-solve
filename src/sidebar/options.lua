@@ -17,6 +17,12 @@ function OptionsSidebar:enter(context)
 				end
 			},
 			{
+				text = "Reset progress",
+				exec = function ()
+					self.onResetProgress()
+				end
+			},
+			{
 				text = "Rename profile",
 				exec = function ()
 					self.onRename()

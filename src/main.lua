@@ -251,6 +251,13 @@ optionsSidebar.onRename = function ()
 	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
 end
 
+optionsSidebar.onResetProgress = function ()
+	context.player.played = {}
+	context.player:save(context)
+
+	switchToSidebar(selectModeSidebar)
+end
+
 optionsSidebar.onToggleHints = function ()
 	context.player.options.hintsDisabled = not context.player.options.hintsDisabled
 	context.player:save(context)
