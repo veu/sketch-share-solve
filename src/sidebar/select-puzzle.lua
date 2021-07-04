@@ -18,7 +18,7 @@ function SelectPuzzleSidebar:enter(context, selected)
 	for i, id in pairs(creator.created) do
 		local puzzle = Puzzle.load(context, id)
 		local revealed = creator.id == player.id or player.played[puzzle.id]
-		local text = revealed and puzzle.title or "Puzzle " .. i
+		local text = revealed and "\"" .. puzzle.title .. "\"" or "Puzzle " .. i
 
 		local image = nil
 		if revealed then

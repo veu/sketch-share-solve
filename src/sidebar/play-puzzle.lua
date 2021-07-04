@@ -9,7 +9,7 @@ function PlayPuzzleSidebar:enter(context)
 	local creator = context.creator
 	local puzzle = context.puzzle
 	local config = {
-		menuTitle = "\"" .. self:getTitle(player, creator, puzzle) .. "\"",
+		menuTitle = self:getTitle(player, creator, puzzle),
 		menuItems = {
 			{
 				text = "Reset grid",
@@ -39,7 +39,7 @@ end
 
 function PlayPuzzleSidebar:getTitle(player, creator, puzzle)
 	if creator.id == player.id or player.played[puzzle.id] then
-		return puzzle.title
+		return "\"" .. puzzle.title .. "\""
 	end
 
 	for i, id in pairs(creator.created) do
