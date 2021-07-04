@@ -13,6 +13,7 @@ function Grid:init(withNumbers)
 	self.onUpdateSolution = function() end
 
 	self.cursor = Cursor()
+	self.gridCell = GridCell()
 
 	if withNumbers then
 		self.numbers = GridNumbers()
@@ -63,11 +64,13 @@ function Grid:leave()
 	if self.numbers then
 		self.numbers:leave()
 	end
+	self.gridCell:leave()
 end
 
 function Grid:toggle(index, isStart)
 	if self.crossed[index] == 0 and (isStart or self.solution[index] ~= self.last) then
-		self.solution[index] = self.solution[index] == 1 and 0 or 1
+		self.solution[index] = 1 - self.solution[index]
+		self.gridCell:enter(self.puzzle, index, self.solution[index], nil)
 		self.last = self.solution[index]
 		self:onUpdateSolution_()
 	end
@@ -76,6 +79,7 @@ end
 function Grid:toggleCross(index, isStart)
 	if self.solution[index] == 0 and (isStart or self.crossed[index] ~= self.last) then
 		self.crossed[index] = self.crossed[index] == 1 and 0 or 1
+		self.gridCell:enter(self.puzzle, index, nil, self.crossed[index])
 		self.last = self.crossed[index]
 		self:onUpdateSolution_()
 	end
