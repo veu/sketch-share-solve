@@ -14,10 +14,36 @@ end
 function Title:enter()
 	self:redraw()
 	self:add()
+	self:moveTo(0, 0)
+	if not playdate.isCrankDocked() then
+		self:crankUndocked()
+	end
 end
 
 function Title:leave()
 	self:remove()
+end
+
+function Title:crankDocked()
+	self.animator = gfx.animator.new(
+		400, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, 0, playdate.easingFunctions.inOutSine
+	)
+end
+
+function Title:crankUndocked()
+	self.animator = gfx.animator.new(
+		400, 0, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, playdate.easingFunctions.inOutSine
+	)
+end
+
+function Title:update()
+	if self.animator then
+		local currentValue = math.floor(self.animator:currentValue() + 0.5)
+		self:moveTo(currentValue, 0)
+		if self.animator:ended() then
+			self.animator = nil
+		end
+	end
 end
 
 function Title:redraw()

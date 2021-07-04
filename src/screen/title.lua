@@ -17,3 +17,11 @@ end
 function TitleScreen:leave()
 	self.title:leave()
 end
+
+function TitleScreen:crankDocked()
+	self.title:crankDocked()
+end
+
+function TitleScreen:crankUndocked()
+	self.title:crankUndocked()
+end

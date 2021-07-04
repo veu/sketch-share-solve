@@ -22,5 +22,11 @@ end
 function Screen:BButtonDown()
 end
 
+function Screen:crankDocked()
+end
+
+function Screen:crankUndocked()
+end
+
 function Screen:update()
 end

@@ -362,10 +362,12 @@ testPuzzleSidebar.onSave = function ()
 end
 
 function playdate.crankDocked()
+	context.screen:crankDocked()
 	sidebar:close()
 end
 
 function playdate.crankUndocked()
+	context.screen:crankUndocked()
 	sidebar:open()
 end
 
