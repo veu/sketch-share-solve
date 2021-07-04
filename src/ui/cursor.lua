@@ -25,14 +25,14 @@ function Cursor:init()
 	self.onMove = function () end
 end
 
-function Cursor:enter(level)
-	self.gridX = math.floor(level.width / 2)
+function Cursor:enter(puzzle)
+	self.gridX = math.floor(puzzle.width / 2)
 	self.gridY = 4
 	self:moveTo(
-		BOARD_OFFSET_X + CELL * (15 - level.width) + CELL * (self.gridX - 1) - 2,
-		BOARD_OFFSET_Y - CELL * (self.gridY - 1) - 2
+		GRID_OFFSET_X + CELL * (15 - puzzle.width) + CELL * (self.gridX - 1) - 2,
+		GRID_OFFSET_Y - CELL * (self.gridY - 1) - 2
 	)
-	self.level = level
+	self.puzzle = puzzle
 	self:redraw()
 	self:add()
 	self.onMove(self.gridX, self.gridY)
@@ -43,16 +43,16 @@ function Cursor:leave()
 end
 
 function Cursor:getIndex()
-	return self.gridX - 1 + (self.gridY - 1) * self.level.width + 1
+	return self.gridX - 1 + (self.gridY - 1) * self.puzzle.width + 1
 end
 
 function Cursor:moveBy(dx, dy, pressed)
 	if pressed then
-		self.gridX = math.max(1, math.min(self.level.width, self.gridX + dx))
-		self.gridY = math.max(1, math.min(self.level.height, self.gridY + dy))
+		self.gridX = math.max(1, math.min(self.puzzle.width, self.gridX + dx))
+		self.gridY = math.max(1, math.min(self.puzzle.height, self.gridY + dy))
 	else
-		self.gridX = (self.gridX + dx + self.level.width - 1) % self.level.width + 1
-		self.gridY = (self.gridY + dy + self.level.height - 1) % self.level.height + 1
+		self.gridX = (self.gridX + dx + self.puzzle.width - 1) % self.puzzle.width + 1
+		self.gridY = (self.gridY + dy + self.puzzle.height - 1) % self.puzzle.height + 1
 	end
 	self:redraw()
 	self.onMove(self.gridX, self.gridY)
@@ -60,7 +60,7 @@ end
 
 function Cursor:redraw()
 	self:moveTo(
-		BOARD_OFFSET_X + CELL * (15 - self.level.width) + CELL * (self.gridX - 1) - 2,
-		BOARD_OFFSET_Y + CELL * (self.gridY - 1) - 2
+		GRID_OFFSET_X + CELL * (15 - self.puzzle.width) + CELL * (self.gridX - 1) - 2,
+		GRID_OFFSET_Y + CELL * (self.gridY - 1) - 2
 	)
 end

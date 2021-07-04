@@ -76,10 +76,10 @@ function List:redraw()
 
 		-- draw arrows
 		if self.position > 1 or self.target > 1 then
-			imgBoard:drawImage(4, x + 2, y + 16)
+			imgGrid:drawImage(4, x + 2, y + 16)
 		end
 		if self.position < #self.menuItems - NUM_LIST_ITEMS + 1 or self.target < #self.menuItems - NUM_LIST_ITEMS + 1 then
-			imgBoard:drawImage(5, x + 2, y + 152 - 5 + 24)
+			imgGrid:drawImage(5, x + 2, y + 152 - 5 + 24)
 		end
 
 		-- draw list
@@ -98,7 +98,7 @@ function List:redraw()
 			gfx.fillRect(2, y + 1, 15, 15)
 
 			if self.cursor == i then
-				local image = item.img or imgBoard:getImage(2)
+				local image = item.img or imgGrid:getImage(2)
 				image:draw(2, y + 1)
 			end
 

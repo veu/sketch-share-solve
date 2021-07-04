@@ -18,7 +18,7 @@ DEFAULT_SAVE = {
 			played = {}
 		}
 	},
-	levels = {
+	puzzles = {
 		BCYQPNSTSAQBHEIM = {
 			id = "BCYQPNSTSAQBHEIM",
 			title = "Crank",

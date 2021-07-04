@@ -1,16 +1,16 @@
-class("Level").extends()
+class("Puzzle").extends()
 
-function Level:init(level)
-	self.id = level.id
-	self.title = level.title
-	self.grid = level.grid
-	self.width = level.width or 15
-	self.height = level.height or 10
+function Puzzle:init(puzzle)
+	self.id = puzzle.id
+	self.title = puzzle.title
+	self.grid = puzzle.grid
+	self.width = puzzle.width or 15
+	self.height = puzzle.height or 10
 
 	self.hasBeenSolved = false
 end
 
-function Level:isSolved(solution)
+function Puzzle:isSolved(solution)
 	for i, v in pairs(self.grid) do
 		if v ~= solution[i] then
 			return false
@@ -22,7 +22,7 @@ function Level:isSolved(solution)
 	return true
 end
 
-function Level:isTrivial()
+function Puzzle:isTrivial()
 	for i, v in pairs(self.grid) do
 		if v == 1 then
 			return false
@@ -32,11 +32,11 @@ function Level:isTrivial()
 	return true
 end
 
-function Level:isCellKnownEmpty(cellX, cellY)
+function Puzzle:isCellKnownEmpty(cellX, cellY)
 	return self:isColumnKnownEmpty(cellX) or self:isRowKnownEmpty(cellY)
 end
 
-function Level:isColumnKnownEmpty(cellX)
+function Puzzle:isColumnKnownEmpty(cellX)
 	for y = 1, self.height do
 		local index = cellX - 1 + (y - 1) * self.width + 1
 		if self.grid[index] == 1 then
@@ -47,7 +47,7 @@ function Level:isColumnKnownEmpty(cellX)
 	return true
 end
 
-function Level:isRowKnownEmpty(cellY)
+function Puzzle:isRowKnownEmpty(cellY)
 	for x = 1, self.width do
 		local index = x - 1 + (cellY - 1) * self.width + 1
 		if self.grid[index] == 1 then
@@ -58,48 +58,48 @@ function Level:isRowKnownEmpty(cellY)
 	return true
 end
 
-function Level:save(context)
-	local level = {
+function Puzzle:save(context)
+	local puzzle = {
 		id = self.id,
 		title = self.title,
 		grid = self.grid
 	}
 
-	context.save.levels[self.id] = level
+	context.save.puzzles[self.id] = puzzle
 	table.insert(context.player.created, self.id)
 
 	playdate.datastore.write(context.save)
 end
 
-function Level:delete(context)
-	local levelIndex = nil
+function Puzzle:delete(context)
+	local puzzleIndex = nil
 	for i, id in pairs(context.creator.created) do
 		if id == self.id then
-			levelIndex = i
+			puzzleIndex = i
 		end
 	end
 
-	if levelIndex then
-		table.remove(context.creator.created, levelIndex)
+	if puzzleIndex then
+		table.remove(context.creator.created, puzzleIndex)
 		context.creator:save(context)
 	end
 
-	context.save.levels[self.id] = nil
+	context.save.puzzles[self.id] = nil
 
 	playdate.datastore.write(context.save)
 end
 
-Level.load = function (context, id)
-	return Level(context.save.levels[id])
+Puzzle.load = function (context, id)
+	return Puzzle(context.save.puzzles[id])
 end
 
-Level.createEmpty = function (width, height)
+Puzzle.createEmpty = function (width, height)
 	local grid = {}
 	for x = 1, 150 do
 		table.insert(grid, 0)
 	end
 
-	return Level({
+	return Puzzle({
 		id = playdate.string.UUID(16),
 		grid = grid,
 		width = width or 15,

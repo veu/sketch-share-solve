@@ -1,15 +1,15 @@
-class("PlayGridSidebar").extends(Sidebar)
+class("PlayPuzzleSidebar").extends(Sidebar)
 
-function PlayGridSidebar:init()
-	PlayGridSidebar.super.init(self)
+function PlayPuzzleSidebar:init()
+	PlayPuzzleSidebar.super.init(self)
 end
 
-function PlayGridSidebar:enter(context)
+function PlayPuzzleSidebar:enter(context)
 	local player = context.player
 	local creator = context.creator
-	local level = context.level
+	local puzzle = context.puzzle
 	local config = {
-		menuTitle = "\"" .. self:getTitle(player, creator, level) .. "\"",
+		menuTitle = "\"" .. self:getTitle(player, creator, puzzle) .. "\"",
 		menuItems = {
 			{
 				text = "Reset grid",
@@ -29,7 +29,7 @@ function PlayGridSidebar:enter(context)
 		})
 	end
 
-	PlayGridSidebar.super.enter(
+	PlayPuzzleSidebar.super.enter(
 		self,
 		config,
 		player.avatar,
@@ -37,13 +37,13 @@ function PlayGridSidebar:enter(context)
 	)
 end
 
-function PlayGridSidebar:getTitle(player, creator, level)
-	if creator.id == player.id or player.played[level.id] then
-		return level.title
+function PlayPuzzleSidebar:getTitle(player, creator, puzzle)
+	if creator.id == player.id or player.played[puzzle.id] then
+		return puzzle.title
 	end
 
 	for i, id in pairs(creator.created) do
-		if id == level.id then
+		if id == puzzle.id then
 			return "Puzzle " .. i
 		end
 	end

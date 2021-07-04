@@ -33,15 +33,15 @@ function drawRightTextRect(x, y, w, h, text)
 	gfx.drawText(text, x + w - width - 5, y + 6)
 end
 
-function createAvatarPreview(level)
-	local image = gfx.image.new(level.width, level.height, gfx.kColorBlack)
+function createAvatarPreview(puzzle)
+	local image = gfx.image.new(puzzle.width, puzzle.height, gfx.kColorBlack)
 	gfx.lockFocus(image)
 	do
 		gfx.setColor(gfx.kColorWhite)
-		for y = 1, level.height do
-			for x = 1, level.width do
-				local index = x - 1 + (y - 1) * level.width + 1
-				if level.grid[index] == 0 then
+		for y = 1, puzzle.height do
+			for x = 1, puzzle.width do
+				local index = x - 1 + (y - 1) * puzzle.width + 1
+				if puzzle.grid[index] == 0 then
 					gfx.fillRect(x - 1, y - 1, 1, 1)
 				end
 			end
@@ -52,15 +52,15 @@ function createAvatarPreview(level)
 	return image
 end
 
-function createLevelPreview(level)
+function createPuzzlePreview(puzzle)
 	local image = gfx.image.new(16, 16, gfx.kColorBlack)
 	gfx.lockFocus(image)
 	do
 		gfx.setColor(gfx.kColorWhite)
-		for y = 1, level.height do
-			for x = 1, level.width do
-				local index = x - 1 + (y - 1) * level.width + 1
-				if level.grid[index] == 0 then
+		for y = 1, puzzle.height do
+			for x = 1, puzzle.width do
+				local index = x - 1 + (y - 1) * puzzle.width + 1
+				if puzzle.grid[index] == 0 then
 					gfx.fillRect(x - 1, y + 1, 1, 1)
 				end
 			end

@@ -1,7 +1,7 @@
 class("Numbers").extends()
 
-function Numbers:init(level, grid)
-	self.level = level
+function Numbers:init(puzzle, grid)
+	self.puzzle = puzzle
 	self.grid = grid
 
 	self:calcTopNumbers()
@@ -11,12 +11,12 @@ end
 function Numbers:calcTopNumbers()
 	self.top = {}
 	self.topIndexes = {}
-	for x = 1, self.level.width do
+	for x = 1, self.puzzle.width do
 		local numbers = { 0 }
 		local indexes = {}
 		local i = 1
-		for y = 1, self.level.height do
-			local index = x - 1 + (y - 1) * self.level.width + 1
+		for y = 1, self.puzzle.height do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
 			if self.grid[index] == 1 then
 				if numbers[i] == 0 then
 					indexes[i] = y
@@ -38,12 +38,12 @@ end
 function Numbers:calcLeftNumbers()
 	self.left = {}
 	self.leftIndexes = {}
-	for y = 1, self.level.height do
+	for y = 1, self.puzzle.height do
 		local numbers = { 0 }
 		local indexes = {}
 		local i = 1
-		for x = 1, self.level.width do
-			local index = x - 1 + (y - 1) * self.level.width + 1
+		for x = 1, self.puzzle.width do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
 			if self.grid[index] == 1 then
 				if numbers[i] == 0 then
 					indexes[i] = x

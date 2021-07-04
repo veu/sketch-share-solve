@@ -19,11 +19,11 @@ function numbersToPattern(numbers)
 	return r .. "[^#]*$"
 end
 
-function solutionColumnToString(level, x, solution, crossed)
+function solutionColumnToString(puzzle, x, solution, crossed)
 	local s = ""
 
-	for y = 1, level.height do
-		local index = x - 1 + (y - 1) * level.width + 1
+	for y = 1, puzzle.height do
+		local index = x - 1 + (y - 1) * puzzle.width + 1
 		s = s .. (
 			solution[index] == 1 and "#" or
 			crossed[index] == 1 and "x" or
@@ -34,11 +34,11 @@ function solutionColumnToString(level, x, solution, crossed)
 	return s
 end
 
-function solutionRowToString(level, y, solution, crossed)
+function solutionRowToString(puzzle, y, solution, crossed)
 	local s = ""
 
-	for x = 1, level.width do
-		local index = x - 1 + (y - 1) * level.width + 1
+	for x = 1, puzzle.width do
+		local index = x - 1 + (y - 1) * puzzle.width + 1
 		s = s .. (
 			solution[index] == 1 and "#" or
 			crossed[index] == 1 and "x" or

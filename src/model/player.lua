@@ -45,7 +45,7 @@ function Player:save(context)
 end
 
 function Player:delete(context)
-	-- hide profile if player has created levels
+	-- hide profile if player has created puzzles
 	if #self.created > 0 then
 		self.hidden = true
 		self:save(context)

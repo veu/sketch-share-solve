@@ -10,39 +10,39 @@ import "CoreLibs/ui/crankIndicator"
 
 import "constants"
 import "input"
-import "levels"
+import "save"
 import "utils"
 
 import "model/done-numbers"
 import "model/done-numbers-disabled"
-import "model/level"
 import "model/numbers"
 import "model/player"
+import "model/puzzle"
 
 import "screen/screen"
-import "screen/avatar-create"
-import "screen/grid-create"
-import "screen/grid-play"
-import "screen/grid-solved"
+import "screen/create-avatar"
+import "screen/create-puzzle"
+import "screen/play-puzzle"
+import "screen/solved-puzzle"
 import "screen/title"
 
 import "sidebar/sidebar"
 import "sidebar/create-avatar"
-import "sidebar/create-grid"
+import "sidebar/create-puzzle"
 import "sidebar/options"
-import "sidebar/play-grid"
+import "sidebar/play-puzzle"
 import "sidebar/select-avatar"
 import "sidebar/select-creator"
-import "sidebar/select-level"
 import "sidebar/select-mode"
 import "sidebar/select-player"
-import "sidebar/test-grid"
+import "sidebar/select-puzzle"
+import "sidebar/test-puzzle"
 
 import "ui/avatar"
-import "ui/board"
-import "ui/board-numbers"
 import "ui/cursor"
 import "ui/dialog"
+import "ui/grid"
+import "ui/grid-numbers"
 import "ui/list"
 import "ui/modal"
 import "ui/text-cursor"
@@ -63,39 +63,39 @@ fontText = gfx.font.new("font/text")
 assert(fontText)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
-imgBoard, err = gfx.imagetable.new("img/board")
-assert(imgBoard, err)
+imgGrid, err = gfx.imagetable.new("img/grid")
+assert(imgGrid, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 
 -- screens
-local avatarCreate = AvatarCreate()
-local gridCreate = GridCreate()
-local gridPlay = GridPlay()
-local gridSolved = GridSolved()
-local title = TitleScreen()
+local createAvatarScreen = CreateAvatarScreen()
+local createPuzzleScreen = CreatePuzzleScreen()
+local solvedPuzzleScreen = SolvedPuzzleScreen()
+local playPuzzleScreen = PlayPuzzleScreen()
+local titleScreen = TitleScreen()
 
 -- sidebars
 local createAvatarSidebar = CreateAvatarSidebar()
-local createGridSidebar = CreateGridSidebar()
+local createPuzzleSidebar = CreatePuzzleSidebar()
 local optionsSidebar = OptionsSidebar()
-local playGridSidebar = PlayGridSidebar()
+local playPuzzleSidebar = PlayPuzzleSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
 local selectCreatorSidebar = SelectCreatorSidebar()
-local selectLevelSidebar = SelectLevelSidebar()
+local selectPuzzleSidebar = SelectPuzzleSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
-local testGridSidebar = TestGridSidebar()
+local testPuzzleSidebar = TestPuzzleSidebar()
 
 -- modal
 local modal = Modal()
 
 local context = {
 	creator = nil,
-	level = nil,
+	puzzle = nil,
 	player = nil,
 	mode = nil,
 	save = nil,
-	screen = title
+	screen = titleScreen
 }
 
 local sidebar = selectPlayerSidebar
@@ -125,7 +125,7 @@ function showPlayerKeyboard(mode)
 		local text = playdate.keyboard.text
 		gfx.setFont(fontText)
 		local size = gfx.getTextSize(text)
-		if size <= MAX_LEVEL_NAME_SIZE then
+		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.player.name = text
 			switchToSidebar(selectPlayerSidebar, mode)
@@ -137,7 +137,7 @@ function showPlayerKeyboard(mode)
 	playdate.keyboard.show(context.player.name)
 end
 
-function showLevelKeyboard()
+function showPuzzleKeyboard()
 	playdate.keyboard.canDismiss = function ()
 		return true
 	end
@@ -146,12 +146,12 @@ function showLevelKeyboard()
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
-			switchToScreen(gridSolved)
-			switchToSidebar(testGridSidebar)
+			switchToScreen(solvedPuzzleScreen)
+			switchToSidebar(testPuzzleSidebar)
 		else
-			context.level:save(context)
+			context.puzzle:save(context)
 
-			switchToScreen(title)
+			switchToScreen(titleScreen)
 			switchToSidebar(selectModeSidebar)
 		end
 	end
@@ -160,12 +160,12 @@ function showLevelKeyboard()
 		local text = playdate.keyboard.text
 		gfx.setFont(fontText)
 		local size = gfx.getTextSize(text)
-		if size <= MAX_LEVEL_NAME_SIZE then
+		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
-			context.level.title = text
-			switchToSidebar(selectLevelSidebar, LEVEL_ID_SHOW_NAME)
+			context.puzzle.title = text
+			switchToSidebar(selectPuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 		else
-			playdate.keyboard.text = context.level.title
+			playdate.keyboard.text = context.puzzle.title
 		end
 	end
 
@@ -184,48 +184,48 @@ function switchToSidebar(newSidebar, selected)
 	sidebar:enter(context, selected)
 end
 
-avatarCreate.onChanged = function()
+createAvatarScreen.onChanged = function()
 	switchToSidebar(createAvatarSidebar)
 end
 
-gridCreate.onChanged = function ()
-	context.level.hasBeenSolved = false
-	switchToSidebar(createGridSidebar)
+createPuzzleScreen.onChanged = function ()
+	context.puzzle.hasBeenSolved = false
+	switchToSidebar(createPuzzleSidebar)
 end
 
-gridPlay.onPlayed = function ()
-	switchToScreen(gridSolved)
+playPuzzleScreen.onPlayed = function ()
+	switchToScreen(solvedPuzzleScreen)
 	if context.mode == MODE_CREATE then
-		switchToSidebar(testGridSidebar)
+		switchToSidebar(testPuzzleSidebar)
 	else
-		context.player.played[context.level.id] = true
+		context.player.played[context.puzzle.id] = true
 		context.player:save(context)
 
-		switchToSidebar(selectLevelSidebar, context.level.id)
+		switchToSidebar(selectPuzzleSidebar, context.puzzle.id)
 	end
 end
 
 createAvatarSidebar.onAbort = function ()
-	switchToScreen(title)
+	switchToScreen(titleScreen)
 	switchToSidebar(selectAvatarSidebar)
 end
 
 createAvatarSidebar.onSave = function()
-	context.player.avatar = createAvatarPreview(context.level)
+	context.player.avatar = createAvatarPreview(context.puzzle)
 
-	switchToScreen(title)
+	switchToScreen(titleScreen)
 	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
-createGridSidebar.onAbort = function()
-	switchToScreen(title)
+createPuzzleSidebar.onAbort = function()
+	switchToScreen(titleScreen)
 	switchToSidebar(selectModeSidebar)
 end
 
-createGridSidebar.onTestAndSave = function ()
-	switchToScreen(gridPlay)
-	switchToSidebar(testGridSidebar)
+createPuzzleSidebar.onTestAndSave = function ()
+	switchToScreen(playPuzzleScreen)
+	switchToSidebar(testPuzzleSidebar)
 end
 
 optionsSidebar.onAbort = function ()
@@ -242,7 +242,7 @@ optionsSidebar.onDelete = function ()
 		delete()
 	else
 		modal.onOK = delete
-		modal:enter("Deleting your profile won’t delete your levels. Continue anyway?", "Delete")
+		modal:enter("Deleting your profile won’t delete your puzzles. Continue anyway?", "Delete")
 	end
 end
 
@@ -264,22 +264,22 @@ optionsSidebar.onToggleHints = function ()
 	switchToSidebar(optionsSidebar)
 end
 
-playGridSidebar.onAbort = function ()
-	switchToSidebar(selectLevelSidebar, context.level.id)
-	switchToScreen(title)
+playPuzzleSidebar.onAbort = function ()
+	switchToScreen(titleScreen)
+	switchToSidebar(selectPuzzleSidebar, context.puzzle.id)
 end
 
-playGridSidebar.onDeletePuzzle = function ()
+playPuzzleSidebar.onDeletePuzzle = function ()
 	modal.onOK = function ()
-		context.level:delete(context)
+		context.puzzle:delete(context)
 		if #context.creator.created > 0 then
-			switchToSidebar(selectLevelSidebar)
+			switchToSidebar(selectPuzzleSidebar)
 		else
 			switchToSidebar(selectCreatorSidebar)
 		end
-		switchToScreen(title)
+		switchToScreen(titleScreen)
 	end
-	modal:enter("Are you sure you want to delete the puzzle \"" .. context.level.title .. "\"?", "Delete")
+	modal:enter("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
 selectAvatarSidebar.onAbort = function()
@@ -287,7 +287,7 @@ selectAvatarSidebar.onAbort = function()
 end
 
 selectAvatarSidebar.onNewAvatar = function ()
-	switchToScreen(avatarCreate)
+	switchToScreen(createAvatarScreen)
 	switchToSidebar(createAvatarSidebar)
 end
 
@@ -305,18 +305,18 @@ end
 
 selectCreatorSidebar.onSelected = function(creator)
 	context.creator = creator
-	switchToSidebar(selectLevelSidebar)
+	switchToSidebar(selectPuzzleSidebar)
 end
 
-selectLevelSidebar.onAbort = function()
-	switchToScreen(title)
+selectPuzzleSidebar.onAbort = function()
+	switchToScreen(titleScreen)
 	switchToSidebar(selectCreatorSidebar, context.creator.id)
 end
 
-selectLevelSidebar.onSelected = function (level)
-	context.level = Level(level)
-	switchToScreen(gridPlay)
-	switchToSidebar(playGridSidebar)
+selectPuzzleSidebar.onSelected = function (puzzle)
+	context.puzzle = Puzzle(puzzle)
+	switchToScreen(playPuzzleScreen)
+	switchToSidebar(playPuzzleSidebar)
 end
 
 selectModeSidebar.onAbort = function()
@@ -328,9 +328,9 @@ selectModeSidebar.onSelected = function(selectedMode)
 	if context.mode == MODE_PLAY then
 		switchToSidebar(selectCreatorSidebar)
 	elseif context.mode == MODE_CREATE then
-		context.level = Level.createEmpty()
-		switchToScreen(gridCreate)
-		switchToSidebar(createGridSidebar)
+		context.puzzle = Puzzle.createEmpty()
+		switchToScreen(createPuzzleScreen)
+		switchToSidebar(createPuzzleSidebar)
 	else
 		switchToSidebar(optionsSidebar)
 	end
@@ -348,15 +348,15 @@ selectPlayerSidebar.onSelected = function(player)
 	switchToSidebar(selectModeSidebar)
 end
 
-testGridSidebar.onAbort = function ()
-	switchToScreen(gridCreate)
-	switchToSidebar(createGridSidebar)
+testPuzzleSidebar.onAbort = function ()
+	switchToScreen(createPuzzleScreen)
+	switchToSidebar(createPuzzleSidebar)
 end
 
-testGridSidebar.onSave = function ()
-	context.level.title = ""
-	switchToSidebar(selectLevelSidebar, LEVEL_ID_SHOW_NAME)
-	showLevelKeyboard()
+testPuzzleSidebar.onSave = function ()
+	context.puzzle.title = ""
+	switchToSidebar(selectPuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+	showPuzzleKeyboard()
 end
 
 function playdate.crankDocked()

@@ -1,15 +1,15 @@
-class("CreateGridSidebar").extends(Sidebar)
+class("CreatePuzzleSidebar").extends(Sidebar)
 
-function CreateGridSidebar:init()
-	CreateGridSidebar.super.init(self)
+function CreatePuzzleSidebar:init()
+	CreatePuzzleSidebar.super.init(self)
 end
 
-function CreateGridSidebar:enter(context)
+function CreatePuzzleSidebar:enter(context)
 	local config = {
 		menuItems = {
 			{
 				text = "Test and Save",
-				disabled = context.level:isTrivial(),
+				disabled = context.puzzle:isTrivial(),
 				exec = function()
 					self.onTestAndSave()
 				end
@@ -29,7 +29,7 @@ function CreateGridSidebar:enter(context)
 		}
 	}
 
-	CreateGridSidebar.super.enter(
+	CreatePuzzleSidebar.super.enter(
 		self,
 		config,
 		context.player.avatar

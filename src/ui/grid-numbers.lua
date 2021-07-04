@@ -1,29 +1,29 @@
 local gfx <const> = playdate.graphics
 
-class("BoardNumbers").extends(gfx.sprite)
+class("GridNumbers").extends(gfx.sprite)
 
-function BoardNumbers:init()
-	BoardNumbers.super.init(self)
+function GridNumbers:init()
+	GridNumbers.super.init(self)
 
 	self.image = gfx.image.new(400, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:moveTo(0, 0)
-	self:setZIndex(Z_INDEX_BOARD_NUMBERS)
+	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function BoardNumbers:enter(level, solution, crossed, x, y, withHints)
-	self.level = level
-	self.gridNumbers = Numbers(level, level.grid)
-	self.solutionNumbers = Numbers(level, solution)
+function GridNumbers:enter(puzzle, solution, crossed, x, y, withHints)
+	self.puzzle = puzzle
+	self.gridNumbers = Numbers(puzzle, puzzle.grid)
+	self.solutionNumbers = Numbers(puzzle, solution)
 	self.doneNumbers = withHints and DoneNumbers(
-		level,
+		puzzle,
 		self.gridNumbers,
 		self.solutionNumbers,
 		crossed,
 		solution,
 		withHints
-	) or DoneNumbersDisabled(level)
+	) or DoneNumbersDisabled(puzzle)
 	self.x = x
 	self.y = y
 
@@ -31,8 +31,8 @@ function BoardNumbers:enter(level, solution, crossed, x, y, withHints)
 	self:redraw()
 end
 
-function BoardNumbers:updateForPosition(solution, crossed)
-	self.solutionNumbers = Numbers(self.level, solution)
+function GridNumbers:updateForPosition(solution, crossed)
+	self.solutionNumbers = Numbers(self.puzzle, solution)
 	self.doneNumbers:updatePosition(
 		self.solutionNumbers,
 		crossed,
@@ -44,17 +44,17 @@ function BoardNumbers:updateForPosition(solution, crossed)
 	self:redraw()
 end
 
-function BoardNumbers:leave()
+function GridNumbers:leave()
 	self:remove()
 end
 
-function BoardNumbers:setCursor(x, y)
+function GridNumbers:setCursor(x, y)
 	self.x = x
 	self.y = y
 	self:redraw()
 end
 
-function BoardNumbers:redraw()
+function GridNumbers:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
@@ -73,9 +73,9 @@ local NUM_MAP = {
 	[12] = "C", [13] = "D", [14] = "E", [15] = "F",
 }
 
-function BoardNumbers:drawLeft()
+function GridNumbers:drawLeft()
 	gfx.pushContext()
-	gfx.setDrawOffset(BOARD_OFFSET_X + CELL * (15 - self.level.width), BOARD_OFFSET_Y)
+	gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 	do
 		for y, numbers in pairs(self.gridNumbers.left) do
 			for i, v in pairs(numbers) do
@@ -97,9 +97,9 @@ function BoardNumbers:drawLeft()
 	gfx.popContext()
 end
 
-function BoardNumbers:drawTop()
+function GridNumbers:drawTop()
 	gfx.pushContext()
-	gfx.setDrawOffset(BOARD_OFFSET_X + CELL * (15 - self.level.width), BOARD_OFFSET_Y)
+	gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 	do
 		for x, numbers in pairs(self.gridNumbers.top) do
 			for i, v in pairs(numbers) do

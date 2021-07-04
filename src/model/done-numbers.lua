@@ -6,8 +6,8 @@ class("DoneNumbers").extends()
 --- 3. For each block: tap matching blocks in partial solution in range [L,R]
 --- 4. For each partial solution block: if there is only one tap, mark corresponding block as done
 
-function DoneNumbers:init(level, gridNumbers, solutionNumbers, crossed, solution)
-	self.level = level
+function DoneNumbers:init(puzzle, gridNumbers, solutionNumbers, crossed, solution)
+	self.puzzle = puzzle
 	self.gridNumbers = gridNumbers
 	self.solutionNumbers = solutionNumbers
 	self.crossed = crossed
@@ -28,7 +28,7 @@ end
 
 function DoneNumbers:calcLeftNumbers()
 	self.left = {}
-	for y = 1, self.level.height do
+	for y = 1, self.puzzle.height do
 		self:calcLeftNumbersForRow(y)
 	end
 end
@@ -50,7 +50,7 @@ function DoneNumbers:calcLeftNumbersForRow(y)
 end
 
 function DoneNumbers:matchLeft(y)
-	local solutionString = solutionRowToString(self.level, y, self.solution, self.crossed)
+	local solutionString = solutionRowToString(self.puzzle, y, self.solution, self.crossed)
 	local numbers = self.gridNumbers.left[y]
 
 	local leftIndexes = {string.match(
@@ -69,7 +69,7 @@ function DoneNumbers:matchLeft(y)
 		return nil
 	end
 
-	return leftIndexes, reverseIndexes(rightIndexes, self.level.width)
+	return leftIndexes, reverseIndexes(rightIndexes, self.puzzle.width)
 end
 
 function DoneNumbers:tapBlocksLeft(y, indexLeft, indexRight)
@@ -103,7 +103,7 @@ end
 
 function DoneNumbers:calcTopNumbers()
 	self.top = {}
-	for x = 1, self.level.width do
+	for x = 1, self.puzzle.width do
 		self.top[x] = {}
 
 		self:calcTopNumbersForColumn(x)
@@ -127,7 +127,7 @@ function DoneNumbers:calcTopNumbersForColumn(x)
 end
 
 function DoneNumbers:matchTop(x)
-	local solutionString = solutionColumnToString(self.level, x, self.solution, self.crossed)
+	local solutionString = solutionColumnToString(self.puzzle, x, self.solution, self.crossed)
 	local numbers = self.gridNumbers.top[x]
 
 	local topIndexes = {string.match(
@@ -146,7 +146,7 @@ function DoneNumbers:matchTop(x)
 		return nil
 	end
 
-	return topIndexes, reverseIndexes(bottomIndexes, self.level.height)
+	return topIndexes, reverseIndexes(bottomIndexes, self.puzzle.height)
 end
 
 function DoneNumbers:tapBlocksTop(x, indexTop, indexBottom)

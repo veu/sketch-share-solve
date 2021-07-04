@@ -31,6 +31,6 @@ function CreateAvatarSidebar:enter(context)
 	CreateAvatarSidebar.super.enter(
 		self,
 		config,
-		createAvatarPreview(context.level)
+		createAvatarPreview(context.puzzle)
 	)
 end

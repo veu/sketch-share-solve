@@ -1,15 +1,15 @@
-class("TestGridSidebar").extends(Sidebar)
+class("TestPuzzleSidebar").extends(Sidebar)
 
-function TestGridSidebar:init()
-	TestGridSidebar.super.init(self)
+function TestPuzzleSidebar:init()
+	TestPuzzleSidebar.super.init(self)
 end
 
-function TestGridSidebar:enter(context)
+function TestPuzzleSidebar:enter(context)
 	local config = {
 		menuItems = {
 			{
 				text = "Save",
-				disabled = not context.level.hasBeenSolved,
+				disabled = not context.puzzle.hasBeenSolved,
 				exec = function()
 					self.onSave()
 				end
@@ -23,7 +23,7 @@ function TestGridSidebar:enter(context)
 		}
 	}
 
-	TestGridSidebar.super.enter(
+	TestPuzzleSidebar.super.enter(
 		self,
 		config,
 		context.player.avatar
