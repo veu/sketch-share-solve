@@ -24,10 +24,7 @@ function Title:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		gfx.setFont(fontText)
-		gfx.setColor(gfx.kColorBlack)
-		local width = gfx.getTextSize(GAME_NAME)
-		gfx.drawText(GAME_NAME, 400 - width - 20, 20)
+		imgTitle:draw(0, 0)
 	end
 	gfx.unlockFocus()
 	self:markDirty()

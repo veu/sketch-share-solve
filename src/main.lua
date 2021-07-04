@@ -67,6 +67,7 @@ assert(imgAvatars, err)
 imgGrid, err = gfx.imagetable.new("img/grid")
 assert(imgGrid, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
+imgTitle = gfx.image.new("img/title")
 
 -- screens
 local createAvatarScreen = CreateAvatarScreen()
