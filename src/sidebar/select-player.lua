@@ -35,6 +35,10 @@ function SelectPlayerSidebar:enter(context, selected)
 		end
 	end
 
+	if not context.isCrankDocked then
+		config.player = config.menuItems[selectedIndex].avatar
+	end
+
 	if selected == PLAYER_ID_SHOW_NAME then
 		table.insert(config.menuItems, {
 			text = context.player.name,
@@ -53,12 +57,7 @@ function SelectPlayerSidebar:enter(context, selected)
 		})
 	end
 
-	local avatar = config.menuItems[selectedIndex].avatar
-	SelectPlayerSidebar.super.enter(
-		self,
-		config,
-		not playdate.isCrankDocked() and avatar or nil
-	)
+	SelectPlayerSidebar.super.enter(self, context, config)
 end
 
 function SelectPlayerSidebar:onCranked()

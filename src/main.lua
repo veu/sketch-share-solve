@@ -97,7 +97,8 @@ local context = {
 	player = nil,
 	mode = nil,
 	save = nil,
-	screen = titleScreen
+	screen = titleScreen,
+	isCrankDocked = true,
 }
 
 local sidebar = selectPlayerSidebar
@@ -362,11 +363,13 @@ testPuzzleSidebar.onSave = function ()
 end
 
 function playdate.crankDocked()
+	context.isCrankDocked = true
 	context.screen:crankDocked()
 	sidebar:close()
 end
 
 function playdate.crankUndocked()
+	context.isCrankDocked = false
 	context.screen:crankUndocked()
 	sidebar:open()
 end
@@ -417,6 +420,12 @@ context.save = playdate.datastore.read() or DEFAULT_SAVE
 playdate.ui.crankIndicator:start()
 context.screen:enter(context)
 sidebar:enter(context)
+
+if not playdate.isCrankDocked() then
+	context.isCrankDocked = false
+	context.screen:crankUndocked()
+	sidebar:open()
+end
 
 function playdate.update()
 	context.screen:update()

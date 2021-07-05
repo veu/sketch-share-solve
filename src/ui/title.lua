@@ -11,13 +11,10 @@ function Title:init()
 	self:setZIndex(Z_INDEX_TITLE)
 end
 
-function Title:enter()
+function Title:enter(context)
 	self:redraw()
 	self:add()
-	self:moveTo(0, 0)
-	if not playdate.isCrankDocked() then
-		self:crankUndocked()
-	end
+	self:moveTo(context.isCrankDocked and 0 or SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, 0)
 end
 
 function Title:leave()

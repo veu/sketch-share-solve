@@ -8,6 +8,7 @@ end
 
 function SelectAvatarSidebar:enter(context)
 	local config = {
+		player = imgAvatars:getImage(1),
 		menuItems = {},
 		menuTitle = "Choose avatar"
 	}
@@ -27,11 +28,7 @@ function SelectAvatarSidebar:enter(context)
 		end
 	})
 
-	SelectAvatarSidebar.super.enter(
-		self,
-		config,
-		imgAvatars:getImage(1)
-	)
+	SelectAvatarSidebar.super.enter(self, context, config)
 end
 
 function SelectAvatarSidebar:onCranked()

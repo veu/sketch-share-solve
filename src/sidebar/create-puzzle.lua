@@ -6,6 +6,7 @@ end
 
 function CreatePuzzleSidebar:enter(context)
 	local config = {
+		player = context.player.avatar,
 		menuItems = {
 			{
 				text = "Test and Save",
@@ -29,9 +30,5 @@ function CreatePuzzleSidebar:enter(context)
 		}
 	}
 
-	CreatePuzzleSidebar.super.enter(
-		self,
-		config,
-		context.player.avatar
-	)
+	CreatePuzzleSidebar.super.enter(self, context, config)
 end

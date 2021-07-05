@@ -6,6 +6,7 @@ end
 
 function CreateAvatarSidebar:enter(context)
 	local config = {
+		player = createAvatarPreview(context.puzzle),
 		menuItems = {
 			{
 				text = "Save",
@@ -28,9 +29,5 @@ function CreateAvatarSidebar:enter(context)
 		}
 	}
 
-	CreateAvatarSidebar.super.enter(
-		self,
-		config,
-		createAvatarPreview(context.puzzle)
-	)
+	CreateAvatarSidebar.super.enter(self, context, config)
 end

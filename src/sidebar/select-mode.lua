@@ -6,6 +6,7 @@ end
 
 function SelectModeSidebar:enter(context)
 	local config = {
+		player = context.player.avatar,
 		menuItems = {
 			{ text = "Solve", ref = MODE_PLAY },
 			{ text = "Sketch", ref = MODE_CREATE },
@@ -13,9 +14,5 @@ function SelectModeSidebar:enter(context)
 		}
 	}
 
-	SelectModeSidebar.super.enter(
-		self,
-		config,
-		context.player.avatar
-	)
+	SelectModeSidebar.super.enter(self, context, config)
 end

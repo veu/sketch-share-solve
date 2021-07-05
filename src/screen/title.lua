@@ -11,7 +11,7 @@ function TitleScreen:init()
 end
 
 function TitleScreen:enter(context)
-	self.title:enter()
+	self.title:enter(context)
 end
 
 function TitleScreen:leave()

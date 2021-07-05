@@ -7,14 +7,17 @@ function SelectPuzzleSidebar:init()
 end
 
 function SelectPuzzleSidebar:enter(context, selected)
+	local player = context.player
+	local creator = selected == PUZZLE_ID_SHOW_NAME and player or context.creator
+
 	local config = {
+		player = player.avatar,
+		creator = creator.avatar,
 		menuItems = {},
 		menuTitle = selected == PUZZLE_ID_SHOW_NAME and "Name your puzzle" or "Choose puzzle",
 		stayOpen = selected == PUZZLE_ID_SHOW_NAME
 	}
 
-	local player = context.player
-	local creator = selected == PUZZLE_ID_SHOW_NAME and player or context.creator
 	for i, id in pairs(creator.created) do
 		local puzzle = Puzzle.load(context, id)
 		local revealed = creator.id == player.id or player.played[puzzle.id]
@@ -42,10 +45,5 @@ function SelectPuzzleSidebar:enter(context, selected)
 		})
 	end
 
-	SelectPuzzleSidebar.super.enter(
-		self,
-		config,
-		context.player.avatar,
-		creator.avatar
-	)
+	SelectPuzzleSidebar.super.enter(self, context, config)
 end

@@ -9,6 +9,8 @@ function PlayPuzzleSidebar:enter(context)
 	local creator = context.creator
 	local puzzle = context.puzzle
 	local config = {
+		player = player.avatar,
+		creator = creator.avatar,
 		menuTitle = self:getTitle(player, creator, puzzle),
 		menuItems = {
 			{
@@ -29,12 +31,7 @@ function PlayPuzzleSidebar:enter(context)
 		})
 	end
 
-	PlayPuzzleSidebar.super.enter(
-		self,
-		config,
-		player.avatar,
-		creator.avatar
-	)
+	PlayPuzzleSidebar.super.enter(self, context, config)
 end
 
 function PlayPuzzleSidebar:getTitle(player, creator, puzzle)

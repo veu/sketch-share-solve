@@ -9,6 +9,7 @@ function OptionsSidebar:enter(context)
 		context.player.options.hintsDisabled and "off" or "on"
 	)
 	local config = {
+		player = context.player.avatar,
 		menuItems = {
 			{
 				text = hintsText,
@@ -39,7 +40,7 @@ function OptionsSidebar:enter(context)
 
 	OptionsSidebar.super.enter(
 		self,
-		config,
-		context.player.avatar
+		context,
+		config
 	)
 end

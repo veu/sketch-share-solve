@@ -6,6 +6,7 @@ end
 
 function SelectCreatorSidebar:enter(context, selected)
 	local config = {
+		player = context.player.avatar,
 		menuItems = {},
 		menuTitle = "Choose creator"
 	}
@@ -30,12 +31,9 @@ function SelectCreatorSidebar:enter(context, selected)
 		end
 	end
 
-	SelectCreatorSidebar.super.enter(
-		self,
-		config,
-		context.player.avatar,
-		creator.avatar
-	)
+	config.creator = creator.avatar
+
+	SelectCreatorSidebar.super.enter(self, context, config)
 end
 
 function SelectCreatorSidebar:onCranked()
