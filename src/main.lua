@@ -156,7 +156,7 @@ function showPuzzleKeyboard()
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
 			switchToScreen(solvedPuzzleScreen)
-			switchToSidebar(testPuzzleSidebar)
+			switchToSidebar(testPuzzleSidebar, nil, true)
 		else
 			context.puzzle:save(context)
 
@@ -221,7 +221,7 @@ end
 
 createAvatarSidebar.onAbort = function ()
 	switchToScreen(titleScreen)
-	switchToSidebar(selectAvatarSidebar)
+	switchToSidebar(selectAvatarSidebar, nil, true)
 end
 
 createAvatarSidebar.onSave = function()
@@ -234,7 +234,7 @@ end
 
 createPuzzleSidebar.onAbort = function()
 	switchToScreen(titleScreen)
-	switchToSidebar(selectModeSidebar)
+	switchToSidebar(selectModeSidebar, nil, true)
 end
 
 createPuzzleSidebar.onTestAndSave = function ()
@@ -364,7 +364,7 @@ end
 
 testPuzzleSidebar.onAbort = function ()
 	switchToScreen(createPuzzleScreen)
-	switchToSidebar(createPuzzleSidebar)
+	switchToSidebar(createPuzzleSidebar, nil, true)
 end
 
 testPuzzleSidebar.onSave = function ()
