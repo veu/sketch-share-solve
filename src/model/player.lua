@@ -66,6 +66,14 @@ function Player:delete(context)
 	end
 end
 
+function Player:getNumPlayed()
+	local numPlayed = 0
+	for _ in pairs(self.played) do
+		numPlayed += 1
+	end
+	return numPlayed
+end
+
 Player.load = function (context, id)
 	return Player(context.save.profiles[id])
 end

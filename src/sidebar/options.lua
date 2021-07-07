@@ -20,6 +20,7 @@ function OptionsSidebar:enter(context)
 			},
 			{
 				text = "Reset progress",
+				disabled = context.player:getNumPlayed() == 0,
 				exec = function ()
 					self.onResetProgress()
 				end

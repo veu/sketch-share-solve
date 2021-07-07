@@ -260,10 +260,13 @@ optionsSidebar.onRename = function ()
 end
 
 optionsSidebar.onResetProgress = function ()
-	context.player.played = {}
-	context.player:save(context)
-
-	switch(nil, selectModeSidebar)
+	modal.onOK = function ()
+		context.player.played = {}
+		context.player:save(context)
+		switch(nil, optionsSidebar)
+	end
+	local numPlayed = context.player:getNumPlayed()
+	modal:enter("This will reset " .. numPlayed .. " played puzzles.", "Reset progress")
 end
 
 optionsSidebar.onToggleHints = function ()

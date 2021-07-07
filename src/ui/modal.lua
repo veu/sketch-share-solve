@@ -52,7 +52,7 @@ function Modal:draw(text, ok, cancel)
 		gfx.drawTextInRect(text, 40, 40, 320, 160)
 
 		self:drawButton("B", cancel or "Cancel", 40, 180)
-		self:drawButton("A", ok or "OK", 86 + gfx.getTextSize(ok or "OK"), 180)
+		self:drawButton("A", ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
 	end
 	gfx.popContext()
 	self:markDirty()
