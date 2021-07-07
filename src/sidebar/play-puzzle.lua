@@ -16,7 +16,7 @@ function PlayPuzzleSidebar:enter(context)
 			{
 				text = "Reset grid",
 				exec = function()
-					context.screen:resetBoard()
+					context.screen:resetGrid()
 				end
 			}
 		}

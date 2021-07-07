@@ -4,7 +4,7 @@ function OptionsSidebar:init()
 	OptionsSidebar.super.init(self)
 end
 
-function OptionsSidebar:enter(context)
+function OptionsSidebar:enter(context, selected)
 	local hintsText = "Hints: " .. (
 		context.player.options.hintsDisabled and "off" or "on"
 	)
@@ -21,12 +21,14 @@ function OptionsSidebar:enter(context)
 			{
 				text = "Reset progress",
 				disabled = context.player:getNumPlayed() == 0,
+				selected = selected == OPTION_ID_RESET_PROGRESS,
 				exec = function ()
 					self.onResetProgress()
 				end
 			},
 			{
 				text = "Rename profile",
+				selected = selected == OPTION_ID_RENAME_PROFILE,
 				exec = function ()
 					self.onRename()
 				end

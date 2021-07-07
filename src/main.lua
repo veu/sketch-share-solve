@@ -123,7 +123,7 @@ function showPlayerKeyboard(mode)
 		else
 			context.player:save(context)
 			if mode == PLAYER_ID_SHOW_RENAME then
-				switch(nil, optionsSidebar, nil, true)
+				switch(nil, optionsSidebar, OPTION_ID_RENAME_PROFILE, true)
 			else
 				switch(nil, selectModeSidebar)
 			end
@@ -229,7 +229,19 @@ createAvatarSidebar.onSave = function()
 end
 
 createPuzzleSidebar.onAbort = function()
-	switch(titleScreen, selectModeSidebar, nil, true)
+	switch(titleScreen, selectModeSidebar, MODE_CREATE, true)
+end
+
+createPuzzleSidebar.onInvertColors = function()
+	context.screen:invertGrid()
+	context.puzzle.hasBeenSolved = false
+	switch(nil, createPuzzleSidebar, ACTION_ID_INVERT_COLORS)
+end
+
+createPuzzleSidebar.onResetGrid = function()
+	context.screen:resetGrid()
+	context.puzzle.hasBeenSolved = false
+	switch(nil, createPuzzleSidebar, ACTION_ID_RESET_GRID)
 end
 
 createPuzzleSidebar.onTestAndSave = function ()
@@ -237,7 +249,7 @@ createPuzzleSidebar.onTestAndSave = function ()
 end
 
 optionsSidebar.onAbort = function ()
-	switch(nil, selectModeSidebar, nil, true)
+	switch(nil, selectModeSidebar, MODE_OPTIONS, true)
 end
 
 optionsSidebar.onDelete = function ()
@@ -263,7 +275,7 @@ optionsSidebar.onResetProgress = function ()
 	modal.onOK = function ()
 		context.player.played = {}
 		context.player:save(context)
-		switch(nil, optionsSidebar)
+		switch(nil, optionsSidebar, OPTION_ID_RESET_PROGRESS)
 	end
 	local numPlayed = context.player:getNumPlayed()
 	modal:enter("This will reset " .. numPlayed .. " played puzzles.", "Reset progress")
@@ -308,7 +320,7 @@ selectAvatarSidebar.onSelected = function(avatar)
 end
 
 selectCreatorSidebar.onAbort = function()
-	switch(nil, selectModeSidebar, nil, true)
+	switch(nil, selectModeSidebar, MODE_PLAY, true)
 end
 
 selectCreatorSidebar.onSelected = function(creator)

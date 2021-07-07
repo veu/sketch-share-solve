@@ -89,7 +89,8 @@ function Grid:invert()
 	for i = 1, #self.solution do
 		self.solution[i] = self.solution[i] == 1 and 0 or 1
 	end
-	self:onUpdateSolution_()
+
+	self:redraw()
 end
 
 function Grid:reset()
@@ -110,7 +111,6 @@ function Grid:reset()
 	end
 
 	self:redraw()
-	self.onUpdateSolution(self.solution)
 end
 
 function Grid:getCursor()
@@ -136,7 +136,7 @@ function Grid:onUpdateSolution_()
 	end
 
 	self:redraw()
-	self.onUpdateSolution(self.solution)
+	self.onUpdateSolution()
 end
 
 function Grid:redraw()

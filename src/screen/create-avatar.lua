@@ -12,8 +12,8 @@ function CreateAvatarScreen:enter(context)
 	self.puzzle = Puzzle.createEmpty(10, 10)
 	context.puzzle = self.puzzle
 	self.grid:enter(self.puzzle, MODE_CREATE)
-	self.grid.onUpdateSolution = function (grid)
-		self.puzzle.grid = grid
+	self.grid.onUpdateSolution = function ()
+		self.puzzle.grid = self.grid.solution
 		self.onChanged()
 	end
 end
@@ -25,11 +25,11 @@ function CreateAvatarScreen:leave()
 	self.grid:leave()
 end
 
-function CreateAvatarScreen:invertBoard()
+function CreateAvatarScreen:invertGrid()
 	self.grid:invert()
 end
 
-function CreateAvatarScreen:resetBoard()
+function CreateAvatarScreen:resetGrid()
 	self.grid:reset()
 end
 

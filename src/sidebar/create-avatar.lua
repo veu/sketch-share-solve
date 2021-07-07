@@ -18,13 +18,13 @@ function CreateAvatarSidebar:enter(context)
 			{
 				text = "Invert colors",
 				exec = function()
-					context.screen:invertBoard()
+					context.screen:invertGrid()
 				end
 			},
 			{
 				text = "Reset avatar",
 				exec = function()
-					context.screen:resetBoard()
+					context.screen:resetGrid()
 				end
 			}
 		}

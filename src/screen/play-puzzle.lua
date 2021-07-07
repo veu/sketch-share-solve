@@ -11,8 +11,8 @@ end
 function PlayPuzzleScreen:enter(context)
 	self.puzzle = context.puzzle
 	self.mode = context.mode
-	self.grid.onUpdateSolution = function (solution)
-		if self.puzzle:isSolved(solution) then
+	self.grid.onUpdateSolution = function ()
+		if self.puzzle:isSolved(self.grid.solution) then
 			self.onPlayed()
 		end
 	end
@@ -27,7 +27,7 @@ function PlayPuzzleScreen:leave()
 	self.grid:leave()
 end
 
-function PlayPuzzleScreen:resetBoard()
+function PlayPuzzleScreen:resetGrid()
 	self.grid:reset()
 end
 

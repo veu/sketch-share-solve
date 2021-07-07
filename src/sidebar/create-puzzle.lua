@@ -4,7 +4,7 @@ function CreatePuzzleSidebar:init()
 	CreatePuzzleSidebar.super.init(self)
 end
 
-function CreatePuzzleSidebar:enter(context)
+function CreatePuzzleSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
 		menuItems = {
@@ -17,14 +17,16 @@ function CreatePuzzleSidebar:enter(context)
 			},
 			{
 				text = "Invert colors",
+				selected = selected == ACTION_ID_INVERT_COLORS,
 				exec = function()
-					context.screen:invertBoard()
+					self.onInvertColors()
 				end
 			},
 			{
 				text = "Reset grid",
+				selected = selected == ACTION_ID_RESET_GRID,
 				exec = function()
-					context.screen:resetBoard()
+					self.onResetGrid()
 				end
 			}
 		}

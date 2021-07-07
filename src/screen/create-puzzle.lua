@@ -11,8 +11,8 @@ end
 function CreatePuzzleScreen:enter(context)
 	self.puzzle = context.puzzle
 	self.grid:enter(self.puzzle, MODE_CREATE)
-	self.grid.onUpdateSolution = function (grid)
-		self.puzzle.grid = grid
+	self.grid.onUpdateSolution = function ()
+		self.puzzle.grid = self.grid.solution
 		self.onChanged()
 	end
 end
@@ -24,12 +24,14 @@ function CreatePuzzleScreen:leave()
 	self.grid:leave()
 end
 
-function CreatePuzzleScreen:invertBoard()
+function CreatePuzzleScreen:invertGrid()
 	self.grid:invert()
+	self.puzzle.grid = self.grid.solution
 end
 
-function CreatePuzzleScreen:resetBoard()
+function CreatePuzzleScreen:resetGrid()
 	self.grid:reset()
+	self.puzzle.grid = self.grid.solution
 end
 
 function CreatePuzzleScreen:update()

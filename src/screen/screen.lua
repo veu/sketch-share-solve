@@ -10,10 +10,10 @@ end
 function Screen:leave()
 end
 
-function Screen:invertBoard()
+function Screen:invertGrid()
 end
 
-function Screen:resetBoard()
+function Screen:resetGrid()
 end
 
 function Screen:AButtonDown()
