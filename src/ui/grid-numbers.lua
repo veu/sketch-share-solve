@@ -48,6 +48,12 @@ function GridNumbers:leave()
 	self:remove()
 end
 
+function GridNumbers:reset(solution, crossed)
+	self.solutionNumbers = Numbers(self.puzzle, solution)
+	self.doneNumbers:updateAll(self.solutionNumbers, crossed, solution)
+	self:redraw()
+end
+
 function GridNumbers:setCursor(x, y)
 	self.x = x
 	self.y = y

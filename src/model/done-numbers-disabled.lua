@@ -13,3 +13,6 @@ end
 
 function DoneNumbersDisabled:updatePosition()
 end
+
+function DoneNumbersDisabled:updateAll()
+end

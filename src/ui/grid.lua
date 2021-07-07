@@ -93,10 +93,24 @@ function Grid:invert()
 end
 
 function Grid:reset()
-	for i = 1, #self.solution do
-		self.solution[i] = 0
+	self.solution = {}
+	self.crossed = {}
+	for y = 1, self.puzzle.height do
+		for x = 1, self.puzzle.width do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
+			self.solution[index] = 0
+			self.crossed[index] =
+				self.mode == MODE_PLAY and self.puzzle:isCellKnownEmpty(x, y) and 1
+				or 0
+		end
 	end
-	self:onUpdateSolution_()
+
+	if self.numbers then
+		self.numbers:reset(self.solution, self.crossed)
+	end
+
+	self:redraw()
+	self.onUpdateSolution(self.solution)
 end
 
 function Grid:getCursor()

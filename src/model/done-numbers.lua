@@ -26,6 +26,15 @@ function DoneNumbers:updatePosition(solutionNumbers, crossed, solution, x, y)
 	self:calcTopNumbersForColumn(x)
 end
 
+function DoneNumbers:updateAll(solutionNumbers, crossed, solution)
+	self.solutionNumbers = solutionNumbers
+	self.crossed = crossed
+	self.solution = solution
+
+	self:calcLeftNumbers()
+	self:calcTopNumbers()
+end
+
 function DoneNumbers:calcLeftNumbers()
 	self.left = {}
 	for y = 1, self.puzzle.height do
