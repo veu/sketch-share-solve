@@ -217,8 +217,10 @@ playPuzzleScreen.onPlayed = function ()
 	if context.mode == MODE_CREATE then
 		switch(solvedPuzzleScreen, testPuzzleSidebar)
 	else
-		context.player.played[context.puzzle.id] = true
-		context.player:save(context)
+		if context.creator.id ~= context.player.id then
+			context.player.played[context.puzzle.id] = true
+			context.player:save(context)
+		end
 
 		switch(solvedPuzzleScreen, playPuzzleSidebar)
 	end
