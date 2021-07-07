@@ -4,7 +4,7 @@ function TestPuzzleSidebar:init()
 	TestPuzzleSidebar.super.init(self)
 end
 
-function TestPuzzleSidebar:enter(context)
+function TestPuzzleSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
 		menuItems = {
@@ -19,6 +19,14 @@ function TestPuzzleSidebar:enter(context)
 				text = "Edit",
 				exec = function()
 					self.onAbort()
+				end
+			},
+			{
+				text = "Reset grid",
+				disabled = context.puzzle.hasBeenSolved,
+				selected = selected == ACTION_ID_RESET_GRID,
+				exec = function()
+					self.onResetGrid()
 				end
 			}
 		}

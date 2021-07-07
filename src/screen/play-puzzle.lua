@@ -5,6 +5,7 @@ function PlayPuzzleScreen:init()
 
 	self.grid = Grid(true)
 
+	self.onChanged = function () end
 	self.onPlayed = function () end
 end
 
@@ -14,6 +15,8 @@ function PlayPuzzleScreen:enter(context)
 	self.grid.onUpdateSolution = function ()
 		if self.puzzle:isSolved(self.grid.solution) then
 			self.onPlayed()
+		else
+			self.onChanged()
 		end
 	end
 

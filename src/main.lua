@@ -206,6 +206,13 @@ createPuzzleScreen.onChanged = function ()
 	switch(nil, createPuzzleSidebar)
 end
 
+playPuzzleScreen.onChanged = function ()
+	if context.mode == MODE_CREATE then
+		context.puzzle.hasBeenSolved = false
+		switch(nil, testPuzzleSidebar)
+	end
+end
+
 playPuzzleScreen.onPlayed = function ()
 	if context.mode == MODE_CREATE then
 		switch(solvedPuzzleScreen, testPuzzleSidebar)
@@ -367,6 +374,12 @@ end
 
 testPuzzleSidebar.onAbort = function ()
 	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
+end
+
+testPuzzleSidebar.onResetGrid = function()
+	context.screen:resetGrid()
+	context.puzzle.hasBeenSolved = false
+	switch(nil, testPuzzleSidebar, ACTION_ID_RESET_GRID)
 end
 
 testPuzzleSidebar.onSave = function ()
