@@ -184,18 +184,18 @@ end
 function switchToScreen(newScreen)
 	context.screen:leave()
 	context.screen = newScreen
-	context.screen:enter(context)
 end
 
 function switchToSidebar(newSidebar, selected, out)
 	context.scrolling = newSidebar ~= sidebar
 	context.scrollOut = out
 	sidebar.onLeft = function ()
-		sidebar = newSidebar
 		context.scrolling = false
+		context.screen:enter(context)
 	end
 	sidebar:leave(context)
-	newSidebar:enter(context, selected)
+	sidebar = newSidebar
+	sidebar:enter(context, selected)
 end
 
 createAvatarScreen.onChanged = function()
