@@ -6,7 +6,8 @@ end
 
 function CreateAvatarSidebar:enter(context)
 	local config = {
-		player = createAvatarPreview(context.puzzle),
+		player = createAvatarPreview(context.puzzle) or imgAvatars:getImage(AVATAR_ID_NIL),
+		menuTitle = "Create new avatar",
 		menuItems = {
 			{
 				text = "Save",

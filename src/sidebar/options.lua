@@ -10,6 +10,7 @@ function OptionsSidebar:enter(context)
 	)
 	local config = {
 		player = context.player.avatar,
+		menuTitle = "Options",
 		menuItems = {
 			{
 				text = hintsText,

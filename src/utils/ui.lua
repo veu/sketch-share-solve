@@ -37,6 +37,10 @@ function drawRightTextRect(x, y, w, h, text)
 end
 
 function createAvatarPreview(puzzle)
+	if not puzzle then
+		return nil
+	end
+
 	local image = gfx.image.new(puzzle.width, puzzle.height, gfx.kColorBlack)
 	gfx.lockFocus(image)
 	do

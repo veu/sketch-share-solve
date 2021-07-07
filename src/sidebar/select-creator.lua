@@ -8,7 +8,7 @@ function SelectCreatorSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
 		menuItems = {},
-		menuTitle = "Choose creator"
+		menuTitle = "Choose a creator"
 	}
 
 	local selectedIndex = nil

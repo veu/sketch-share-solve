@@ -7,10 +7,11 @@ end
 function SelectModeSidebar:enter(context)
 	local config = {
 		player = context.player.avatar,
+		menuTitle = "What do you want to do?",
 		menuItems = {
 			{ text = "Solve", ref = MODE_PLAY },
 			{ text = "Sketch", ref = MODE_CREATE },
-			{ text = "Options", ref = MODE_OPTIONS },
+			{ text = "Configure", ref = MODE_OPTIONS },
 		}
 	}
 

@@ -119,13 +119,13 @@ function showPlayerKeyboard(mode)
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
-			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
+			switch(nil, mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
 		else
 			context.player:save(context)
 			if mode == PLAYER_ID_SHOW_RENAME then
-				switchToSidebar(optionsSidebar, nil, true)
+				switch(nil, optionsSidebar, nil, true)
 			else
-				switchToSidebar(selectModeSidebar)
+				switch(nil, selectModeSidebar)
 			end
 		end
 	end
@@ -137,7 +137,7 @@ function showPlayerKeyboard(mode)
 		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.player.name = text
-			switchToSidebar(namePlayerSidebar, mode)
+			switch(nil, namePlayerSidebar, mode)
 		else
 			playdate.keyboard.text = context.player.name
 		end
@@ -155,13 +155,11 @@ function showPuzzleKeyboard()
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
-			switchToScreen(solvedPuzzleScreen)
-			switchToSidebar(testPuzzleSidebar, nil, true)
+			switch(solvedPuzzleScreen, testPuzzleSidebar, nil, true)
 		else
 			context.puzzle:save(context)
 
-			switchToScreen(titleScreen)
-			switchToSidebar(selectModeSidebar, nil, true)
+			switch(titleScreen, selectModeSidebar, nil, true)
 		end
 	end
 
@@ -172,7 +170,7 @@ function showPuzzleKeyboard()
 		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.puzzle.title = text
-			switchToSidebar(namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+			switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 		else
 			playdate.keyboard.text = context.puzzle.title
 		end
@@ -181,17 +179,18 @@ function showPuzzleKeyboard()
 	playdate.keyboard.show()
 end
 
-function switchToScreen(newScreen)
-	context.screen:leave()
-	context.screen = newScreen
-end
-
-function switchToSidebar(newSidebar, selected, out)
+function switch(newScreen, newSidebar, selected, out)
+	if newScreen then
+		context.screen:leave()
+		context.screen = newScreen
+	end
 	context.scrolling = newSidebar ~= sidebar
 	context.scrollOut = out
 	sidebar.onLeft = function ()
 		context.scrolling = false
-		context.screen:enter(context)
+		if newScreen then
+			newScreen:enter(context)
+		end
 	end
 	sidebar:leave(context)
 	sidebar = newSidebar
@@ -199,57 +198,52 @@ function switchToSidebar(newSidebar, selected, out)
 end
 
 createAvatarScreen.onChanged = function()
-	switchToSidebar(createAvatarSidebar)
+	switch(nil, createAvatarSidebar)
 end
 
 createPuzzleScreen.onChanged = function ()
 	context.puzzle.hasBeenSolved = false
-	switchToSidebar(createPuzzleSidebar)
+	switch(nil, createPuzzleSidebar)
 end
 
 playPuzzleScreen.onPlayed = function ()
-	switchToScreen(solvedPuzzleScreen)
 	if context.mode == MODE_CREATE then
-		switchToSidebar(testPuzzleSidebar)
+		switch(solvedPuzzleScreen, testPuzzleSidebar)
 	else
 		context.player.played[context.puzzle.id] = true
 		context.player:save(context)
 
-		switchToSidebar(playPuzzleSidebar)
+		switch(solvedPuzzleScreen, playPuzzleSidebar)
 	end
 end
 
 createAvatarSidebar.onAbort = function ()
-	switchToScreen(titleScreen)
-	switchToSidebar(selectAvatarSidebar, nil, true)
+	switch(titleScreen, selectAvatarSidebar, nil, true)
 end
 
 createAvatarSidebar.onSave = function()
 	context.player.avatar = createAvatarPreview(context.puzzle)
 
-	switchToScreen(titleScreen)
-	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_NAME)
+	switch(titleScreen, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
 createPuzzleSidebar.onAbort = function()
-	switchToScreen(titleScreen)
-	switchToSidebar(selectModeSidebar, nil, true)
+	switch(titleScreen, selectModeSidebar, nil, true)
 end
 
 createPuzzleSidebar.onTestAndSave = function ()
-	switchToScreen(playPuzzleScreen)
-	switchToSidebar(testPuzzleSidebar)
+	switch(playPuzzleScreen, testPuzzleSidebar)
 end
 
 optionsSidebar.onAbort = function ()
-	switchToSidebar(selectModeSidebar, nil, true)
+	switch(nil, selectModeSidebar, nil, true)
 end
 
 optionsSidebar.onDelete = function ()
 	local delete = function ()
 		context.player:delete(context)
-		switchToSidebar(selectPlayerSidebar)
+		switch(nil, selectPlayerSidebar, nil, true)
 	end
 
 	if #context.player.created == 0 then
@@ -261,7 +255,7 @@ optionsSidebar.onDelete = function ()
 end
 
 optionsSidebar.onRename = function ()
-	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_RENAME)
+	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_RENAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
 end
 
@@ -269,107 +263,100 @@ optionsSidebar.onResetProgress = function ()
 	context.player.played = {}
 	context.player:save(context)
 
-	switchToSidebar(selectModeSidebar)
+	switch(nil, selectModeSidebar)
 end
 
 optionsSidebar.onToggleHints = function ()
 	context.player.options.hintsDisabled = not context.player.options.hintsDisabled
 	context.player:save(context)
-	switchToSidebar(optionsSidebar)
+	switch(nil, optionsSidebar)
 end
 
 playPuzzleSidebar.onAbort = function ()
-	switchToScreen(titleScreen)
-	switchToSidebar(selectPuzzleSidebar, context.puzzle.id, true)
+	switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
 end
 
 playPuzzleSidebar.onDeletePuzzle = function ()
 	modal.onOK = function ()
 		context.puzzle:delete(context)
 		if #context.creator.created > 0 then
-			switchToSidebar(selectPuzzleSidebar)
+			switch(titleScreen, selectPuzzleSidebar, nil, true)
 		else
-			switchToSidebar(selectCreatorSidebar)
+			switch(titleScreen, selectCreatorSidebar, nil, true)
 		end
-		switchToScreen(titleScreen)
 	end
 	modal:enter("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
 selectAvatarSidebar.onAbort = function()
-	switchToSidebar(selectPlayerSidebar, nil, true)
+	switch(nil, selectPlayerSidebar, nil, true)
 end
 
 selectAvatarSidebar.onNewAvatar = function ()
-	switchToScreen(createAvatarScreen)
-	switchToSidebar(createAvatarSidebar)
+	switch(createAvatarScreen, createAvatarSidebar)
 end
 
 selectAvatarSidebar.onSelected = function(avatar)
 	local player = context.player
 	player.avatar = imgAvatars:getImage(avatar)
 
-	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_NAME)
+	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
 selectCreatorSidebar.onAbort = function()
-	switchToSidebar(selectModeSidebar, nil, true)
+	switch(nil, selectModeSidebar, nil, true)
 end
 
 selectCreatorSidebar.onSelected = function(creator)
 	context.creator = creator
-	switchToSidebar(selectPuzzleSidebar)
+	switch(nil, selectPuzzleSidebar)
 end
 
 selectPuzzleSidebar.onAbort = function()
-	switchToScreen(titleScreen)
-	switchToSidebar(selectCreatorSidebar, context.creator.id, true)
+	switch(titleScreen, selectCreatorSidebar, context.creator.id, true)
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
 	context.puzzle = Puzzle(puzzle)
-	switchToScreen(playPuzzleScreen)
-	switchToSidebar(playPuzzleSidebar)
+	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 
 selectModeSidebar.onAbort = function()
-	switchToSidebar(selectPlayerSidebar, context.player.id, true)
+	switch(nil, selectPlayerSidebar, context.player.id, true)
 end
 
 selectModeSidebar.onSelected = function(selectedMode)
 	context.mode = selectedMode
 	if context.mode == MODE_PLAY then
-		switchToSidebar(selectCreatorSidebar)
+		switch(nil, selectCreatorSidebar)
 	elseif context.mode == MODE_CREATE then
 		context.puzzle = Puzzle.createEmpty()
-		switchToScreen(createPuzzleScreen)
-		switchToSidebar(createPuzzleSidebar)
+		switch(createPuzzleScreen, createPuzzleSidebar)
 	else
-		switchToSidebar(optionsSidebar)
+		switch(nil, optionsSidebar)
 	end
 end
 
 selectPlayerSidebar.onNewPlayer = function()
 	context.player = Player.createEmpty()
 
-	switchToSidebar(selectAvatarSidebar)
+	switch(nil, selectAvatarSidebar)
 end
 
 selectPlayerSidebar.onSelected = function(player)
 	context.player = player
 
-	switchToSidebar(selectModeSidebar)
+	switch(nil, selectModeSidebar)
 end
 
 testPuzzleSidebar.onAbort = function ()
-	switchToScreen(createPuzzleScreen)
-	switchToSidebar(createPuzzleSidebar, nil, true)
+	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
 end
 
 testPuzzleSidebar.onSave = function ()
 	context.puzzle.title = ""
-	switchToSidebar(namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+	switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 	showPuzzleKeyboard()
 end
 

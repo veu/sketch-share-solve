@@ -9,7 +9,7 @@ function CreatePuzzleSidebar:enter(context)
 		player = context.player.avatar,
 		menuItems = {
 			{
-				text = "Test and Save",
+				text = "Test and save",
 				disabled = context.puzzle:isTrivial(),
 				exec = function()
 					self.onTestAndSave()

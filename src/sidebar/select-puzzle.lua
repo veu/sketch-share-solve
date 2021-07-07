@@ -14,7 +14,7 @@ function SelectPuzzleSidebar:enter(context, selected)
 		player = player.avatar,
 		creator = creator.avatar,
 		menuItems = {},
-		menuTitle = selected == PUZZLE_ID_SHOW_NAME and "Name your puzzle" or "Choose puzzle",
+		menuTitle = selected == PUZZLE_ID_SHOW_NAME and "Name your puzzle" or "Select a puzzle",
 		stayOpen = selected == PUZZLE_ID_SHOW_NAME
 	}
 
