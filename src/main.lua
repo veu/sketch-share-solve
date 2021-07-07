@@ -38,7 +38,7 @@ import "sidebar/select-player"
 import "sidebar/select-puzzle"
 import "sidebar/test-puzzle"
 
-import "ui/avatar"
+import "ui/creator-avatar"
 import "ui/cursor"
 import "ui/dialog"
 import "ui/grid"
@@ -46,6 +46,7 @@ import "ui/grid-cell"
 import "ui/grid-numbers"
 import "ui/list"
 import "ui/modal"
+import "ui/player-avatar"
 import "ui/text-cursor"
 import "ui/title"
 
@@ -79,6 +80,8 @@ local titleScreen = TitleScreen()
 -- sidebars
 local createAvatarSidebar = CreateAvatarSidebar()
 local createPuzzleSidebar = CreatePuzzleSidebar()
+local namePlayerSidebar = SelectPlayerSidebar()
+local namePuzzleSidebar = SelectPuzzleSidebar()
 local optionsSidebar = OptionsSidebar()
 local playPuzzleSidebar = PlayPuzzleSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
@@ -116,11 +119,14 @@ function showPlayerKeyboard(mode)
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
-			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar)
+			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
 		else
 			context.player:save(context)
-
-			switchToSidebar(mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectModeSidebar)
+			if mode == PLAYER_ID_SHOW_RENAME then
+				switchToSidebar(optionsSidebar, nil, true)
+			else
+				switchToSidebar(selectModeSidebar)
+			end
 		end
 	end
 
@@ -131,7 +137,7 @@ function showPlayerKeyboard(mode)
 		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.player.name = text
-			switchToSidebar(selectPlayerSidebar, mode)
+			switchToSidebar(namePlayerSidebar, mode)
 		else
 			playdate.keyboard.text = context.player.name
 		end
@@ -155,7 +161,7 @@ function showPuzzleKeyboard()
 			context.puzzle:save(context)
 
 			switchToScreen(titleScreen)
-			switchToSidebar(selectModeSidebar)
+			switchToSidebar(selectModeSidebar, nil, true)
 		end
 	end
 
@@ -166,7 +172,7 @@ function showPuzzleKeyboard()
 		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.puzzle.title = text
-			switchToSidebar(selectPuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+			switchToSidebar(namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 		else
 			playdate.keyboard.text = context.puzzle.title
 		end
@@ -181,10 +187,15 @@ function switchToScreen(newScreen)
 	context.screen:enter(context)
 end
 
-function switchToSidebar(newSidebar, selected)
-	sidebar:leave()
-	sidebar = newSidebar
-	sidebar:enter(context, selected)
+function switchToSidebar(newSidebar, selected, out)
+	context.scrolling = newSidebar ~= sidebar
+	context.scrollOut = out
+	sidebar.onLeft = function ()
+		sidebar = newSidebar
+		context.scrolling = false
+	end
+	sidebar:leave(context)
+	newSidebar:enter(context, selected)
 end
 
 createAvatarScreen.onChanged = function()
@@ -204,7 +215,7 @@ playPuzzleScreen.onPlayed = function ()
 		context.player.played[context.puzzle.id] = true
 		context.player:save(context)
 
-		switchToSidebar(selectPuzzleSidebar, context.puzzle.id)
+		switchToSidebar(playPuzzleSidebar)
 	end
 end
 
@@ -217,7 +228,7 @@ createAvatarSidebar.onSave = function()
 	context.player.avatar = createAvatarPreview(context.puzzle)
 
 	switchToScreen(titleScreen)
-	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
+	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
@@ -232,7 +243,7 @@ createPuzzleSidebar.onTestAndSave = function ()
 end
 
 optionsSidebar.onAbort = function ()
-	switchToSidebar(selectModeSidebar)
+	switchToSidebar(selectModeSidebar, nil, true)
 end
 
 optionsSidebar.onDelete = function ()
@@ -250,7 +261,7 @@ optionsSidebar.onDelete = function ()
 end
 
 optionsSidebar.onRename = function ()
-	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_RENAME)
+	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_RENAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
 end
 
@@ -269,7 +280,7 @@ end
 
 playPuzzleSidebar.onAbort = function ()
 	switchToScreen(titleScreen)
-	switchToSidebar(selectPuzzleSidebar, context.puzzle.id)
+	switchToSidebar(selectPuzzleSidebar, context.puzzle.id, true)
 end
 
 playPuzzleSidebar.onDeletePuzzle = function ()
@@ -286,7 +297,7 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 end
 
 selectAvatarSidebar.onAbort = function()
-	switchToSidebar(selectPlayerSidebar)
+	switchToSidebar(selectPlayerSidebar, nil, true)
 end
 
 selectAvatarSidebar.onNewAvatar = function ()
@@ -298,12 +309,12 @@ selectAvatarSidebar.onSelected = function(avatar)
 	local player = context.player
 	player.avatar = imgAvatars:getImage(avatar)
 
-	switchToSidebar(selectPlayerSidebar, PLAYER_ID_SHOW_NAME)
+	switchToSidebar(namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
 end
 
 selectCreatorSidebar.onAbort = function()
-	switchToSidebar(selectModeSidebar)
+	switchToSidebar(selectModeSidebar, nil, true)
 end
 
 selectCreatorSidebar.onSelected = function(creator)
@@ -313,7 +324,7 @@ end
 
 selectPuzzleSidebar.onAbort = function()
 	switchToScreen(titleScreen)
-	switchToSidebar(selectCreatorSidebar, context.creator.id)
+	switchToSidebar(selectCreatorSidebar, context.creator.id, true)
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
@@ -323,7 +334,7 @@ selectPuzzleSidebar.onSelected = function (puzzle)
 end
 
 selectModeSidebar.onAbort = function()
-	switchToSidebar(selectPlayerSidebar, context.player.id)
+	switchToSidebar(selectPlayerSidebar, context.player.id, true)
 end
 
 selectModeSidebar.onSelected = function(selectedMode)
@@ -358,7 +369,7 @@ end
 
 testPuzzleSidebar.onSave = function ()
 	context.puzzle.title = ""
-	switchToSidebar(selectPuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+	switchToSidebar(namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 	showPuzzleKeyboard()
 end
 
@@ -375,24 +386,36 @@ function playdate.crankUndocked()
 end
 
 function playdate.cranked(change, acceleratedChange)
+	if context.scrolling then
+		return
+	end
 	if not modal:isVisible() then
 		sidebar:cranked(-change, -acceleratedChange)
 	end
 end
 
 function playdate.downButtonDown()
+	if context.scrolling then
+		return
+	end
 	if not modal:isVisible() and not playdate.isCrankDocked() then
 		sidebar:downButtonDown()
 	end
 end
 
 function playdate.upButtonDown()
+	if context.scrolling then
+		return
+	end
 	if not modal:isVisible() and not playdate.isCrankDocked() then
 		sidebar:upButtonDown()
 	end
 end
 
 function playdate.AButtonDown()
+	if context.scrolling then
+		return
+	end
 	if modal:isVisible() then
 		modal:AButtonDown()
 	elseif playdate.isCrankDocked() then
@@ -403,6 +426,9 @@ function playdate.AButtonDown()
 end
 
 function playdate.BButtonDown()
+	if context.scrolling then
+		return
+	end
 	if modal:isVisible() then
 		modal:BButtonDown()
 	elseif playdate.isCrankDocked() then

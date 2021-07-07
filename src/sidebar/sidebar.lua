@@ -5,8 +5,10 @@ class("Sidebar").extends(gfx.sprite)
 function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()
-	self.playerAvatar = Avatar("Player")
-	self.creatorAvatar = Avatar("Creator")
+	self.playerAvatar = Avatar()
+	if not Sidebar.creatorAvatar then
+		Sidebar.creatorAvatar = CreatorAvatar()
+	end
 	self.menuItems = nil
 	self.menuTitle = nil
 	self.opened = false
@@ -20,6 +22,7 @@ function Sidebar:init()
 	self.onAbort = function () end
 	self.onNavigated = function () end
 	self.onSelected = function () end
+	self.onLeft = function () end
 end
 
 function Sidebar:enter(context, config, player, creator)
@@ -42,10 +45,10 @@ function Sidebar:enter(context, config, player, creator)
 	self.playerAvatar:enter(config, config.player)
 	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, -1)
 	self.creatorAvatar:enter(config, config.creator)
-	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 240 - 25)
+	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
 	self.list:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
-	self.list:enter(self.menuItems, self.menuTitle)
+	self.list:enter(context, self.menuItems, self.menuTitle)
 	self.list:select(self.cursor)
 	self:redraw()
 
@@ -55,11 +58,21 @@ function Sidebar:enter(context, config, player, creator)
 	end
 end
 
-function Sidebar:leave()
+function Sidebar:leave(context)
+	self.list.onLeft = function ()
+		self:onLeft_()
+	end
+	self.list:leave(context)
+end
+
+function Sidebar:onLeft_()
 	self.playerAvatar:leave()
-	self.creatorAvatar:leave()
-	self.list:leave()
 	self:remove()
+	self.onLeft()
+end
+
+function Sidebar:moveList(x, y)
+	self.list:moveTo(x, y)
 end
 
 function Sidebar:cranked(change, acceleratedChange)
@@ -142,10 +155,10 @@ end
 
 function Sidebar:update()
 	if self.animator then
-		local currentValue = math.floor(self.animator:currentValue() + 0.5)
+		local currentValue = self.animator:currentValue()
 		self:moveTo(currentValue, 0)
 		self.playerAvatar:moveTo(currentValue, -1)
-		self.creatorAvatar:moveTo(currentValue, 240 - 25)
+		self.creatorAvatar:moveTo(currentValue, Sidebar.creatorAvatar.y)
 		self.list:moveTo(currentValue, 0)
 
 		if self.animator:ended() then
@@ -186,19 +199,10 @@ function Sidebar:redraw()
 			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)
 		end
 
-		local height = 240 - (
-			self.creatorAvatar:isVisible() and 48 or (
-				self.playerAvatar:isVisible() and 23 or -2
-			)
-		)
+		local height = 242
 
 		-- draw sidebar
-		drawPaddedRect(
-			SIDEBAR_WIDTH - 25,
-			self.playerAvatar:isVisible() and 24 or -1,
-			26,
-			height
-		)
+		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242)
 
 		-- menu
 		drawStripedRect(-1, 24, SIDEBAR_WIDTH - 23, height)

@@ -24,6 +24,9 @@ function drawStripedRect(x, y, w, h)
 end
 
 function drawRightTextRect(x, y, w, h, text)
+	-- background
+	gfx.setColor(gfx.kColorWhite)
+	gfx.fillRect(x, y, w, h)
 	-- outline
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(x, y, w, h)

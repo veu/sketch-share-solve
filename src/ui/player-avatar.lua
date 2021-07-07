@@ -2,11 +2,11 @@ local gfx <const> = playdate.graphics
 
 class("Avatar").extends(gfx.sprite)
 
-function Avatar:init(text)
+function Avatar:init()
 	Avatar.super.init(self)
 
-	self.text = text
-	self.image = gfx.image.new(SIDEBAR_WIDTH + 1, 26, gfx.kColorClear)
+	self.text = "Player"
+	self.image = gfx.image.new(SIDEBAR_WIDTH + 1, 27, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_AVATAR)
@@ -50,6 +50,7 @@ function Avatar:setPosition(position)
 	do
 		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
 		gfx.setDrawOffset(AVATAR_OFFSET, 0)
+		gfx.setClipRect(0, 0, 26, 26)
 		self.slide:draw(3, 3 - math.floor((position - 1) * 23 + 0.5))
 
 		gfx.setColor(gfx.kColorBlack)
@@ -74,6 +75,9 @@ function Avatar:draw(avatar)
 	self.image:clear(gfx.kColorClear)
 	gfx.pushContext(self.image)
 	do
+		gfx.setColor(gfx.kColorWhite)
+		gfx.drawLine(0, 26, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 1, 26)
+		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 26, SIDEBAR_WIDTH, 26)
 		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
 		gfx.setDrawOffset(AVATAR_OFFSET, 0)
 		avatar:drawScaled(3, 3, 2)

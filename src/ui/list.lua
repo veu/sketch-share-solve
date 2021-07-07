@@ -9,9 +9,13 @@ function List:init()
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_LIST)
+	self:setClipRect(0, 0, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240)
+
+	self.onLeft = function ()
+	end
 end
 
-function List:enter(menuItems, menuTitle)
+function List:enter(context, menuItems, menuTitle)
 	self.menuTitle = menuTitle
 	self.menuItems = menuItems
 	self.idleCounter = 0
@@ -29,13 +33,34 @@ function List:enter(menuItems, menuTitle)
 
 	self.textCursor = TextCursor()
 
+	if context.scrolling then
+		self.leaving = false
+		self.scrollOut = context.scrollOut
+		self.scrollAnimator = gfx.animator.new(
+			400, 0, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
+		)
+	end
+
 	self:redraw()
 	self:add()
 end
 
-function List:leave()
-	self:remove()
+function List:leave(context)
 	self.textCursor:remove()
+	if context.scrolling then
+		self.leaving = true
+		self.scrollOut = context.scrollOut
+		self.scrollAnimator = gfx.animator.new(
+			400, 0, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
+		)
+	else
+		self:onLeft_()
+	end
+end
+
+function List:onLeft_()
+	self:remove()
+	self.onLeft()
 end
 
 function List:select(index)
@@ -111,7 +136,7 @@ function List:redraw()
 			end
 			gfx.fillRect(23, y, width + 4, 18)
 			gfx.drawText(cellText, 25, y + 2)
-			if item.showCursor then
+			if item.showCursor and not self.scrollAnimator then
 				gfx.setColor(gfx.kColorBlack)
 				local cursorX, cursorY = gfx.getDrawOffset()
 				self.textCursor:enter(
@@ -130,6 +155,21 @@ function List:redraw()
 end
 
 function List:update()
+	if self.scrollAnimator then
+		local currentValue = math.floor(self.scrollAnimator:currentValue() + 0.5)
+		local x = self.leaving
+			and currentValue
+			or SIDEBAR_WIDTH - SEPARATOR_WIDTH + currentValue
+		self:moveTo(self.scrollOut and -x or x, 0)
+		if self.scrollAnimator:ended() then
+			self.scrollAnimator = nil
+			if self.leaving then
+				self:onLeft_()
+			else
+				self:redraw()
+			end
+		end
+	end
 	local ideal = self.target + 2
 	if self.cursor <= 2 then
 		if self.target > 1 then
