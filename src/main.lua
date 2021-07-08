@@ -321,6 +321,7 @@ selectAvatarSidebar.onAbort = function()
 end
 
 selectAvatarSidebar.onNewAvatar = function ()
+	context.puzzle = nil
 	switch(createAvatarScreen, createAvatarSidebar)
 end
 
