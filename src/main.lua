@@ -45,6 +45,7 @@ import "ui/grid"
 import "ui/grid-cell"
 import "ui/grid-numbers"
 import "ui/list"
+import "ui/menu-border"
 import "ui/modal"
 import "ui/player-avatar"
 import "ui/text-cursor"
@@ -69,6 +70,7 @@ imgGrid, err = gfx.imagetable.new("img/grid")
 assert(imgGrid, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
+imgMenuBorder = gfx.image.new("img/menu-border")
 
 -- screens
 local createAvatarScreen = CreateAvatarScreen()

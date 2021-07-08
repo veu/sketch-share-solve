@@ -90,7 +90,7 @@ function List:redraw()
 		-- draw header
 		gfx.setFont(fontText)
 		gfx.setColor(gfx.kColorWhite)
-		local x = 4
+		local x = 7
 		local y = self.menuTitle and 33 or 2
 
 		if self.menuTitle then
