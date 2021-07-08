@@ -5,8 +5,10 @@ class("Sidebar").extends(gfx.sprite)
 function Sidebar:init()
 	Sidebar.super.init(self)
 	self.list = List()
-	self.playerAvatar = Avatar()
 	self.menuBorder = MenuBorder()
+	if not Sidebar.playerAvatar then
+		Sidebar.playerAvatar = PlayerAvatar()
+	end
 	if not Sidebar.creatorAvatar then
 		Sidebar.creatorAvatar = CreatorAvatar()
 	end
@@ -44,7 +46,7 @@ function Sidebar:enter(context, config, player, creator)
 
 	self:add()
 	self.playerAvatar:enter(config, config.player)
-	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, -1)
+	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.playerAvatar.y)
 	self.creatorAvatar:enter(config, config.creator)
 	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
 	self.list:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
@@ -206,7 +208,7 @@ function Sidebar:redraw()
 		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242)
 
 		-- menu
-		drawStripedRect(-1, 24, SIDEBAR_WIDTH - 23, height - 25)
+		drawStripedRect(-1, -1, SIDEBAR_WIDTH - 23, height)
 	end
 
 	gfx.unlockFocus()

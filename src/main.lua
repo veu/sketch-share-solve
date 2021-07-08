@@ -37,6 +37,7 @@ import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/select-puzzle"
 import "sidebar/test-puzzle"
+import "sidebar/title"
 
 import "ui/creator-avatar"
 import "ui/cursor"
@@ -92,6 +93,7 @@ local selectPuzzleSidebar = SelectPuzzleSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
+local titleSidebar = TitleSidebar()
 
 -- modal
 local modal = Modal()
@@ -106,7 +108,7 @@ local context = {
 	isCrankDocked = true,
 }
 
-local sidebar = selectPlayerSidebar
+local sidebar = titleSidebar
 
 function showModal(text)
 	modal:enter(text)
@@ -364,6 +366,10 @@ selectModeSidebar.onSelected = function(selectedMode)
 	end
 end
 
+selectPlayerSidebar.onAbort = function()
+	switch(nil, titleSidebar, nil, true)
+end
+
 selectPlayerSidebar.onNewPlayer = function()
 	context.player = Player.createEmpty()
 
@@ -390,6 +396,10 @@ testPuzzleSidebar.onSave = function ()
 	context.puzzle.title = ""
 	switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 	showPuzzleKeyboard()
+end
+
+titleSidebar.onPlay = function ()
+	switch(nil, selectPlayerSidebar)
 end
 
 function playdate.crankDocked()
