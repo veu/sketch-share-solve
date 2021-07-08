@@ -15,6 +15,7 @@ function PlayPuzzleSidebar:enter(context)
 		menuItems = {
 			{
 				text = "Reset grid",
+				disabled = context.puzzle.hasBeenSolved,
 				exec = function()
 					context.screen:resetGrid()
 				end
