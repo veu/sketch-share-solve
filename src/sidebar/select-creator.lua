@@ -26,6 +26,7 @@ function SelectCreatorSidebar:enter(context, selected)
 				avatar = profile.avatar,
 				ref = profile,
 				selected = profile.id == selected,
+				checked = context.player:playedAllBy(profile),
 			})
 			i += 1
 		end

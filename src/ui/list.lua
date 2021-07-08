@@ -123,7 +123,7 @@ function List:redraw()
 			gfx.fillRect(2, y + 1, 15, 15)
 
 			if self.cursor == i then
-				local image = item.img or imgGrid:getImage(2)
+				local image = item.img or imgGrid:getImage(item.checked and 3 or 2)
 				image:draw(2, y + 1)
 			end
 

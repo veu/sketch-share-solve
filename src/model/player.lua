@@ -74,6 +74,18 @@ function Player:getNumPlayed()
 	return numPlayed
 end
 
+function Player:playedAllBy(creator)
+	if self.id == creator.id then
+		return true
+	end
+	for _, id in pairs(creator.created) do
+		if not self.played[id] then
+			return false
+		end
+	end
+	return true
+end
+
 Player.load = function (context, id)
 	return Player(context.save.profiles[id])
 end
