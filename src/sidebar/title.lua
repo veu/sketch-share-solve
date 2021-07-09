@@ -21,15 +21,18 @@ function TitleSidebar:enter(context, selected)
 				end
 			},
 			{
-				text = "Tutorial",
-				disabled = true,
+				text = "Settings",
+				selected = selected == ACTION_ID_SETTINGS,
+				exec = function ()
+					self.onSettings()
+				end
 			},
 			{
-				text = "Settings",
+				text = "Tutorial",
 				disabled = true,
 			},
 		}
 	}
 
-	SelectModeSidebar.super.enter(self, context, config)
+	TitleSidebar.super.enter(self, context, config)
 end

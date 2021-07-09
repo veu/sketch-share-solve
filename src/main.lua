@@ -18,6 +18,7 @@ import "model/done-numbers-disabled"
 import "model/numbers"
 import "model/player"
 import "model/puzzle"
+import "model/settings"
 
 import "screen/screen"
 import "screen/create-avatar"
@@ -36,6 +37,7 @@ import "sidebar/select-creator"
 import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/select-puzzle"
+import "sidebar/settings"
 import "sidebar/test-puzzle"
 import "sidebar/title"
 
@@ -92,6 +94,7 @@ local selectCreatorSidebar = SelectCreatorSidebar()
 local selectPuzzleSidebar = SelectPuzzleSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
+local settingsSidebar = SettingsSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
 local titleSidebar = TitleSidebar()
 
@@ -104,6 +107,7 @@ local context = {
 	player = nil,
 	mode = nil,
 	save = nil,
+	settings = nil,
 	screen = titleScreen,
 	isCrankDocked = true,
 }
@@ -387,6 +391,22 @@ selectPlayerSidebar.onSelected = function(player)
 	switch(nil, selectModeSidebar)
 end
 
+settingsSidebar.onAbort = function ()
+	switch(nil, titleSidebar, ACTION_ID_SETTINGS, true)
+end
+
+settingsSidebar.onCrankSpeedDown = function ()
+	context.settings.crankSpeed = (context.settings.crankSpeed + 3) % 5 + 1
+	context.settings:save(context)
+	switch(nil, settingsSidebar)
+end
+
+settingsSidebar.onCrankSpeedUp = function ()
+	context.settings.crankSpeed = context.settings.crankSpeed % 5 + 1
+	context.settings:save(context)
+	switch(nil, settingsSidebar)
+end
+
 testPuzzleSidebar.onAbort = function ()
 	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
 end
@@ -405,6 +425,10 @@ end
 
 titleSidebar.onPlay = function ()
 	switch(nil, selectPlayerSidebar)
+end
+
+titleSidebar.onSettings = function ()
+	switch(nil, settingsSidebar)
 end
 
 titleSidebar.onQuickPlay = function ()
@@ -432,7 +456,8 @@ function playdate.cranked(change, acceleratedChange)
 		return
 	end
 	if not modal:isVisible() then
-		sidebar:cranked(-change, -acceleratedChange)
+		local factor = 0.5 + context.settings.crankSpeed * 0.1
+		sidebar:cranked(-change * factor, -acceleratedChange * factor)
 	end
 end
 
@@ -442,6 +467,24 @@ function playdate.downButtonDown()
 	end
 	if not modal:isVisible() and not playdate.isCrankDocked() then
 		sidebar:downButtonDown()
+	end
+end
+
+function playdate.leftButtonDown()
+	if context.scrolling then
+		return
+	end
+	if not modal:isVisible() and not playdate.isCrankDocked() then
+		sidebar:leftButtonDown()
+	end
+end
+
+function playdate.rightButtonDown()
+	if context.scrolling then
+		return
+	end
+	if not modal:isVisible() and not playdate.isCrankDocked() then
+		sidebar:rightButtonDown()
 	end
 end
 
@@ -484,6 +527,7 @@ math.randomseed(playdate.getSecondsSinceEpoch())
 
 -- playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE
+context.settings = Settings.load(context)
 
 playdate.ui.crankIndicator:start()
 context.screen:enter(context)

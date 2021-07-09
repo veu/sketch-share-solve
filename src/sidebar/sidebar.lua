@@ -107,6 +107,20 @@ function Sidebar:downButtonDown()
 	end
 end
 
+function Sidebar:leftButtonDown()
+	local item = self.menuItems[self.cursor]
+	if not item.disabled and item.execLeft then
+		item.execLeft()
+	end
+end
+
+function Sidebar:rightButtonDown()
+	local item = self.menuItems[self.cursor]
+	if not item.disabled and item.execRight then
+		item.execRight()
+	end
+end
+
 function Sidebar:upButtonDown()
 	local newCursor = math.max(1, self.cursor - 1)
 	if self.cursor ~= newCursor then
@@ -121,13 +135,14 @@ function Sidebar:upButtonDown()
 end
 
 function Sidebar:AButtonDown()
-	if self.menuItems[self.cursor].disabled then
+	local item = self.menuItems[self.cursor]
+	if item.disabled then
 		return
 	end
-	if self.menuItems[self.cursor].exec then
-		self.menuItems[self.cursor].exec()
+	if item.exec then
+		item.exec()
 	else
-		self.onSelected(self.menuItems[self.cursor].ref)
+		self.onSelected(item.ref)
 	end
 end
 
