@@ -27,10 +27,12 @@ end
 
 function CreateAvatarScreen:invertGrid()
 	self.grid:invert()
+	self.puzzle.grid = self.grid.solution
 end
 
 function CreateAvatarScreen:resetGrid()
 	self.grid:reset()
+	self.puzzle.grid = self.grid.solution
 end
 
 function CreateAvatarScreen:update()

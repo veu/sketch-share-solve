@@ -238,6 +238,16 @@ createAvatarSidebar.onAbort = function ()
 	switch(titleScreen, selectAvatarSidebar, nil, true)
 end
 
+createAvatarSidebar.onInvertGrid = function ()
+	context.screen:invertGrid()
+	switch(nil, createAvatarSidebar, ACTION_ID_INVERT_COLORS)
+end
+
+createAvatarSidebar.onResetGrid = function()
+	context.screen:resetGrid()
+	switch(nil, createAvatarSidebar, ACTION_ID_RESET_GRID)
+end
+
 createAvatarSidebar.onSave = function()
 	context.player.avatar = createAvatarPreview(context.puzzle)
 

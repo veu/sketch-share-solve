@@ -4,7 +4,7 @@ function CreateAvatarSidebar:init()
 	CreateAvatarSidebar.super.init(self)
 end
 
-function CreateAvatarSidebar:enter(context)
+function CreateAvatarSidebar:enter(context, selected)
 	local config = {
 		player = createAvatarPreview(context.puzzle) or imgAvatars:getImage(AVATAR_ID_NIL),
 		menuTitle = "Create new avatar",
@@ -17,14 +17,16 @@ function CreateAvatarSidebar:enter(context)
 			},
 			{
 				text = "Invert colors",
+				selected = selected == ACTION_ID_INVERT_COLORS,
 				exec = function()
-					context.screen:invertGrid()
+					self.onInvertGrid()
 				end
 			},
 			{
 				text = "Reset avatar",
+				selected = selected == ACTION_ID_RESET_GRID,
 				exec = function()
-					context.screen:resetGrid()
+					self.onResetGrid()
 				end
 			}
 		}
