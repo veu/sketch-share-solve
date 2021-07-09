@@ -343,7 +343,7 @@ selectCreatorSidebar.onSelected = function(creator)
 end
 
 selectPuzzleSidebar.onAbort = function()
-	switch(titleScreen, selectCreatorSidebar, context.creator.id, true)
+	switch(nil, selectCreatorSidebar, context.creator.id, true)
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
