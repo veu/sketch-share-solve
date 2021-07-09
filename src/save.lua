@@ -18,6 +18,13 @@ DEFAULT_SAVE = {
 				"WAGFWMFXIQAQJKGB",
 			},
 			played = {}
+		},
+		YWPAGTGGLDOLBBZL = {
+			id = "YWPAGTGGLDOLBBZL",
+			hidden = true,
+			name = "Quick play",
+			created = {},
+			played = {}
 		}
 	},
 	puzzles = {

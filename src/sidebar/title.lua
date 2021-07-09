@@ -8,10 +8,25 @@ function TitleSidebar:enter(context, selected)
 	local config = {
 		menuItems = {
 			{
-				text = "Play",
+				text = "Start",
 				exec = function ()
 					self.onPlay()
 				end
+			},
+			{
+				text = "Quick solve",
+				selected = selected == ACTION_ID_QUICK_PLAY,
+				exec = function ()
+					self.onQuickPlay()
+				end
+			},
+			{
+				text = "Tutorial",
+				disabled = true,
+			},
+			{
+				text = "Settings",
+				disabled = true,
 			},
 		}
 	}

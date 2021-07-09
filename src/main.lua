@@ -221,7 +221,7 @@ playPuzzleScreen.onPlayed = function ()
 	if context.mode == MODE_CREATE then
 		switch(solvedPuzzleScreen, testPuzzleSidebar)
 	else
-		if context.creator.id ~= context.player.id then
+		if context.player.id ~= context.creator.id and context.player.id ~= PLAYER_ID_QUICK_PLAY then
 			context.player.played[context.puzzle.id] = true
 			context.player:save(context)
 		end
@@ -301,7 +301,11 @@ optionsSidebar.onToggleHints = function ()
 end
 
 playPuzzleSidebar.onAbort = function ()
-	switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
+	if context.player.id == PLAYER_ID_QUICK_PLAY then
+		switch(titleScreen, titleSidebar, ACTION_ID_QUICK_PLAY, true)
+	else
+		switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
+	end
 end
 
 playPuzzleSidebar.onDeletePuzzle = function ()
@@ -403,6 +407,14 @@ titleSidebar.onPlay = function ()
 	switch(nil, selectPlayerSidebar)
 end
 
+titleSidebar.onQuickPlay = function ()
+	context.player = Player.load(context, PLAYER_ID_QUICK_PLAY)
+	context.creator = Player.load(context, PLAYER_ID_RDK)
+	local puzzleId = context.creator.created[math.random(#context.creator.created)]
+	context.puzzle = Puzzle.load(context, puzzleId)
+	switch(playPuzzleScreen, playPuzzleSidebar)
+end
+
 function playdate.crankDocked()
 	context.isCrankDocked = true
 	context.screen:crankDocked()
@@ -470,7 +482,7 @@ end
 
 math.randomseed(playdate.getSecondsSinceEpoch())
 
---playdate.datastore.write(DEFAULT_SAVE)
+-- playdate.datastore.write(DEFAULT_SAVE)
 context.save = playdate.datastore.read() or DEFAULT_SAVE
 
 playdate.ui.crankIndicator:start()

@@ -12,7 +12,10 @@ function Player:init(player)
 	if avatar then
 		self.avatar = avatar
 	else
-		local id = self.id == "IHOMLFGGPUEOLDQY" and AVATAR_ID_RDK or AVATAR_ID_NIL
+		local id =
+			(self.id == PLAYER_ID_RDK and AVATAR_ID_RDK) or
+			(self.id == PLAYER_ID_QUICK_PLAY and AVATAR_ID_QUICK_PLAY) or
+			AVATAR_ID_NIL
 		self.avatar = imgAvatars:getImage(id)
 	end
 end
