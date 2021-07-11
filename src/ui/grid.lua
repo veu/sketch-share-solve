@@ -10,10 +10,12 @@ function Grid:init(withNumbers)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_GRID)
 
+	self.tilemap = gfx.tilemap.new()
+	self.tilemap:setImageTable(imgGrid)
+
 	self.onUpdateSolution = function() end
 
 	self.cursor = Cursor()
-	self.gridCell = GridCell()
 
 	if withNumbers then
 		self.numbers = GridNumbers()
@@ -25,6 +27,8 @@ function Grid:enter(puzzle, mode, withHints)
 	self.puzzle = puzzle
 	self.mode = mode
 
+	self.tilemap:setSize(puzzle.width, puzzle.height)
+
 	self.solution = {}
 	for y = 1, puzzle.height do
 		for x = 1, puzzle.width do
@@ -35,6 +39,7 @@ function Grid:enter(puzzle, mode, withHints)
 				or 0
 		end
 	end
+	self.tilemap:setTiles(self.solution, puzzle.width)
 
 	self:add()
 	self.cursor:enter(puzzle)
@@ -62,25 +67,41 @@ function Grid:leave()
 	if self.numbers then
 		self.numbers:leave()
 	end
-	self.gridCell:leave()
 end
 
 function Grid:toggle(index, isStart)
-	if self.solution[index] ~= 2 and (isStart or self.solution[index] ~= self.last) then
-		self.solution[index] = 1 - self.solution[index]
-		self.gridCell:enter(self.puzzle, index, self.solution[index], 1 - self.solution[index])
-		self.last = self.solution[index]
-		self:onUpdateSolution_()
+	local old = self.solution[index]
+	if old ~= 2 and (isStart or old ~= self.last) then
+		local new = 1 - old
+		self.solution[index] = new
+		self.last = new
+		self:addAnimation(index, old, new)
+		self:onUpdateSolution_(index)
 	end
 end
 
 function Grid:toggleCross(index, isStart)
-	if self.solution[index] ~= 1 and (isStart or self.solution[index] ~= self.last) then
-		self.solution[index] = 2 - self.solution[index]
-		self.gridCell:enter(self.puzzle, index, self.solution[index], 2 - self.solution[index])
-		self.last = self.solution[index]
-		self:onUpdateSolution_()
+	local old = self.solution[index]
+	if old ~= 1 and (isStart or old ~= self.last) then
+		local new = 2 - old
+		self.solution[index] = new
+		self.last = new
+		self:addAnimation(index, old, new)
+		self:onUpdateSolution_(index)
 	end
+end
+
+function Grid:addAnimation(index, old, new)
+	if self.animator then
+		self.tilemap:setTileAtPosition(self.animator.x, self.animator.y, self.animator.value)
+	end
+
+	local animator = gfx.animator.new(100, 1, 4)
+	animator.x = self.cursor.gridX
+	animator.y = self.cursor.gridY
+	animator.value = self.solution[index]
+	animator.offset = new == 0 and (old == 1 and 4 or 3) or (new == 1 and 1 or 2)
+	self.animator = animator
 end
 
 function Grid:invert()
@@ -88,6 +109,7 @@ function Grid:invert()
 		self.solution[i] = self.solution[i] == 1 and 0 or 1
 	end
 
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
 	self:redraw()
 end
 
@@ -106,6 +128,7 @@ function Grid:reset()
 		self.numbers:reset(self.solution)
 	end
 
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
 	self:redraw()
 end
 
@@ -126,7 +149,7 @@ function Grid:moveTowardsTop(step)
 	self:moveTo(self.x, math.floor(GRID_OFFSET_Y * (1 - step) + 8 * step + 0.5))
 end
 
-function Grid:onUpdateSolution_()
+function Grid:onUpdateSolution_(index)
 	if self.numbers then
 		self.numbers:updateForPosition(self.solution)
 	end
@@ -168,26 +191,22 @@ function Grid:redraw()
 		end
 
 		-- cells
-		gfx.setFont(fontGrid)
-		for y = 1, self.puzzle.height do
-			for x = 1, self.puzzle.width do
-				gfx.setDrawOffset(CELL * (x - 1) + 1, CELL * (y - 1) + 1)
-				local index = x - 1 + (y - 1) * self.puzzle.width + 1
-				if isSolved then
-					if self.solution[index] == 1 then
-						gfx.setColor(gfx.kColorBlack)
-						gfx.fillRect(0, 0, CELL, CELL)
-					end
-				else
-					if self.solution[index] == 1 then
-						imgGrid:drawImage(2, 0, 0)
-					elseif self.solution[index] == 2 then
-						imgGrid:drawImage(1, 0, 0)
-					end
-				end
-			end
-		end
+		self.tilemap:draw(1, 1)
 	end
 	gfx.unlockFocus()
 	self:markDirty()
+end
+
+function Grid:update()
+	if self.animator then
+		self.tilemap:setTileAtPosition(
+			self.animator.x,
+			self.animator.y,
+			self.animator.offset + math.floor(self.animator:currentValue() + 0.5) * 5
+		)
+		self:redraw()
+		if self.animator:ended() then
+			self.animator = nil
+		end
+	end
 end

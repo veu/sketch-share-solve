@@ -23,20 +23,20 @@ function GridNumbers:enter(puzzle, solution, x, y, withHints)
 		solution,
 		withHints
 	) or DoneNumbersDisabled(puzzle)
-	self.x = x
-	self.y = y
+	self.gridX = x
+	self.gridY = y
 
 	self:add()
 	self:redraw()
 end
 
 function GridNumbers:updateForPosition(solution)
-	self.solutionNumbers:updatePosition(solution, self.x, self.y)
+	self.solutionNumbers:updatePosition(solution, self.gridX, self.gridY)
 	self.doneNumbers:updatePosition(
 		self.solutionNumbers,
 		solution,
-		self.x,
-		self.y
+		self.gridX,
+		self.gridY
 	)
 
 	self:redraw()
@@ -53,8 +53,8 @@ function GridNumbers:reset(solution)
 end
 
 function GridNumbers:setCursor(x, y)
-	self.x = x
-	self.y = y
+	self.gridX = x
+	self.gridY = y
 	self:redraw()
 end
 
@@ -116,7 +116,7 @@ function GridNumbers:drawTop()
 		end
 		for x = 0, rawlen(self.gridNumbers.top) do
 			gfx.setColor(gfx.kColorBlack)
-			if x ~= self.x and x ~= self.x - 1 then
+			if x ~= self.gridX and x ~= self.gridX - 1 then
 				gfx.setDitherPattern(0.85)
 			end
 			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -2)

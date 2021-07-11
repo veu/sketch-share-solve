@@ -116,14 +116,14 @@ function List:redraw()
 			gfx.fillRect(0, y - 1, 19, 19)
 			gfx.setColor(gfx.kColorBlack)
 			if self.cursor ~= i then
-				gfx.setDitherPattern(.5, playdate.graphics.image.kDitherTypeFloydSteinberg)
+				gfx.setDitherPattern(.5, gfx.image.kDitherTypeFloydSteinberg)
 			end
 			gfx.fillRect(1, y, 17, 17)
 			gfx.setColor(gfx.kColorWhite)
 			gfx.fillRect(2, y + 1, 15, 15)
 
 			if self.cursor == i then
-				local image = item.img or imgGrid:getImage(item.checked and 3 or 2)
+				local image = item.img or imgGrid:getImage(item.checked and 3 or 1)
 				image:draw(2, y + 1)
 			end
 
