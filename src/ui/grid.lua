@@ -67,6 +67,7 @@ function Grid:leave()
 	if self.numbers then
 		self.numbers:leave()
 	end
+	self.animator = nil
 end
 
 function Grid:toggle(index, isStart)
