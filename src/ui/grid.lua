@@ -94,12 +94,7 @@ end
 function Grid:addAnimation(index, old, new)
 	if self.animator then
 		self.tilemap:setTileAtPosition(self.animator.x, self.animator.y, self.animator.value)
-		self.addDirtyRect(
-			self.x + CELL * (self.animator.x - 1) + 1,
-			self.y + CELL * (self.animator.y - 1) + 1,
-			CELL - 1,
-			CELL - 1
-		)
+		self:redrawPosition(self.animator.x, self.animator.y)
 	end
 
 	local animator = gfx.animator.new(100, 1, 4)
