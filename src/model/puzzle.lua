@@ -12,7 +12,7 @@ end
 
 function Puzzle:isSolved(solution)
 	for i, v in pairs(self.grid) do
-		if v ~= solution[i] then
+		if v ~= solution[i] & 1 then
 			return false
 		end
 	end
@@ -23,7 +23,7 @@ function Puzzle:isSolved(solution)
 end
 
 function Puzzle:isTrivial()
-	for i, v in pairs(self.grid) do
+	for i, v in ipairs(self.grid) do
 		if v == 1 then
 			return false
 		end

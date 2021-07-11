@@ -1,11 +1,11 @@
 class("DoneNumbersDisabled").extends()
 
 function DoneNumbersDisabled:init(puzzle)
-	self.left = {}
+	self.left = table.create(puzzle.height, 0)
 	for y = 1, puzzle.height do
 		self.left[y] = {}
 	end
-	self.top = {}
+	self.top = table.create(puzzle.width, 0)
 	for x = 1, puzzle.width do
 		self.top[x] = {}
 	end

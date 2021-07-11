@@ -21,7 +21,7 @@ function List:enter(context, menuItems, menuTitle)
 	self.idleCounter = 0
 
 	local selected = 1
-	for i, item in pairs(menuItems) do
+	for i, item in ipairs(menuItems) do
 		if item.selected then
 			selected = i
 		end
@@ -110,7 +110,7 @@ function List:redraw()
 		-- draw list
 		gfx.setClipRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
 		gfx.setDrawOffset(x, y + 33 - 24 * (self.position - 1))
-		for i, item in pairs(self.menuItems) do
+		for i, item in ipairs(self.menuItems) do
 			local y = 24 * (i - 1)
 			gfx.setColor(gfx.kColorWhite)
 			gfx.fillRect(0, y - 1, 19, 19)

@@ -26,13 +26,12 @@ function Grid:enter(puzzle, mode, withHints)
 	self.mode = mode
 
 	self.solution = {}
-	self.crossed = {}
 	for y = 1, puzzle.height do
 		for x = 1, puzzle.width do
 			local index = x - 1 + (y - 1) * puzzle.width + 1
-			self.solution[index] = self.mode == MODE_CREATE and puzzle.grid[index] or 0
-			self.crossed[index] =
-				self.mode == MODE_PLAY and puzzle:isCellKnownEmpty(x, y) and 1
+			self.solution[index] =
+				self.mode == MODE_CREATE and puzzle.grid[index] or
+				self.mode == MODE_PLAY and puzzle:isCellKnownEmpty(x, y) and 2
 				or 0
 		end
 	end
@@ -47,7 +46,6 @@ function Grid:enter(puzzle, mode, withHints)
 		self.numbers:enter(
 			puzzle,
 			self.solution,
-			self.crossed,
 			self.cursor.gridX,
 			self.cursor.gridY,
 			withHints
@@ -68,19 +66,19 @@ function Grid:leave()
 end
 
 function Grid:toggle(index, isStart)
-	if self.crossed[index] == 0 and (isStart or self.solution[index] ~= self.last) then
+	if self.solution[index] ~= 2 and (isStart or self.solution[index] ~= self.last) then
 		self.solution[index] = 1 - self.solution[index]
-		self.gridCell:enter(self.puzzle, index, self.solution[index], nil)
+		self.gridCell:enter(self.puzzle, index, self.solution[index], 1 - self.solution[index])
 		self.last = self.solution[index]
 		self:onUpdateSolution_()
 	end
 end
 
 function Grid:toggleCross(index, isStart)
-	if self.solution[index] == 0 and (isStart or self.crossed[index] ~= self.last) then
-		self.crossed[index] = self.crossed[index] == 1 and 0 or 1
-		self.gridCell:enter(self.puzzle, index, nil, self.crossed[index])
-		self.last = self.crossed[index]
+	if self.solution[index] ~= 1 and (isStart or self.solution[index] ~= self.last) then
+		self.solution[index] = 2 - self.solution[index]
+		self.gridCell:enter(self.puzzle, index, self.solution[index], 2 - self.solution[index])
+		self.last = self.solution[index]
 		self:onUpdateSolution_()
 	end
 end
@@ -95,19 +93,17 @@ end
 
 function Grid:reset()
 	self.solution = {}
-	self.crossed = {}
 	for y = 1, self.puzzle.height do
 		for x = 1, self.puzzle.width do
 			local index = x - 1 + (y - 1) * self.puzzle.width + 1
-			self.solution[index] = 0
-			self.crossed[index] =
-				self.mode == MODE_PLAY and self.puzzle:isCellKnownEmpty(x, y) and 1
+			self.solution[index] =
+				self.mode == MODE_PLAY and self.puzzle:isCellKnownEmpty(x, y) and 2
 				or 0
 		end
 	end
 
 	if self.numbers then
-		self.numbers:reset(self.solution, self.crossed)
+		self.numbers:reset(self.solution)
 	end
 
 	self:redraw()
@@ -132,7 +128,7 @@ end
 
 function Grid:onUpdateSolution_()
 	if self.numbers then
-		self.numbers:updateForPosition(self.solution, self.crossed)
+		self.numbers:updateForPosition(self.solution)
 	end
 
 	self:redraw()
@@ -185,7 +181,7 @@ function Grid:redraw()
 				else
 					if self.solution[index] == 1 then
 						imgGrid:drawImage(2, 0, 0)
-					elseif self.crossed[index] == 1 then
+					elseif self.solution[index] == 2 then
 						imgGrid:drawImage(1, 0, 0)
 					end
 				end

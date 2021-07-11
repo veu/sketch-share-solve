@@ -1,59 +1,49 @@
 function reverseNumbers(numbers)
-	local newNumbers = {}
-	for _, number in pairs(numbers) do
-		table.insert(newNumbers, 1, number)
+	local length = #numbers
+	local newNumbers = table.create(length, 0)
+	for i, number in ipairs(numbers) do
+		newNumbers[length - i + 1] = number
 	end
 	return newNumbers
 end
 
 function numbersToPattern(numbers)
-	local r = "^[^#]-"
+	local patterns = table.create(#numbers, 0)
 
-	for i, n in pairs(numbers) do
-		r = i > 1 and r .. "[^#][^#]-()" or r .. "()"
-		for _ = 1, n do
-			r = r .. "[^x]"
-		end
+	for i, n in ipairs(numbers) do
+		patterns[i] = "()" .. string.rep("[^2]", n)
 	end
 
-	return r .. "[^#]*$"
+	return "^[^1]-" .. table.concat(patterns, "[^1][^1]-") .. "[^1]*$"
 end
 
-function solutionColumnToString(puzzle, x, solution, crossed)
+function solutionColumnToString(puzzle, x, solution)
 	local s = ""
 
 	for y = 1, puzzle.height do
 		local index = x - 1 + (y - 1) * puzzle.width + 1
-		s = s .. (
-			solution[index] == 1 and "#" or
-			crossed[index] == 1 and "x" or
-			" "
-		)
+		s = s .. solution[index]
 	end
 
 	return s
 end
 
-function solutionRowToString(puzzle, y, solution, crossed)
+function solutionRowToString(puzzle, y, solution)
 	local s = ""
 
 	for x = 1, puzzle.width do
 		local index = x - 1 + (y - 1) * puzzle.width + 1
-		s = s .. (
-			solution[index] == 1 and "#" or
-			crossed[index] == 1 and "x" or
-			" "
-		)
+		s = s .. solution[index]
 	end
 
 	return s
 end
 
-
 function reverseIndexes(indexes, size)
-	local newIndexes = {}
-	for _, index in pairs(indexes) do
-		table.insert(newIndexes, 1, size - index + 1)
+	local length = #indexes
+	local newIndexes = table.create(length, 0)
+	for i, index in ipairs(indexes) do
+		newIndexes[length - i + 1] = size - index + 1
 	end
 	return newIndexes
 end

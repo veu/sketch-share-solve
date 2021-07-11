@@ -12,7 +12,7 @@ function GridNumbers:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbers:enter(puzzle, solution, crossed, x, y, withHints)
+function GridNumbers:enter(puzzle, solution, x, y, withHints)
 	self.puzzle = puzzle
 	self.gridNumbers = Numbers(puzzle, puzzle.grid)
 	self.solutionNumbers = Numbers(puzzle, solution)
@@ -20,7 +20,6 @@ function GridNumbers:enter(puzzle, solution, crossed, x, y, withHints)
 		puzzle,
 		self.gridNumbers,
 		self.solutionNumbers,
-		crossed,
 		solution,
 		withHints
 	) or DoneNumbersDisabled(puzzle)
@@ -31,11 +30,10 @@ function GridNumbers:enter(puzzle, solution, crossed, x, y, withHints)
 	self:redraw()
 end
 
-function GridNumbers:updateForPosition(solution, crossed)
-	self.solutionNumbers = Numbers(self.puzzle, solution)
+function GridNumbers:updateForPosition(solution)
+	self.solutionNumbers:updatePosition(solution, self.x, self.y)
 	self.doneNumbers:updatePosition(
 		self.solutionNumbers,
-		crossed,
 		solution,
 		self.x,
 		self.y
@@ -48,9 +46,9 @@ function GridNumbers:leave()
 	self:remove()
 end
 
-function GridNumbers:reset(solution, crossed)
+function GridNumbers:reset(solution)
 	self.solutionNumbers = Numbers(self.puzzle, solution)
-	self.doneNumbers:updateAll(self.solutionNumbers, crossed, solution)
+	self.doneNumbers:updateAll(self.solutionNumbers, solution)
 	self:redraw()
 end
 
@@ -83,8 +81,8 @@ function GridNumbers:drawLeft()
 	gfx.pushContext()
 	gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 	do
-		for y, numbers in pairs(self.gridNumbers.left) do
-			for i, v in pairs(numbers) do
+		for y, numbers in ipairs(self.gridNumbers.left) do
+			for i, v in ipairs(numbers) do
 				gfx.drawText(
 					self.doneNumbers.left[y][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
 					CELL * (i - 1 - rawlen(numbers)),
@@ -107,8 +105,8 @@ function GridNumbers:drawTop()
 	gfx.pushContext()
 	gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 	do
-		for x, numbers in pairs(self.gridNumbers.top) do
-			for i, v in pairs(numbers) do
+		for x, numbers in ipairs(self.gridNumbers.top) do
+			for i, v in ipairs(numbers) do
 				gfx.drawText(
 					self.doneNumbers.top[x][i] and NUM_MAP[v] or "*" .. NUM_MAP[v] .. "*",
 					CELL * (x - 1) + 1,

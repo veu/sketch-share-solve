@@ -11,13 +11,10 @@ function GridCell:init()
 	self:setZIndex(Z_INDEX_GRID_ANIM)
 end
 
-function GridCell:enter(puzzle, index, filled, crossed)
+function GridCell:enter(puzzle, index, current, last)
 	self.puzzle = puzzle
 	self.animator = gfx.animator.new(100, 1, 4)
-	self.offset =
-		filled
-			and (filled == 1 and 2 or 4)
-			or (crossed == 1 and 1 or 3)
+	self.offset = current == 0 and (last == 1 and 4 or 3) or (current == 1 and 2 or 1)
 
 	self:moveTo(
 		GRID_OFFSET_X + CELL * (15 - self.puzzle.width) + CELL * ((index - 1) % puzzle.width) + 1,
