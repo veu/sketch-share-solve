@@ -94,6 +94,12 @@ end
 function Grid:addAnimation(index, old, new)
 	if self.animator then
 		self.tilemap:setTileAtPosition(self.animator.x, self.animator.y, self.animator.value)
+		self.addDirtyRect(
+			self.x + CELL * (self.animator.x - 1) + 1,
+			self.y + CELL * (self.animator.y - 1) + 1,
+			CELL - 1,
+			CELL - 1
+		)
 	end
 
 	local animator = gfx.animator.new(100, 1, 4)
@@ -138,7 +144,6 @@ end
 
 function Grid:moveBy(dx, dy, pressed)
 	self.cursor:moveBy(dx, dy, pressed)
-	self:redraw()
 end
 
 function Grid:hideCursor()
@@ -154,8 +159,19 @@ function Grid:onUpdateSolution_(index)
 		self.numbers:updateForPosition(self.solution)
 	end
 
-	self:redraw()
+	self:redrawPosition(self.cursor.x, self.cursor.y)
 	self.onUpdateSolution()
+end
+
+function Grid:redrawPosition(gridX, gridY)
+	local x = CELL * (gridX - 1) + 1
+	local y = CELL * (gridY - 1) + 1
+	gfx.lockFocus(self.image)
+	gfx.setColor(gfx.kColorClear)
+	gfx.fillRect(x, y, CELL - 1, CELL - 1)
+	self.tilemap:draw(1, 1)
+	gfx.unlockFocus()
+	self.addDirtyRect(self.x + x, self.y + y, CELL - 1, CELL - 1)
 end
 
 function Grid:redraw()
@@ -204,7 +220,7 @@ function Grid:update()
 			self.animator.y,
 			self.animator.offset + math.floor(self.animator:currentValue() + 0.5) * 5
 		)
-		self:redraw()
+		self:redrawPosition(self.animator.x, self.animator.y)
 		if self.animator:ended() then
 			self.animator = nil
 		end
