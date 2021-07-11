@@ -5,7 +5,7 @@ class("List").extends(gfx.sprite)
 function List:init()
 	List.super.init(self)
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
+	self.image = gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_LIST)

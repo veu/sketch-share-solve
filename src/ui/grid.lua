@@ -5,7 +5,7 @@ class("Grid").extends(gfx.sprite)
 function Grid:init(withNumbers)
 	Grid.super.init(self)
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
+	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_GRID)
