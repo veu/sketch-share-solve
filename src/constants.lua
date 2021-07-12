@@ -27,19 +27,16 @@ Z_INDEX_AVATAR = 90
 
 Z_INDEX_MODAL = 500
 
-AVATAR_ID_SNAIL = 1
-AVATAR_ID_CAT = 2
-AVATAR_ID_MOUSE = 3
-AVATAR_ID_RACCOON = 4
-AVATAR_ID_NIL = 5
-AVATAR_ID_RDK = 6
-AVATAR_ID_QUICK_PLAY = 7
-NUM_AVATARS = 4
+AVATAR_ID_NIL = 6
+AVATAR_ID_RDK = 7
+AVATAR_ID_QUICK_PLAY = 8
+NUM_AVATARS = 5
 AVATAR_NAMES = {
 	"Suave Snail",
-	"Charming Cat",
+	"Charismatic Cat",
 	"Mindful Mouse",
-	"Reliable Raccoon"
+	"Reliable Raccoon",
+	"Credible Crab"
 }
 AVATAR_FOLDER_NAME = "avatars/"
 
