@@ -4,7 +4,7 @@ class("Sidebar").extends(gfx.sprite)
 
 function Sidebar:init()
 	Sidebar.super.init(self)
-	self.list = List()
+	self.list = List(self)
 	self.menuBorder = MenuBorder()
 	if not Sidebar.playerAvatar then
 		Sidebar.playerAvatar = PlayerAvatar()
@@ -15,7 +15,6 @@ function Sidebar:init()
 	self.menuItems = nil
 	self.menuTitle = nil
 	self.opened = false
-	self.animator = nil
 
 	self.image = gfx.image.new(SIDEBAR_WIDTH + 3, 240, gfx.kColorClear)
 	self:setImage(self.image)
@@ -25,7 +24,6 @@ function Sidebar:init()
 	self.onAbort = function () end
 	self.onNavigated = function () end
 	self.onSelected = function () end
-	self.onLeft = function () end
 end
 
 function Sidebar:enter(context, config, player, creator)
@@ -34,6 +32,9 @@ function Sidebar:enter(context, config, player, creator)
 	self.menuTitle = config.menuTitle
 	self.stayOpen = config.stayOpen
 	self.opened = self.stayOpen or not context.isCrankDocked
+
+	self.animator = nil
+	self.onLeft = function () end
 
 	self.cursor = 1
 	self.cursorRaw = 1
@@ -45,13 +46,13 @@ function Sidebar:enter(context, config, player, creator)
 	end
 
 	self:add()
+	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.playerAvatar:enter(config, config.player)
 	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.playerAvatar.y)
 	self.creatorAvatar:enter(config, config.creator)
 	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
-	self.list:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
+	self.list:moveTo()
 	self.menuBorder:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
-	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(context, self.menuItems, self.menuTitle)
 	self.list:select(self.cursor)
 	self:redraw()
@@ -155,18 +156,20 @@ function Sidebar:open()
 		return
 	end
 	self.opened = true
+	local start = self.animator and self.animator:currentValue() or SEPARATOR_WIDTH - SIDEBAR_WIDTH
 	self.animator = gfx.animator.new(
-		400, SEPARATOR_WIDTH - SIDEBAR_WIDTH, 0, playdate.easingFunctions.inOutSine
+		400, start, 0, playdate.easingFunctions.inOutSine
 	)
 	self:redraw()
 end
 
 function Sidebar:close()
 	if self.stayOpen then
-		return
+		self.onAbort()
 	end
+	local start = self.animator and self.animator:currentValue() or 0
 	self.animator = gfx.animator.new(
-		400, 0, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
+		400, start, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
 	)
 end
 
@@ -176,7 +179,7 @@ function Sidebar:update()
 		self:moveTo(currentValue, 0)
 		self.playerAvatar:moveTo(currentValue, -1)
 		self.creatorAvatar:moveTo(currentValue, Sidebar.creatorAvatar.y)
-		self.list:moveTo(currentValue, 0)
+		self.list:moveTo()
 		self.menuBorder:moveTo(currentValue, 0)
 
 		if self.animator:ended() then

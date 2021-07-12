@@ -2,14 +2,15 @@ local gfx <const> = playdate.graphics
 
 class("List").extends(gfx.sprite)
 
-function List:init()
+function List:init(parent)
+	self.parent = parent
 	List.super.init(self)
 
 	self.image = gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_LIST)
-	self:setClipRect(0, 0, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240)
+	self:moveTo(0, 0)
 
 	self.onLeft = function ()
 	end
@@ -152,6 +153,21 @@ function List:redraw()
 	end
 	gfx.unlockFocus()
 	self:markDirty()
+end
+
+function List:moveTo(x, y)
+	if x then
+		self.x_ = x
+	end
+	if y then
+		self.y_ = y
+	end
+	self:setClipRect(self.parent.x, self.parent.y, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240)
+	List.super.moveTo(
+		self,
+		self.parent.x + self.x_,
+		self.parent.y + self.y_
+	)
 end
 
 function List:update()

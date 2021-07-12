@@ -22,14 +22,15 @@ function Title:leave()
 end
 
 function Title:crankDocked()
-	self.animator = gfx.animator.new(
-		400, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, 0, playdate.easingFunctions.inOutSine
-	)
+	local start =
+		self.animator and self.animator:currentValue() or SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10
+	self.animator = gfx.animator.new(400, start, 0, playdate.easingFunctions.inOutSine)
 end
 
 function Title:crankUndocked()
+	local start = self.animator and self.animator:currentValue() or 0
 	self.animator = gfx.animator.new(
-		400, 0, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, playdate.easingFunctions.inOutSine
+		400, start, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, playdate.easingFunctions.inOutSine
 	)
 end
 

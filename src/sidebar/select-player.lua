@@ -77,6 +77,4 @@ function SelectPlayerSidebar:open()
 	if not self.playerAvatar:isVisible() then
 		self.playerAvatar:enter(self.config, self.menuItems[self.cursor].avatar)
 	end
-
-	self:redraw()
 end

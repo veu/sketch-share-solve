@@ -137,6 +137,11 @@ function showPlayerKeyboard(mode)
 		end
 	end
 
+	namePlayerSidebar.onAbort = function()
+		invalid = true
+		playdate.keyboard.hide()
+	end
+
 	playdate.keyboard.textChangedCallback = function ()
 		local text = playdate.keyboard.text
 		gfx.setFont(fontText)
@@ -168,6 +173,11 @@ function showPuzzleKeyboard()
 
 			switch(titleScreen, selectModeSidebar, nil, true)
 		end
+	end
+
+	namePuzzleSidebar.onAbort = function()
+		invalid = true
+		playdate.keyboard.hide()
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
