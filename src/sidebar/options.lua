@@ -16,6 +16,12 @@ function OptionsSidebar:enter(context, selected)
 				text = hintsText,
 				exec = function ()
 					self.onToggleHints()
+				end,
+				execLeft = function ()
+					self.onToggleHints()
+				end,
+				execRight = function ()
+					self.onToggleHints()
 				end
 			},
 			{
