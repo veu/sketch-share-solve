@@ -10,8 +10,6 @@ import "CoreLibs/ui/crankIndicator"
 
 import "constants"
 import "input"
-import "save"
-import "utils"
 
 import "model/done-numbers"
 import "model/done-numbers-disabled"
@@ -544,8 +542,8 @@ end
 
 math.randomseed(playdate.getSecondsSinceEpoch())
 
--- playdate.datastore.write(DEFAULT_SAVE)
-context.save = playdate.datastore.read() or DEFAULT_SAVE
+-- playdate.datastore.write(json.decodeFile("./save.json"))
+context.save = playdate.datastore.read() or json.decodeFile("./save.json")
 context.settings = Settings.load(context)
 
 playdate.ui.crankIndicator:start()
