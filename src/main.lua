@@ -116,10 +116,6 @@ function showModal(text)
 end
 
 function showPlayerKeyboard(mode)
-	playdate.keyboard.canDismiss = function ()
-		return true
-	end
-
 	local invalid = mode == PLAYER_ID_SHOW_NAME
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
@@ -157,10 +153,6 @@ function showPlayerKeyboard(mode)
 end
 
 function showPuzzleKeyboard()
-	playdate.keyboard.canDismiss = function ()
-		return true
-	end
-
 	local invalid = true
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
