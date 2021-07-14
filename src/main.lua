@@ -116,10 +116,10 @@ function showModal(text)
 end
 
 function showPlayerKeyboard(mode)
-	local invalid = mode == PLAYER_ID_SHOW_NAME
+	local invalid = false
 
-	playdate.keyboard.keyboardWillHideCallback = function ()
-		if invalid then
+	playdate.keyboard.keyboardWillHideCallback = function (ok)
+		if invalid or not ok then
 			switch(nil, mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
 		else
 			context.player:save(context)

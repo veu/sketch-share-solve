@@ -98,7 +98,7 @@ function Player.createEmpty()
 		id = playdate.string.UUID(16),
 		hidden = false,
 		avatar = AVATAR_ID_NIL,
-		name = "",
+		name = "Player",
 		created = {},
 		played = {}
 	})
