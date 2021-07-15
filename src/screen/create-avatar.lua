@@ -19,9 +19,6 @@ function CreateAvatarScreen:enter(context)
 end
 
 function CreateAvatarScreen:leave()
-	local menu = playdate.getSystemMenu()
-	menu:removeAllMenuItems()
-
 	self.grid:leave()
 end
 

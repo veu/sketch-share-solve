@@ -24,9 +24,6 @@ function PlayPuzzleScreen:enter(context)
 end
 
 function PlayPuzzleScreen:leave()
-	local menu = playdate.getSystemMenu()
-	menu:removeAllMenuItems()
-
 	self.grid:leave()
 end
 

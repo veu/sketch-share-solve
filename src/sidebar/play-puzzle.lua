@@ -15,13 +15,22 @@ function PlayPuzzleSidebar:enter(context)
 		menuItems = {
 			{
 				text = "Reset grid",
-				disabled = context.puzzle.hasBeenSolved,
+				disabled = puzzle.hasBeenSolved,
 				exec = function()
 					context.screen:resetGrid()
 				end
 			}
 		}
 	}
+
+	if puzzle.hasBeenSolved and player.id == PLAYER_ID_QUICK_PLAY then
+		table.insert(config.menuItems, {
+			text = "Solve another",
+			exec = function()
+				self.onNext()
+			end
+		})
+	end
 
 	if creator.id == player.id then
 		table.insert(config.menuItems, {

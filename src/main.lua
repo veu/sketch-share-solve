@@ -333,6 +333,12 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	modal:enter("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onNext = function ()
+	local puzzleId = context.creator.created[math.random(#context.creator.created)]
+	context.puzzle = Puzzle.load(context, puzzleId)
+	switch(playPuzzleScreen, playPuzzleSidebar)
+end
+
 selectAvatarSidebar.onAbort = function()
 	switch(nil, selectPlayerSidebar, nil, true)
 end

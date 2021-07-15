@@ -18,9 +18,6 @@ function CreatePuzzleScreen:enter(context)
 end
 
 function CreatePuzzleScreen:leave()
-	local menu = playdate.getSystemMenu()
-	menu:removeAllMenuItems()
-
 	self.grid:leave()
 end
 
