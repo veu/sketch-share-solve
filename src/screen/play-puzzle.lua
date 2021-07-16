@@ -31,23 +31,29 @@ function PlayPuzzleScreen:resetGrid()
 	self.grid:reset()
 end
 
+function PlayPuzzleScreen:AButtonDown()
+	self:fill(true)
+end
+
+function PlayPuzzleScreen:BButtonDown()
+	self:cross(true)
+end
+
+function PlayPuzzleScreen:cross(isStart)
+	self.grid:toggleCross(self.grid:getCursor(), isStart)
+end
+
+function PlayPuzzleScreen:fill(isStart)
+	self.grid:toggle(self.grid:getCursor(), isStart)
+end
+
 function PlayPuzzleScreen:update()
-	function cross(isStart)
-		self.grid:toggleCross(self.grid:getCursor(), isStart)
-	end
-
-	function fill(isStart)
-		self.grid:toggle(self.grid:getCursor(), isStart)
-	end
-
 	if not playdate.isCrankDocked() or self.puzzle:isSolved(self.grid.solution) then
 		return
 	end
 
-	handleFill(fill)
-	handleCross(cross)
-	handleCursorDir(fill, cross, playdate.kButtonRight, function (pressed) self.grid:moveBy(1, 0, pressed) end)
-	handleCursorDir(fill, cross, playdate.kButtonDown, function (pressed) self.grid:moveBy(0, 1, pressed) end)
-	handleCursorDir(fill, cross, playdate.kButtonLeft, function (pressed) self.grid:moveBy(-1, 0, pressed) end)
-	handleCursorDir(fill, cross, playdate.kButtonUp, function (pressed) self.grid:moveBy(0, -1, pressed) end)
+	self:handleCursorDir(playdate.kButtonRight, function (pressed) self.grid:moveBy(1, 0, pressed) end)
+	self:handleCursorDir(playdate.kButtonDown, function (pressed) self.grid:moveBy(0, 1, pressed) end)
+	self:handleCursorDir(playdate.kButtonLeft, function (pressed) self.grid:moveBy(-1, 0, pressed) end)
+	self:handleCursorDir(playdate.kButtonUp, function (pressed) self.grid:moveBy(0, -1, pressed) end)
 end

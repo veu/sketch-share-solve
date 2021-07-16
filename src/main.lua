@@ -9,7 +9,6 @@ import "CoreLibs/timer"
 import "CoreLibs/ui/crankIndicator"
 
 import "constants"
-import "input"
 
 import "model/done-numbers"
 import "model/done-numbers-disabled"

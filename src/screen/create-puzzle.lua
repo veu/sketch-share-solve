@@ -31,22 +31,24 @@ function CreatePuzzleScreen:resetGrid()
 	self.puzzle.grid = self.grid.solution
 end
 
+function CreatePuzzleScreen:AButtonDown()
+	self:fill(true)
+end
+
+function CreatePuzzleScreen:cross()
+end
+
+function CreatePuzzleScreen:fill(isStart)
+	self.grid:toggle(self.grid:getCursor(), isStart)
+end
+
 function CreatePuzzleScreen:update()
-	function cross(isStart)
-		self.grid:toggleCross(self.grid:getCursor(), isStart)
-	end
-
-	function fill(isStart)
-		self.grid:toggle(self.grid:getCursor(), isStart)
-	end
-
 	if not playdate.isCrankDocked() then
 		return
 	end
 
-	handleFill(fill)
-	handleCursorDir(fill, cross, playdate.kButtonRight, function () self.grid:moveBy(1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonDown, function () self.grid:moveBy(0, 1) end)
-	handleCursorDir(fill, cross, playdate.kButtonLeft, function () self.grid:moveBy(-1, 0) end)
-	handleCursorDir(fill, cross, playdate.kButtonUp, function () self.grid:moveBy(0, -1) end)
+	self:handleCursorDir(playdate.kButtonRight, function () self.grid:moveBy(1, 0) end)
+	self:handleCursorDir(playdate.kButtonDown, function () self.grid:moveBy(0, 1) end)
+	self:handleCursorDir(playdate.kButtonLeft, function () self.grid:moveBy(-1, 0) end)
+	self:handleCursorDir(playdate.kButtonUp, function () self.grid:moveBy(0, -1) end)
 end
