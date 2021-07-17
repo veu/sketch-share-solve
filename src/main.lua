@@ -369,7 +369,7 @@ selectPuzzleSidebar.onAbort = function()
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
-	context.puzzle = Puzzle(puzzle)
+	context.puzzle = puzzle
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 

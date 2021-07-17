@@ -3,9 +3,13 @@ class("Puzzle").extends()
 function Puzzle:init(puzzle)
 	self.id = puzzle.id
 	self.title = puzzle.title
-	self.grid = puzzle.grid
 	self.width = puzzle.width or 15
 	self.height = puzzle.height or 10
+
+	self.grid = table.create(self.width * self.height, 0)
+	for i = 1, puzzle.grid:len() do
+		self.grid[i] = 0 + puzzle.grid:sub(i, i)
+	end
 
 	self.hasBeenSolved = false
 end
@@ -62,7 +66,7 @@ function Puzzle:save(context)
 	local puzzle = {
 		id = self.id,
 		title = self.title,
-		grid = self.grid
+		grid = table.concat(self.grid)
 	}
 
 	context.save.puzzles[self.id] = puzzle
@@ -94,15 +98,13 @@ Puzzle.load = function (context, id)
 end
 
 Puzzle.createEmpty = function (width, height)
-	local grid = {}
-	for x = 1, 150 do
-		table.insert(grid, 0)
-	end
+	width = width or 15
+	height = height or 10
 
 	return Puzzle({
 		id = playdate.string.UUID(16),
-		grid = grid,
-		width = width or 15,
-		height = height or 10
+		grid = string.rep("0", width * height),
+		width = width,
+		height = height
 	})
 end
