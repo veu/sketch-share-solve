@@ -15,7 +15,7 @@ function SelectCreatorSidebar:enter(context, selected)
 	local i = 1
 	local creator = nil
 	for _, id in pairs(context.save.profileList) do
-		local profile = Player.load(context, id)
+		local profile = Profile.load(context, id)
 		if #profile.created > 0 then
 			if profile.id == selected or not creator then
 				selectedIndex = i

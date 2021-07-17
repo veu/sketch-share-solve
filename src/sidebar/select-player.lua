@@ -17,7 +17,7 @@ function SelectPlayerSidebar:enter(context, selected)
 	local selectedIndex = 1
 	local i = 1
 	for _, id in pairs(context.save.profileList) do
-		local profile = Player.load(context, id)
+		local profile = Profile.load(context, id)
 		if not profile.hidden then
 			if profile.id == selected then
 				selectedIndex = i

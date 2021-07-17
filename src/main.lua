@@ -13,7 +13,7 @@ import "constants"
 import "model/done-numbers"
 import "model/done-numbers-disabled"
 import "model/numbers"
-import "model/player"
+import "model/profile"
 import "model/puzzle"
 import "model/settings"
 
@@ -394,7 +394,7 @@ selectPlayerSidebar.onAbort = function()
 end
 
 selectPlayerSidebar.onNewPlayer = function()
-	context.player = Player.createEmpty()
+	context.player = Profile.createEmpty()
 
 	switch(nil, selectAvatarSidebar)
 end
@@ -446,8 +446,8 @@ titleSidebar.onSettings = function ()
 end
 
 titleSidebar.onQuickPlay = function ()
-	context.player = Player.load(context, PLAYER_ID_QUICK_PLAY)
-	context.creator = Player.load(context, PLAYER_ID_RDK)
+	context.player = Profile.load(context, PLAYER_ID_QUICK_PLAY)
+	context.creator = Profile.load(context, PLAYER_ID_RDK)
 	local puzzleId = context.creator.created[math.random(#context.creator.created)]
 	context.puzzle = Puzzle.load(context, puzzleId)
 	switch(playPuzzleScreen, playPuzzleSidebar)

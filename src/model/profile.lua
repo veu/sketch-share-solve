@@ -1,12 +1,12 @@
-class("Player").extends()
+class("Profile").extends()
 
-function Player:init(player)
-	self.id = player.id
-	self.hidden = player.hidden or false
-	self.name = player.name
-	self.created = player.created
-	self.played = player.played
-	self.options = player.options or {}
+function Profile:init(profile)
+	self.id = profile.id
+	self.hidden = profile.hidden or false
+	self.name = profile.name
+	self.created = profile.created
+	self.played = profile.played
+	self.options = profile.options or {}
 
 	local avatar = playdate.datastore.readImage(AVATAR_FOLDER_NAME .. self.id)
 	if avatar then
@@ -20,8 +20,8 @@ function Player:init(player)
 	end
 end
 
-function Player:save(context)
-	local player = {
+function Profile:save(context)
+	local profile = {
 		id = self.id,
 		hidden = self.hidden,
 		name = self.name,
@@ -30,11 +30,11 @@ function Player:save(context)
 		options = self.options
 	}
 
-	context.save.profiles[self.id] = player
+	context.save.profiles[self.id] = profile
 
 	local hasProfile = false
 	for _, id in pairs(context.save.profileList) do
-		if id == player.id then
+		if id == profile.id then
 			hasProfile = true
 		end
 	end
@@ -47,21 +47,21 @@ function Player:save(context)
 	playdate.datastore.write(context.save)
 end
 
-function Player:delete(context)
+function Profile:delete(context)
 	-- hide profile if player has created puzzles
 	if #self.created > 0 then
 		self.hidden = true
 		self:save(context)
 	else
-		local playerIndex = nil
+		local profileIndex = nil
 		for i, id in pairs(context.save.profileList) do
 			if id == self.id then
-				playerIndex = i
+				profileIndex = i
 			end
 		end
 
-		if playerIndex then
-			table.remove(context.save.profileList, playerIndex)
+		if profileIndex then
+			table.remove(context.save.profileList, profileIndex)
 		end
 		context.save.profiles[self.id] = nil
 
@@ -69,7 +69,7 @@ function Player:delete(context)
 	end
 end
 
-function Player:getNumPlayed()
+function Profile:getNumPlayed()
 	local numPlayed = 0
 	for _ in pairs(self.played) do
 		numPlayed += 1
@@ -77,7 +77,7 @@ function Player:getNumPlayed()
 	return numPlayed
 end
 
-function Player:playedAllBy(creator)
+function Profile:playedAllBy(creator)
 	if self.id == creator.id then
 		return true
 	end
@@ -89,12 +89,12 @@ function Player:playedAllBy(creator)
 	return true
 end
 
-Player.load = function (context, id)
-	return Player(context.save.profiles[id])
+Profile.load = function (context, id)
+	return Profile(context.save.profiles[id])
 end
 
-function Player.createEmpty()
-	return Player({
+function Profile.createEmpty()
+	return Profile({
 		id = playdate.string.UUID(16),
 		hidden = false,
 		avatar = AVATAR_ID_NIL,
