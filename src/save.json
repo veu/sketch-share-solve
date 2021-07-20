@@ -5,13 +5,17 @@
 	"profiles": {
 		"YWPAGTGGLDOLBBZL": {
 			"id": "YWPAGTGGLDOLBBZL",
-			"created":[],
-			"hidden": true,
 			"name":"Quick play",
+			"hidden": true,
+			"avatar": "1111111111111111110111111000111111000011111001001110000001111110001111110101111111110111111111111111",
+			"created":[],
 			"played":[]
 		},
 		"IHOMLFGGPUEOLDQY": {
 			"id": "IHOMLFGGPUEOLDQY",
+			"name": "RDK",
+			"avatar": "0111111111111111101111000000011011101110111011101110111011101000000000100000000010001110001000000000",
+			"hidden": true,
 			"created": [
 				"BCYQPNSTSAQBHEIM",
 				"IFYMMITFGDLMCJNJ",
@@ -50,8 +54,6 @@
 				"ANRGZKWQYCOHPMAO",
 				"KAXCXBRSKJWHFQPO"
 			],
-			"hidden": true,
-			"name": "RDK",
 			"played":[]
 		}
 	},

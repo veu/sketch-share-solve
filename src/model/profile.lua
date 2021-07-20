@@ -8,15 +8,12 @@ function Profile:init(profile)
 	self.played = profile.played
 	self.options = profile.options or {}
 
-	local avatar = playdate.datastore.readImage(AVATAR_FOLDER_NAME .. self.id)
-	if avatar then
-		self.avatar = avatar
+	if profile.avatar then
+		self._avatar = profile.avatar
+		self.avatar = loadAvatar(profile.avatar)
 	else
-		local id =
-			(self.id == PLAYER_ID_RDK and AVATAR_ID_RDK) or
-			(self.id == PLAYER_ID_QUICK_PLAY and AVATAR_ID_QUICK_PLAY) or
-			AVATAR_ID_NIL
-		self.avatar = imgAvatars:getImage(id)
+		local id = AVATAR_ID_NIL
+		self.avatar = imgAvatars:getImage(AVATAR_ID_NIL)
 	end
 end
 
@@ -27,7 +24,8 @@ function Profile:save(context)
 		name = self.name,
 		created = self.created,
 		played = self.played,
-		options = self.options
+		options = self.options,
+		avatar = self._avatar
 	}
 
 	context.save.profiles[self.id] = profile
@@ -42,8 +40,6 @@ function Profile:save(context)
 	if not hasProfile then
 		table.insert(context.save.profileList, self.id)
 	end
-
-	playdate.datastore.writeImage(self.avatar, AVATAR_FOLDER_NAME .. self.id)
 	playdate.datastore.write(context.save)
 end
 
@@ -67,6 +63,11 @@ function Profile:delete(context)
 
 		playdate.datastore.write(context.save)
 	end
+end
+
+function Profile:setAvatar(avatar)
+	self.avatar = avatar
+	self._avatar = saveAvatar(avatar)
 end
 
 function Profile:getNumPlayed()
@@ -97,7 +98,7 @@ function Profile.createEmpty()
 	return Profile({
 		id = playdate.string.UUID(16),
 		hidden = false,
-		avatar = AVATAR_ID_NIL,
+		avatar = saveAvatar(imgAvatars:getImage(AVATAR_ID_NIL)),
 		name = "Player",
 		created = {},
 		played = {}

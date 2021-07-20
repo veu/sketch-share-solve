@@ -247,7 +247,7 @@ createAvatarSidebar.onResetGrid = function()
 end
 
 createAvatarSidebar.onSave = function()
-	context.player.avatar = createAvatarPreview(context.puzzle)
+	context.player:setAvatar(createAvatarPreview(context.puzzle))
 
 	switch(titleScreen, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
@@ -348,8 +348,7 @@ selectAvatarSidebar.onNewAvatar = function ()
 end
 
 selectAvatarSidebar.onSelected = function(avatar)
-	local player = context.player
-	player.avatar = imgAvatars:getImage(avatar)
+	context.player:setAvatar(imgAvatars:getImage(avatar))
 
 	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
 	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)

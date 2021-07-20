@@ -36,6 +36,39 @@ function drawRightTextRect(x, y, w, h, text)
 	gfx.drawText(text, x + w - width - 5, y + 6)
 end
 
+function loadAvatar(data)
+	local image = gfx.image.new(10, 10, gfx.kColorBlack)
+	gfx.lockFocus(image)
+	do
+		gfx.setColor(gfx.kColorWhite)
+		local i = 1
+		for y = 0, 9 do
+			for x = 0, 9 do
+				if data:sub(i, i) == "0" then
+					gfx.fillRect(x, y, 1, 1)
+				end
+				i += 1
+			end
+		end
+	end
+	gfx.unlockFocus()
+
+	return image
+end
+
+function saveAvatar(avatar)
+	local data = table.create(100, 0)
+	local i = 1
+	for y = 0, 9 do
+		for x = 0, 9 do
+			data[i] = avatar:sample(x, y) == playdate.graphics.kColorBlack and 1 or 0
+			i += 1
+		end
+	end
+
+	return table.concat(data)
+end
+
 function createAvatarPreview(puzzle)
 	if not puzzle then
 		return nil
