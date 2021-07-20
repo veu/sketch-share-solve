@@ -538,8 +538,12 @@ end
 
 math.randomseed(playdate.getSecondsSinceEpoch())
 
--- playdate.datastore.write(json.decodeFile("./save.json"))
-context.save = playdate.datastore.read() or json.decodeFile("./save.json")
+function save(context)
+	playdate.datastore.write(context.save, FILE_SAVE, true)
+end
+
+-- playdate.datastore.write(json.decodeFile("./save.json"), FILE_SAVE)
+context.save = playdate.datastore.read(FILE_SAVE) or json.decodeFile("./save.json")
 context.settings = Settings.load(context)
 
 playdate.ui.crankIndicator:start()

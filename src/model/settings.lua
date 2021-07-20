@@ -9,7 +9,7 @@ function Settings:save(context)
 		crankSpeed = self.crankSpeed
 	}
 
-	playdate.datastore.write(context.save)
+	save(context)
 end
 
 Settings.load = function (context)

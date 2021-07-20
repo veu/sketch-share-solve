@@ -72,7 +72,7 @@ function Puzzle:save(context)
 	context.save.puzzles[self.id] = puzzle
 	table.insert(context.player.created, self.id)
 
-	playdate.datastore.write(context.save)
+	save(context)
 end
 
 function Puzzle:delete(context)
@@ -90,7 +90,7 @@ function Puzzle:delete(context)
 
 	context.save.puzzles[self.id] = nil
 
-	playdate.datastore.write(context.save)
+	save(context)
 end
 
 Puzzle.load = function (context, id)

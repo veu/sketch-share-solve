@@ -60,4 +60,6 @@ ACTION_ID_SETTINGS = "SETTINGS"
 
 GAME_NAME = "Sketch, Share, Solve"
 
+FILE_SAVE = "save"
+
 NUM_LIST_ITEMS = 6

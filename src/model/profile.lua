@@ -40,7 +40,7 @@ function Profile:save(context)
 	if not hasProfile then
 		table.insert(context.save.profileList, self.id)
 	end
-	playdate.datastore.write(context.save)
+	save(context)
 end
 
 function Profile:delete(context)
@@ -61,7 +61,7 @@ function Profile:delete(context)
 		end
 		context.save.profiles[self.id] = nil
 
-		playdate.datastore.write(context.save)
+		save(context)
 	end
 end
 
