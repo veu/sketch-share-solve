@@ -204,6 +204,12 @@ function switch(newScreen, newSidebar, selected, out)
 	sidebar:enter(context, selected)
 end
 
+local idleCounter = 0
+function resume()
+	playdate.start()
+	idleCounter = 0
+end
+
 createAvatarScreen.onChanged = function()
 	switch(nil, createAvatarSidebar)
 end
@@ -454,18 +460,21 @@ titleSidebar.onQuickPlay = function ()
 end
 
 function playdate.crankDocked()
+	resume()
 	context.isCrankDocked = true
 	context.screen:crankDocked()
 	sidebar:close()
 end
 
 function playdate.crankUndocked()
+	resume()
 	context.isCrankDocked = false
 	context.screen:crankUndocked()
 	sidebar:open()
 end
 
 function playdate.cranked(change, acceleratedChange)
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -476,6 +485,7 @@ function playdate.cranked(change, acceleratedChange)
 end
 
 function playdate.downButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -485,6 +495,7 @@ function playdate.downButtonDown()
 end
 
 function playdate.leftButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -494,6 +505,7 @@ function playdate.leftButtonDown()
 end
 
 function playdate.rightButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -503,6 +515,7 @@ function playdate.rightButtonDown()
 end
 
 function playdate.upButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -512,6 +525,7 @@ function playdate.upButtonDown()
 end
 
 function playdate.AButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -525,6 +539,7 @@ function playdate.AButtonDown()
 end
 
 function playdate.BButtonDown()
+	resume()
 	if context.scrolling then
 		return
 	end
@@ -568,6 +583,11 @@ function playdate.update()
 	gfx.sprite.update()
 	if context.screen.showCrank and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
+	else
+		idleCounter += 1
+		if idleCounter > 200 then
+			playdate.stop()
+		end
 	end
 	if showFPS then
 		playdate.drawFPS(0,0)
