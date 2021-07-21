@@ -94,14 +94,17 @@ end
 
 function Grid:addAnimation(index, old, new)
 	if self.animator then
-		self.tilemap:setTileAtPosition(self.animator.x, self.animator.y, self.animator.value)
+		self.tilemap:setTileAtPosition(
+			self.animator.x,
+			self.animator.y,
+			self.animator.offset + self.animator.endValue * 5
+		)
 		self:redrawPosition(self.animator.x, self.animator.y)
 	end
 
-	local animator = gfx.animator.new(100, 1, 4)
+	local animator = playdate.frameTimer.new(2, 1, 3)
 	animator.x = self.cursor.gridX
 	animator.y = self.cursor.gridY
-	animator.value = self.solution[index]
 	animator.offset = new == 0 and (old == 1 and 4 or 3) or (new == 1 and 1 or 2)
 	self.animator = animator
 end
@@ -214,10 +217,10 @@ function Grid:update()
 		self.tilemap:setTileAtPosition(
 			self.animator.x,
 			self.animator.y,
-			self.animator.offset + math.floor(self.animator:currentValue() + 0.5) * 5
+			self.animator.offset + math.floor(self.animator.value) * 5
 		)
 		self:redrawPosition(self.animator.x, self.animator.y)
-		if self.animator:ended() then
+		if self.animator.value == self.animator.endValue then
 			self.animator = nil
 		end
 	end

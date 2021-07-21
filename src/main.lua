@@ -1,4 +1,5 @@
 import "CoreLibs/animation"
+import "CoreLibs/frameTimer"
 import "CoreLibs/graphics"
 import "CoreLibs/keyboard"
 import "CoreLibs/nineslice"
@@ -565,4 +566,5 @@ function playdate.update()
 	end
 	--playdate.drawFPS(0,0)
 	playdate.timer.updateTimers()
+	playdate.frameTimer.updateTimers()
 end
