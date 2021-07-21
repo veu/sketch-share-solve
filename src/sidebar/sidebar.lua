@@ -177,7 +177,7 @@ function Sidebar:update()
 	if self.animator then
 		local currentValue = self.animator:currentValue()
 		self:moveTo(currentValue, 0)
-		self.playerAvatar:moveTo(currentValue, -1)
+		self.playerAvatar:moveTo(currentValue, Sidebar.playerAvatar.y)
 		self.creatorAvatar:moveTo(currentValue, Sidebar.creatorAvatar.y)
 		self.list:moveTo()
 		self.menuBorder:moveTo(currentValue, 0)
