@@ -113,41 +113,43 @@ function List:redraw()
 		gfx.setDrawOffset(x, y + 33 - 24 * (self.position - 1))
 		for i, item in ipairs(self.menuItems) do
 			local y = 24 * (i - 1)
-			gfx.setColor(gfx.kColorWhite)
-			gfx.fillRect(0, y - 1, 19, 19)
-			gfx.setColor(gfx.kColorBlack)
-			if self.cursor ~= i then
-				gfx.setDitherPattern(.5, gfx.image.kDitherTypeFloydSteinberg)
-			end
-			gfx.fillRect(1, y, 17, 17)
-			gfx.setColor(gfx.kColorWhite)
-			gfx.fillRect(2, y + 1, 15, 15)
-
-			if self.cursor == i then
-				local image = item.img or imgGrid:getImage(item.checked and 3 or 1)
-				image:draw(2, y + 1)
-			end
-
-			local cellText = item.text
-			gfx.setFont(fontText)
-			gfx.setColor(gfx.kColorWhite)
-			local width = gfx.getTextSize(cellText)
-			if item.showCursor then
-				width += 2
-			end
-			gfx.fillRect(23, y, width + 4, 18)
-			gfx.drawText(cellText, 25, y + 2)
-			if item.showCursor and not self.scrollAnimator then
+			if i >= self.position - 1 and i <= self.position + 6 then
+				gfx.setColor(gfx.kColorWhite)
+				gfx.fillRect(0, y - 1, 19, 19)
 				gfx.setColor(gfx.kColorBlack)
-				local cursorX, cursorY = gfx.getDrawOffset()
-				self.textCursor:enter(
-					cursorX + 24 + width,
-					cursorY + y + 2
-				)
-			end
-			if item.disabled then
-				gfx.setColor(gfx.kColorBlack)
-				gfx.drawLine(25, y + 2 + 7, 25 + width, y + 2 + 7)
+				if self.cursor ~= i then
+					gfx.setDitherPattern(.5, gfx.image.kDitherTypeFloydSteinberg)
+				end
+				gfx.fillRect(1, y, 17, 17)
+				gfx.setColor(gfx.kColorWhite)
+				gfx.fillRect(2, y + 1, 15, 15)
+
+				if self.cursor == i then
+					local image = item.img or imgGrid:getImage(item.checked and 3 or 1)
+					image:draw(2, y + 1)
+				end
+
+				local cellText = item.text
+				gfx.setFont(fontText)
+				gfx.setColor(gfx.kColorWhite)
+				local width = gfx.getTextSize(cellText)
+				if item.showCursor then
+					width += 2
+				end
+				gfx.fillRect(23, y, width + 4, 18)
+				gfx.drawText(cellText, 25, y + 2)
+				if item.showCursor and not self.scrollAnimator then
+					gfx.setColor(gfx.kColorBlack)
+					local cursorX, cursorY = gfx.getDrawOffset()
+					self.textCursor:enter(
+						cursorX + 24 + width,
+						cursorY + y + 2
+					)
+				end
+				if item.disabled then
+					gfx.setColor(gfx.kColorBlack)
+					gfx.drawLine(25, y + 2 + 7, 25 + width, y + 2 + 7)
+				end
 			end
 		end
 	end
