@@ -557,6 +557,11 @@ if not playdate.isCrankDocked() then
 	sidebar:open()
 end
 
+local showFPS = false
+local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
+	showFPS = not showFPS
+end)
+
 function playdate.update()
 	context.screen:update()
 
@@ -564,7 +569,9 @@ function playdate.update()
 	if context.screen.showCrank and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
 	end
-	--playdate.drawFPS(0,0)
+	if showFPS then
+		playdate.drawFPS(0,0)
+	end
 	playdate.timer.updateTimers()
 	playdate.frameTimer.updateTimers()
 end
