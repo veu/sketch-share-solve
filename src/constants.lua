@@ -34,7 +34,7 @@ AVATAR_NAMES = {
 	"Charismatic Cat",
 	"Mindful Mouse",
 	"Reliable Raccoon",
-	"Credible Crab"
+	"Obscure Owl"
 }
 
 MAX_PUZZLE_NAME_SIZE = 147
