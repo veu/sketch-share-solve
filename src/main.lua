@@ -568,3 +568,5 @@ function playdate.update()
 	playdate.timer.updateTimers()
 	playdate.frameTimer.updateTimers()
 end
+
+playdate.display.setRefreshRate(40)

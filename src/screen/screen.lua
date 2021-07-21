@@ -42,7 +42,7 @@ function Screen:handleCursorDir(button, update)
 		end
 	elseif playdate.buttonIsPressed(button) then
 		self.pressCounter += 1
-		if self.pressCounter > 4 and self.pressCounter % 4 == 0 then
+		if self.pressCounter > 5 and self.pressCounter % 5 == 0 then
 			update()
 			if playdate.buttonIsPressed(playdate.kButtonA) then
 				self:fill(false)
