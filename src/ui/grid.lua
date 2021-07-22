@@ -29,14 +29,15 @@ function Grid:enter(puzzle, mode, withHints)
 
 	self.tilemap:setSize(puzzle.width, puzzle.height)
 
-	self.solution = {}
-	for y = 1, puzzle.height do
-		for x = 1, puzzle.width do
-			local index = x - 1 + (y - 1) * puzzle.width + 1
-			self.solution[index] =
-				self.mode == MODE_CREATE and puzzle.grid[index] or
-				self.mode == MODE_PLAY and puzzle:isCellKnownEmpty(x, y) and 2
-				or 0
+	if self.mode == MODE_CREATE then
+		self.solution = table.shallowcopy(puzzle.grid)
+	else
+		self.solution = {}
+		for y = 1, puzzle.height do
+			for x = 1, puzzle.width do
+				local index = x - 1 + (y - 1) * puzzle.width + 1
+				self.solution[index] = puzzle:isCellKnownEmpty(x, y) and 2 or 0
+			end
 		end
 	end
 	self.tilemap:setTiles(self.solution, puzzle.width)

@@ -339,6 +339,14 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	modal:enter("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onRemixPuzzle = function ()
+	local puzzle = Puzzle.createEmpty()
+	puzzle.grid = table.shallowcopy(context.puzzle.grid)
+	context.puzzle = puzzle
+	context.mode = MODE_CREATE
+	switch(createPuzzleScreen, createPuzzleSidebar)
+end
+
 playPuzzleSidebar.onNext = function ()
 	local puzzleId = context.creator.created[math.random(#context.creator.created)]
 	context.puzzle = Puzzle.load(context, puzzleId)

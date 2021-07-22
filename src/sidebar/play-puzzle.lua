@@ -34,6 +34,12 @@ function PlayPuzzleSidebar:enter(context)
 
 	if creator.id == player.id then
 		table.insert(config.menuItems, {
+			text = "Remix puzzle",
+			exec = function()
+				self.onRemixPuzzle()
+			end
+		})
+		table.insert(config.menuItems, {
 			text = "Delete puzzle",
 			exec = function()
 				self.onDeletePuzzle()
