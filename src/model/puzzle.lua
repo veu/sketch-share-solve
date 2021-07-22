@@ -1,7 +1,8 @@
 class("Puzzle").extends()
 
-function Puzzle:init(puzzle)
+function Puzzle:init(puzzle, save)
 	self.id = puzzle.id
+	self._save = save
 	self.title = puzzle.title
 	self.width = puzzle.width or 15
 	self.height = puzzle.height or 10
@@ -93,8 +94,8 @@ function Puzzle:delete(context)
 	save(context)
 end
 
-Puzzle.load = function (context, id)
-	return Puzzle(context.save.puzzles[id])
+Puzzle.load = function (context, id, save)
+	return Puzzle((save or context.save).puzzles[id], save)
 end
 
 Puzzle.createEmpty = function (width, height)

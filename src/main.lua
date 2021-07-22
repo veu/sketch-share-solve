@@ -231,7 +231,7 @@ playPuzzleScreen.onPlayed = function ()
 		switch(solvedPuzzleScreen, testPuzzleSidebar)
 	else
 		if context.player.id ~= context.creator.id and context.player.id ~= PLAYER_ID_QUICK_PLAY then
-			context.player.played[context.puzzle.id] = true
+			context.player:setPlayed(context.puzzle)
 			context.player:save(context)
 		end
 
@@ -558,8 +558,18 @@ function save(context)
 	playdate.datastore.write(context.save, FILE_SAVE, true)
 end
 
--- playdate.datastore.write(json.decodeFile("./save.json"), FILE_SAVE)
-context.save = playdate.datastore.read(FILE_SAVE) or json.decodeFile("./save.json")
+context.ext = {}
+for i, path in pairs(playdate.file.listFiles()) do
+		if string.sub(path, -5, -1) == ".json" then
+			local id = string.sub(path, 0, -6)
+			if id ~= FILE_SAVE then
+				context.ext[id] = playdate.datastore.read(id)
+				context.ext[id].id = id
+			end
+		end
+end
+
+context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
 
 playdate.ui.crankIndicator:start()
@@ -583,6 +593,8 @@ function playdate.update()
 	gfx.sprite.update()
 	if context.screen.showCrank and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
+	elseif playdate.keyboard.isVisible() then
+		idleCounter = 0
 	else
 		idleCounter += 1
 		if idleCounter > 200 then

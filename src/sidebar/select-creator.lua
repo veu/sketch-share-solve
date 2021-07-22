@@ -31,6 +31,25 @@ function SelectCreatorSidebar:enter(context, selected)
 			i += 1
 		end
 	end
+	for _, save in pairs(context.ext) do
+		for _, id in pairs(save.profileList) do
+			local profile = Profile.load(context, id, save)
+			if #profile.created > 0 then
+				if profile.id == selected or not creator then
+					selectedIndex = i
+					creator = profile
+				end
+				table.insert(config.menuItems, {
+					text = profile.name,
+					avatar = profile.avatar,
+					ref = profile,
+					selected = profile.id == selected,
+					checked = context.player:playedAllBy(profile),
+				})
+				i += 1
+			end
+		end
+	end
 
 	config.creator = creator.avatar
 

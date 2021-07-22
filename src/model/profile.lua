@@ -1,7 +1,8 @@
 class("Profile").extends()
 
-function Profile:init(profile)
+function Profile:init(profile, save)
 	self.id = profile.id
+	self._save = save
 	self.hidden = profile.hidden or false
 	self.name = profile.name
 	self.created = profile.created
@@ -82,16 +83,27 @@ function Profile:playedAllBy(creator)
 	if self.id == creator.id then
 		return true
 	end
+	local prefix = creator._save and creator._save.id .. "." or ""
 	for _, id in pairs(creator.created) do
-		if not self.played[id] then
+		if not self.played[prefix .. id] then
 			return false
 		end
 	end
 	return true
 end
 
-Profile.load = function (context, id)
-	return Profile(context.save.profiles[id])
+function Profile:hasPlayed(puzzle)
+	local id = puzzle._save and puzzle._save.id .. "." .. puzzle.id or puzzle.id
+	return self.played[id]
+end
+
+function Profile:setPlayed(puzzle)
+	local id = puzzle._save and puzzle._save.id .. "." .. puzzle.id or puzzle.id
+	self.played[id] = true
+end
+
+Profile.load = function (context, id, save)
+	return Profile((save or context.save).profiles[id], save)
 end
 
 function Profile.createEmpty()

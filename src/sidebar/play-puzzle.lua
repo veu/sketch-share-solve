@@ -45,13 +45,13 @@ function PlayPuzzleSidebar:enter(context)
 end
 
 function PlayPuzzleSidebar:getTitle(player, creator, puzzle)
-	if creator.id == player.id or player.played[puzzle.id] then
+	if creator.id == player.id or player:hasPlayed(puzzle) then
 		return "\"" .. puzzle.title .. "\""
 	end
 
 	for i, id in pairs(creator.created) do
 		if id == puzzle.id then
-			return "Puzzle " .. i
+			return string.format("Puzzle %02d", i)
 		end
 	end
 end
