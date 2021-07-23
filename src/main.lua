@@ -570,7 +570,7 @@ context.ext = {}
 for i, path in pairs(playdate.file.listFiles()) do
 		if string.sub(path, -5, -1) == ".json" then
 			local id = string.sub(path, 0, -6)
-			if id ~= FILE_SAVE then
+			if id ~= FILE_SAVE and string.sub(path, 0, 1) ~= "." then
 				context.ext[id] = playdate.datastore.read(id)
 				context.ext[id].id = id
 			end
