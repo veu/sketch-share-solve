@@ -12,8 +12,15 @@ function DoneNumbers:init(puzzle, gridNumbers, solutionNumbers, solution)
 	self.solutionNumbers = solutionNumbers
 	self.solution = solution
 
-	self:calcLeftNumbers()
-	self:calcTopNumbers()
+	self.left = table.create(self.puzzle.height, 0)
+	for y = 1, self.puzzle.height do
+		self.left[y] = { self.gridNumbers.left[y][1] == 0 }
+	end
+
+	self.top = table.create(self.puzzle.width, 0)
+	for x = 1, self.puzzle.width do
+		self.top[x] = { self.gridNumbers.top[x][1] == 0 }
+	end
 end
 
 function DoneNumbers:updatePosition(solutionNumbers, solution, x, y)
@@ -41,7 +48,7 @@ end
 
 function DoneNumbers:calcLeftNumbersForRow(y)
 	if self.gridNumbers.left[y][1] == 0 then
-		self.left[y] = { self.solutionNumbers.left[y][1] == 0 }
+		self.left[y] = { true }
 	else
 		self.left[y] = {}
 		-- layout blocks from left and right
@@ -117,7 +124,7 @@ end
 
 function DoneNumbers:calcTopNumbersForColumn(x)
 	if self.gridNumbers.top[x][1] == 0 then
-		self.top[x] = { self.solutionNumbers.top[x][1] == 0 }
+		self.top[x] = { true }
 	else
 		self.top[x] = {}
 		-- layout blocks from both top and bottom
