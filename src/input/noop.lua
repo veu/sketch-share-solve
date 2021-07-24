@@ -1,0 +1,3 @@
+function createNoopInputHandler()
+	return {}
+end

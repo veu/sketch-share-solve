@@ -28,29 +28,8 @@ end
 function Screen:crankUndocked()
 end
 
-function Screen:update()
+function Screen:buttonPressed()
 end
 
-function Screen:handleCursorDir(button, update)
-	if playdate.buttonJustPressed(button) then
-		self.pressCounter = 0
-		update()
-		if playdate.buttonIsPressed(playdate.kButtonA) then
-			self:fill(false)
-		elseif playdate.buttonIsPressed(playdate.kButtonB) then
-			self:cross(false)
-		end
-	elseif playdate.buttonIsPressed(button) then
-		self.pressCounter += 1
-		if self.pressCounter > 5 and self.pressCounter % 5 == 0 then
-			update()
-			if playdate.buttonIsPressed(playdate.kButtonA) then
-				self:fill(false)
-			elseif playdate.buttonIsPressed(playdate.kButtonB) then
-				self:cross(false)
-			end
-		end
-	elseif playdate.buttonJustReleased(button) then
-		self.pressCounter = 0
-	end
+function Screen:update()
 end

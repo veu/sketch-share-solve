@@ -11,6 +11,10 @@ import "CoreLibs/ui/crankIndicator"
 
 import "constants"
 
+import "input/default"
+import "input/modal"
+import "input/noop"
+
 import "model/done-numbers"
 import "model/done-numbers-disabled"
 import "model/numbers"
@@ -95,24 +99,29 @@ local settingsSidebar = SettingsSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
 local titleSidebar = TitleSidebar()
 
--- modal
-local modal = Modal()
-
 local context = {
 	creator = nil,
 	puzzle = nil,
 	player = nil,
+	modal = Modal(),
 	mode = nil,
 	save = nil,
 	settings = nil,
 	screen = titleScreen,
+	sidebar = titleSidebar,
 	isCrankDocked = true,
 }
 
-local sidebar = titleSidebar
+local defaultInputHandler = createDefaultInputHandler(context)
+local modalInputHandler = createModalInputHandler(context)
+local noopInputHandler = createNoopInputHandler(context)
 
-function showModal(text)
-	modal:enter(text)
+function showModal(text, ok)
+	context.modal:enter(text, ok)
+	playdate.inputHandlers.push(modalInputHandler, true)
+	context.modal.onClose = function ()
+		playdate.inputHandlers.pop()
+	end
 end
 
 function showPlayerKeyboard(mode)
@@ -187,21 +196,23 @@ function showPuzzleKeyboard()
 end
 
 function switch(newScreen, newSidebar, selected, out)
+	playdate.inputHandlers.push(noopInputHandler, true)
 	if newScreen then
 		context.screen:leave()
 		context.screen = newScreen
 	end
-	context.scrolling = newSidebar ~= sidebar
+	context.scrolling = newSidebar ~= context.sidebar
 	context.scrollOut = out
-	sidebar.onLeft = function ()
+	context.sidebar.onLeft = function ()
 		context.scrolling = false
 		if newScreen then
 			newScreen:enter(context)
 		end
+		playdate.inputHandlers.pop()
 	end
-	sidebar:leave(context)
-	sidebar = newSidebar
-	sidebar:enter(context, selected)
+	context.sidebar:leave(context)
+	context.sidebar = newSidebar
+	context.sidebar:enter(context, selected)
 end
 
 local idleCounter = 0
@@ -293,8 +304,8 @@ optionsSidebar.onDelete = function ()
 	if #context.player.created == 0 then
 		delete()
 	else
-		modal.onOK = delete
-		modal:enter("Deleting your profile won’t delete your puzzles. Continue anyway?", "Delete")
+		context.modal.onOK = delete
+		showModal("Deleting your profile won’t delete your puzzles. Continue anyway?", "Delete")
 	end
 end
 
@@ -304,13 +315,13 @@ optionsSidebar.onRename = function ()
 end
 
 optionsSidebar.onResetProgress = function ()
-	modal.onOK = function ()
+	context.modal.onOK = function ()
 		context.player.played = {}
 		context.player:save(context)
 		switch(nil, optionsSidebar, OPTION_ID_RESET_PROGRESS)
 	end
 	local numPlayed = context.player:getNumPlayed()
-	modal:enter("This will reset " .. numPlayed .. " played puzzles.", "Reset progress")
+	showModal("This will reset " .. numPlayed .. " played puzzles.", "Reset progress")
 end
 
 optionsSidebar.onToggleHints = function ()
@@ -328,7 +339,7 @@ playPuzzleSidebar.onAbort = function ()
 end
 
 playPuzzleSidebar.onDeletePuzzle = function ()
-	modal.onOK = function ()
+	context.modal.onOK = function ()
 		context.puzzle:delete(context)
 		if #context.creator.created > 0 then
 			switch(titleScreen, selectPuzzleSidebar, nil, true)
@@ -336,7 +347,7 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 			switch(titleScreen, selectCreatorSidebar, nil, true)
 		end
 	end
-	modal:enter("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
+	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
 playPuzzleSidebar.onRemixPuzzle = function ()
@@ -461,103 +472,10 @@ end
 
 titleSidebar.onQuickPlay = function ()
 	context.player = Profile.load(context, PLAYER_ID_QUICK_PLAY)
-	context.creator = Profile.load(context, PLAYER_ID_RDK)
+	context.creator = Profile.load(context, PLAYER_ID_RDK, context.ext.rdk)
 	local puzzleId = context.creator.created[math.random(#context.creator.created)]
-	context.puzzle = Puzzle.load(context, puzzleId)
+	context.puzzle = Puzzle.load(context, puzzleId, context.ext.rdk)
 	switch(playPuzzleScreen, playPuzzleSidebar)
-end
-
-function playdate.crankDocked()
-	resume()
-	context.isCrankDocked = true
-	context.screen:crankDocked()
-	sidebar:close()
-end
-
-function playdate.crankUndocked()
-	resume()
-	context.isCrankDocked = false
-	context.screen:crankUndocked()
-	sidebar:open()
-end
-
-function playdate.cranked(change, acceleratedChange)
-	resume()
-	if context.scrolling then
-		return
-	end
-	if not modal:isVisible() then
-		local factor = 0.5 + context.settings.crankSpeed * 0.1
-		sidebar:cranked(-change * factor, -acceleratedChange * factor)
-	end
-end
-
-function playdate.downButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if not modal:isVisible() and not playdate.isCrankDocked() then
-		sidebar:downButtonDown()
-	end
-end
-
-function playdate.leftButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if not modal:isVisible() and not playdate.isCrankDocked() then
-		sidebar:leftButtonDown()
-	end
-end
-
-function playdate.rightButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if not modal:isVisible() and not playdate.isCrankDocked() then
-		sidebar:rightButtonDown()
-	end
-end
-
-function playdate.upButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if not modal:isVisible() and not playdate.isCrankDocked() then
-		sidebar:upButtonDown()
-	end
-end
-
-function playdate.AButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if modal:isVisible() then
-		modal:AButtonDown()
-	elseif playdate.isCrankDocked() then
-		context.screen:AButtonDown()
-	else
-		sidebar:AButtonDown()
-	end
-end
-
-function playdate.BButtonDown()
-	resume()
-	if context.scrolling then
-		return
-	end
-	if modal:isVisible() then
-		modal:BButtonDown()
-	elseif playdate.isCrankDocked() then
-		context.screen:BButtonDown()
-	else
-		sidebar:BButtonDown()
-	end
 end
 
 math.randomseed(playdate.getSecondsSinceEpoch())
@@ -582,12 +500,13 @@ context.settings = Settings.load(context)
 
 playdate.ui.crankIndicator:start()
 context.screen:enter(context)
-sidebar:enter(context)
+context.sidebar:enter(context)
+playdate.inputHandlers.push(defaultInputHandler)
 
 if not playdate.isCrankDocked() then
 	context.isCrankDocked = false
 	context.screen:crankUndocked()
-	sidebar:open()
+	context.sidebar:open()
 end
 
 local showFPS = false
@@ -597,6 +516,10 @@ end)
 
 function playdate.update()
 	context.screen:update()
+	local inputHandler = playdate.inputHandlers[#playdate.inputHandlers]
+	if inputHandler.update then
+		inputHandler.update()
+	end
 
 	gfx.sprite.update()
 	if context.screen.showCrank and playdate.isCrankDocked() then

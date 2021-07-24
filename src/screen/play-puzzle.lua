@@ -47,13 +47,50 @@ function PlayPuzzleScreen:fill(isStart)
 	self.grid:toggle(self.grid:getCursor(), isStart)
 end
 
-function PlayPuzzleScreen:update()
-	if not playdate.isCrankDocked() or self.puzzle:isSolved(self.grid.solution) then
-		return
+function PlayPuzzleScreen:downButtonDown(pressed)
+	self.grid:moveBy(0, 1, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	elseif playdate.buttonIsPressed(playdate.kButtonB) then
+		self:cross(false)
 	end
+end
 
-	self:handleCursorDir(playdate.kButtonRight, function (pressed) self.grid:moveBy(1, 0, pressed) end)
-	self:handleCursorDir(playdate.kButtonDown, function (pressed) self.grid:moveBy(0, 1, pressed) end)
-	self:handleCursorDir(playdate.kButtonLeft, function (pressed) self.grid:moveBy(-1, 0, pressed) end)
-	self:handleCursorDir(playdate.kButtonUp, function (pressed) self.grid:moveBy(0, -1, pressed) end)
+function PlayPuzzleScreen:leftButtonDown(pressed)
+	self.grid:moveBy(-1, 0, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	elseif playdate.buttonIsPressed(playdate.kButtonB) then
+		self:cross(false)
+	end
+end
+
+function PlayPuzzleScreen:rightButtonDown(pressed)
+	self.grid:moveBy(1, 0, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	elseif playdate.buttonIsPressed(playdate.kButtonB) then
+		self:cross(false)
+	end
+end
+
+function PlayPuzzleScreen:upButtonDown(pressed)
+	self.grid:moveBy(0, -1, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	elseif playdate.buttonIsPressed(playdate.kButtonB) then
+		self:cross(false)
+	end
+end
+
+function PlayPuzzleScreen:buttonPressed(button)
+	if button == playdate.kButtonDown then
+		self:downButtonDown(true)
+	elseif button == playdate.kButtonLeft then
+		self:leftButtonDown(true)
+	elseif button == playdate.kButtonRight then
+		self:rightButtonDown(true)
+	elseif button == playdate.kButtonUp then
+		self:upButtonDown(true)
+	end
 end

@@ -151,6 +151,14 @@ function Sidebar:BButtonDown()
 	self.onAbort()
 end
 
+function Sidebar:buttonPressed(button)
+	if button == playdate.kButtonDown then
+		self:downButtonDown(true)
+	elseif button == playdate.kButtonUp then
+		self:upButtonDown(true)
+	end
+end
+
 function Sidebar:open()
 	if self.stayOpen then
 		return

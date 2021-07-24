@@ -29,11 +29,13 @@ function Modal:leave()
 end
 
 function Modal:AButtonDown()
+	self.onClose()
 	self.onOK()
 	self:leave()
 end
 
 function Modal:BButtonDown()
+	self.onClose()
 	self.onCancel()
 	self:leave()
 end

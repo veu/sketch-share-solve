@@ -43,13 +43,42 @@ function CreateAvatarScreen:fill(isStart)
 	self.grid:toggle(self.grid:getCursor(), isStart)
 end
 
-function CreateAvatarScreen:update()
-	if not playdate.isCrankDocked() then
-		return
+function CreateAvatarScreen:downButtonDown(pressed)
+	self.grid:moveBy(0, 1, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
 	end
+end
 
-	self:handleCursorDir(playdate.kButtonRight, function () self.grid:moveBy(1, 0) end)
-	self:handleCursorDir(playdate.kButtonDown, function () self.grid:moveBy(0, 1) end)
-	self:handleCursorDir(playdate.kButtonLeft, function () self.grid:moveBy(-1, 0) end)
-	self:handleCursorDir(playdate.kButtonUp, function () self.grid:moveBy(0, -1) end)
+function CreateAvatarScreen:leftButtonDown(pressed)
+	self.grid:moveBy(-1, 0, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	end
+end
+
+function CreateAvatarScreen:rightButtonDown(pressed)
+	self.grid:moveBy(1, 0, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	end
+end
+
+function CreateAvatarScreen:upButtonDown(pressed)
+	self.grid:moveBy(0, -1, pressed)
+	if playdate.buttonIsPressed(playdate.kButtonA) then
+		self:fill(false)
+	end
+end
+
+function CreateAvatarScreen:buttonPressed(button)
+	if button == playdate.kButtonDown then
+		self:downButtonDown(true)
+	elseif button == playdate.kButtonLeft then
+		self:leftButtonDown(true)
+	elseif button == playdate.kButtonRight then
+		self:rightButtonDown(true)
+	elseif button == playdate.kButtonUp then
+		self:upButtonDown(true)
+	end
 end
