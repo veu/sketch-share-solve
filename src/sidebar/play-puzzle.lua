@@ -14,7 +14,7 @@ function PlayPuzzleSidebar:enter(context)
 		menuTitle = self:getTitle(player, creator, puzzle),
 		menuItems = {
 			{
-				text = "Reset grid",
+				text = "Restart",
 				disabled = puzzle.hasBeenSolved,
 				exec = function()
 					context.screen:resetGrid()

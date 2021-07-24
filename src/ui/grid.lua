@@ -119,6 +119,21 @@ function Grid:invert()
 	self:redraw()
 end
 
+function Grid:flip()
+	local solution = table.create(#self.solution, 0)
+	for y = 1, self.puzzle.height do
+		for x = 1, self.puzzle.width do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
+			local oldIndex = self.puzzle.width - x + (y - 1) * self.puzzle.width + 1
+			solution[index] = self.solution[oldIndex]
+		end
+	end
+
+	self.solution = solution
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self:redraw()
+end
+
 function Grid:reset()
 	self.solution = {}
 	for y = 1, self.puzzle.height do

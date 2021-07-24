@@ -26,6 +26,11 @@ function CreatePuzzleScreen:invertGrid()
 	self.puzzle.grid = self.grid.solution
 end
 
+function CreatePuzzleScreen:flipGrid()
+	self.grid:flip()
+	self.puzzle.grid = self.grid.solution
+end
+
 function CreatePuzzleScreen:resetGrid()
 	self.grid:reset()
 	self.puzzle.grid = self.grid.solution

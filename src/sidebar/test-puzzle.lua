@@ -22,7 +22,7 @@ function TestPuzzleSidebar:enter(context, selected)
 				end
 			},
 			{
-				text = "Reset grid",
+				text = "Restart",
 				disabled = context.puzzle.hasBeenSolved,
 				selected = selected == ACTION_ID_RESET_GRID,
 				exec = function()
