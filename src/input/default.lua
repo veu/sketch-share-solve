@@ -87,7 +87,7 @@ function createDefaultInputHandler(context)
 				if playdate.buttonJustPressed(button) then
 					pressed[i] = 0
 				elseif playdate.buttonIsPressed(button) then
-					pressed[i] += 1
+					pressed[i] = pressed[i] and pressed[i] + 1 or 0
 					if pressed[i] > 5 and pressed[i] % 5 == 0 then
 						if playdate.isCrankDocked() then
 							context.screen:buttonPressed(button)

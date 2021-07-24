@@ -380,7 +380,7 @@ playPuzzleSidebar.onNext = function ()
 end
 
 selectAvatarSidebar.onAbort = function()
-	switch(nil, selectPlayerSidebar, nil, true)
+	switch(nil, selectPlayerSidebar, ACTION_ID_NEW_PLAYER, true)
 end
 
 selectAvatarSidebar.onNewAvatar = function ()

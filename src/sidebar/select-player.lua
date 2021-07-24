@@ -47,6 +47,7 @@ function SelectPlayerSidebar:enter(context, selected)
 		table.insert(config.menuItems, {
 			text = "New player",
 			avatar = imgAvatars:getImage(AVATAR_ID_NIL),
+			selected = selected == ACTION_ID_NEW_PLAYER,
 			exec = function()
 				self.onNewPlayer()
 			end
