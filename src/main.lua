@@ -522,7 +522,7 @@ function playdate.update()
 	end
 
 	gfx.sprite.update()
-	if context.screen.showCrank and playdate.isCrankDocked() then
+	if context.screen.showCrank and not context.modal:isVisible() and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
 	elseif playdate.keyboard.isVisible() then
 		idleCounter = 0

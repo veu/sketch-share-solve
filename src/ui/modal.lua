@@ -62,7 +62,7 @@ end
 
 function Modal:drawButton(button, text, x, y)
 	gfx.setColor(gfx.kColorBlack)
-	gfx.fillCircleInRect(x, y - 2, 21, 21)
+	gfx.fillCircleInRect(x - 1, y - 3, 23, 23)
 	gfx.setImageDrawMode(gfx.kDrawModeInverted)
 	gfx.drawText(button, button == "A" and x + 6 or x + 7, y)
 	gfx.setImageDrawMode(gfx.kDrawModeCopy)
