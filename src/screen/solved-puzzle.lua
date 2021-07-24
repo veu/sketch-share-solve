@@ -7,6 +7,7 @@ function SolvedPuzzleScreen:init()
 
 	self.grid = Grid()
 	self.dialog = Dialog()
+	self.time = Time()
 end
 
 function SolvedPuzzleScreen:enter(context)
@@ -16,11 +17,13 @@ function SolvedPuzzleScreen:enter(context)
 	self.grid:enter(self.puzzle, MODE_CREATE)
 	self.grid:hideCursor()
 	self.gridAnimator = gfx.animator.new(400, 0, 1, playdate.easingFunctions.inOutSine)
+	self.time:enter(context)
 end
 
 function SolvedPuzzleScreen:leave()
 	self.grid:leave()
 	self.dialog:leave()
+	self.time:leave()
 end
 
 function SolvedPuzzleScreen:update()

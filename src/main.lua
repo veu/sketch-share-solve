@@ -53,6 +53,8 @@ import "ui/menu-border"
 import "ui/modal"
 import "ui/player-avatar"
 import "ui/text-cursor"
+import "ui/time"
+import "ui/timer"
 import "ui/title"
 
 import "utils/numbers"
@@ -237,12 +239,13 @@ playPuzzleScreen.onChanged = function ()
 	end
 end
 
-playPuzzleScreen.onPlayed = function ()
+playPuzzleScreen.onPlayed = function (time)
+	context.player.lastTime = time
 	if context.mode == MODE_CREATE then
 		switch(solvedPuzzleScreen, testPuzzleSidebar)
 	else
-		if context.player.id ~= context.creator.id and context.player.id ~= PLAYER_ID_QUICK_PLAY then
-			context.player:setPlayed(context.puzzle)
+		if context.player.id ~= PLAYER_ID_QUICK_PLAY then
+			context.player:setPlayed(context.puzzle, time)
 			context.player:save(context)
 		end
 
@@ -334,6 +337,12 @@ optionsSidebar.onToggleHints = function ()
 	context.player.options.hintsDisabled = not context.player.options.hintsDisabled
 	context.player:save(context)
 	switch(nil, optionsSidebar)
+end
+
+optionsSidebar.onToggleTimer = function ()
+	context.player.options.showTimer = not context.player.options.showTimer
+	context.player:save(context)
+	switch(nil, optionsSidebar, ACTION_ID_TOGGLE_TIMER)
 end
 
 playPuzzleSidebar.onAbort = function ()
@@ -528,9 +537,13 @@ function playdate.update()
 	end
 
 	gfx.sprite.update()
-	if context.screen.showCrank and not context.modal:isVisible() and playdate.isCrankDocked() then
+	if
+		context.screen.showCrank and
+		not context.modal:isVisible() and
+		playdate.isCrankDocked()
+	then
 		playdate.ui.crankIndicator:update()
-	elseif playdate.keyboard.isVisible() then
+	elseif playdate.keyboard.isVisible() or context.screen.cantIdle then
 		idleCounter = 0
 	else
 		idleCounter += 1

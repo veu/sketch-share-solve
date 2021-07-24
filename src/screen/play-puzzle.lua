@@ -4,6 +4,7 @@ function PlayPuzzleScreen:init()
 	PlayPuzzleScreen.super.init(self)
 
 	self.grid = Grid(true)
+	self.timer = Timer()
 
 	self.onChanged = function () end
 	self.onPlayed = function () end
@@ -14,17 +15,20 @@ function PlayPuzzleScreen:enter(context)
 	self.mode = context.mode
 	self.grid.onUpdateSolution = function ()
 		if self.puzzle:isSolved(self.grid.solution) then
-			self.onPlayed()
+			self.onPlayed(self.timer.current)
 		else
 			self.onChanged()
 		end
 	end
 
 	self.grid:enter(self.puzzle, MODE_PLAY, not context.player.options.hintsDisabled)
+	self.timer:enter(context)
+	self.cantIdle = context.player.options.showTimer
 end
 
 function PlayPuzzleScreen:leave()
 	self.grid:leave()
+	self.timer:leave()
 end
 
 function PlayPuzzleScreen:resetGrid()

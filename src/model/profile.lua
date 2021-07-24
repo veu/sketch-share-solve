@@ -97,9 +97,11 @@ function Profile:hasPlayed(puzzle)
 	return self.played[id]
 end
 
-function Profile:setPlayed(puzzle)
+function Profile:setPlayed(puzzle, time)
 	local id = puzzle._save and puzzle._save.id .. "." .. puzzle.id or puzzle.id
-	self.played[id] = true
+	if not self.played[id] or time < 0 + self.played[id] then
+		self.played[id] = time
+	end
 end
 
 Profile.load = function (context, id, save)
