@@ -22,6 +22,18 @@ end
 function Screen:BButtonDown()
 end
 
+function Screen:downButtonDown()
+end
+
+function Screen:leftButtonDown()
+end
+
+function Screen:rightButtonDown()
+end
+
+function Screen:upButtonDown()
+end
+
 function Screen:crankDocked()
 end
 
