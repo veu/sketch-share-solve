@@ -74,6 +74,8 @@ imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 imgGrid, err = gfx.imagetable.new("img/grid")
 assert(imgGrid, err)
+imgCursor, err = gfx.imagetable.new("img/cursor")
+assert(imgCursor, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
 imgMenuBorder = gfx.image.new("img/menu-border")
@@ -490,6 +492,7 @@ titleSidebar.onQuickPlay = function ()
 	context.creator = Profile.load(context, PLAYER_ID_RDK, context.ext.rdk)
 	local puzzleId = context.creator.created[math.random(#context.creator.created)]
 	context.puzzle = Puzzle.load(context, puzzleId, context.ext.rdk)
+	context.mode = MODE_PLAY
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 

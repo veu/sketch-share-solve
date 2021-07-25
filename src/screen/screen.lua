@@ -22,6 +22,9 @@ end
 function Screen:BButtonDown()
 end
 
+function Screen:BButtonUp()
+end
+
 function Screen:downButtonDown()
 end
 

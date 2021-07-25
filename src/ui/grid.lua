@@ -169,6 +169,46 @@ function Grid:moveTowardsTop(step)
 	self:moveTo(self.x, math.floor(GRID_OFFSET_Y * (1 - step) + 8 * step + 0.5))
 end
 
+function Grid:startTranslating()
+	self.moveContext = {
+		startX = self.cursor.gridX,
+		startY = self.cursor.gridY,
+		grid = table.shallowcopy(self.solution)
+	}
+	self.cursor:startTranslating()
+end
+
+function Grid:endTranslating()
+	self.moveContext = nil
+	self.cursor:endTranslating()
+end
+
+function Grid:translate()
+	local dx = self.cursor.gridX - self.moveContext.startX
+	local dy = self.cursor.gridY - self.moveContext.startY
+	local grid = self.moveContext.grid
+
+	local solution = table.create(#self.solution, 0)
+	for y = 1, self.puzzle.height do
+		for x = 1, self.puzzle.width do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
+			if
+				1 <= x - dx and x - dx <= self.puzzle.width and
+				1 <= y - dy and y - dy <= self.puzzle.height
+			then
+				local translatedIndex = x - dx - 1 + (y - dy - 1) * self.puzzle.width + 1
+				solution[index] = grid[translatedIndex]
+			else
+				solution[index] = 0
+			end
+		end
+	end
+
+	self.solution = solution
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self:redraw()
+end
+
 function Grid:onUpdateSolution_(index)
 	if self.numbers then
 		self.numbers:updateForPosition(self.solution)

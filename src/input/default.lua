@@ -82,6 +82,13 @@ function createDefaultInputHandler(context)
 			end
 		end,
 
+		BButtonUp = function ()
+			resume()
+			if playdate.isCrankDocked() then
+				context.screen:BButtonUp()
+			end
+		end,
+
 		update = function ()
 			for i, button in ipairs(buttons) do
 				if playdate.buttonJustPressed(button) then

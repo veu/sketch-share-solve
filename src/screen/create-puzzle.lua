@@ -40,35 +40,60 @@ function CreatePuzzleScreen:AButtonDown()
 	self:fill(true)
 end
 
+function CreatePuzzleScreen:BButtonDown()
+	self.grid:startTranslating()
+end
+
+function CreatePuzzleScreen:BButtonUp()
+	self.grid:endTranslating()
+end
+
 function CreatePuzzleScreen:fill(isStart)
 	self.grid:toggle(self.grid:getCursor(), isStart)
 end
 
+function CreatePuzzleScreen:translate()
+	self.grid:translate()
+	self.puzzle.grid = self.grid.solution
+end
+
 function CreatePuzzleScreen:downButtonDown(pressed)
-	self.grid:moveBy(0, 1, pressed)
+	local bPressed = playdate.buttonIsPressed(playdate.kButtonB)
+	self.grid:moveBy(0, 1, pressed or bPressed)
 	if playdate.buttonIsPressed(playdate.kButtonA) then
 		self:fill(false)
+	elseif bPressed then
+		self:translate()
 	end
 end
 
 function CreatePuzzleScreen:leftButtonDown(pressed)
-	self.grid:moveBy(-1, 0, pressed)
+	local bPressed = playdate.buttonIsPressed(playdate.kButtonB)
+	self.grid:moveBy(-1, 0, pressed or bPressed)
 	if playdate.buttonIsPressed(playdate.kButtonA) then
 		self:fill(false)
+	elseif bPressed then
+		self:translate()
 	end
 end
 
 function CreatePuzzleScreen:rightButtonDown(pressed)
-	self.grid:moveBy(1, 0, pressed)
+	local bPressed = playdate.buttonIsPressed(playdate.kButtonB)
+	self.grid:moveBy(1, 0, pressed or bPressed)
 	if playdate.buttonIsPressed(playdate.kButtonA) then
 		self:fill(false)
+	elseif bPressed then
+		self:translate()
 	end
 end
 
 function CreatePuzzleScreen:upButtonDown(pressed)
-	self.grid:moveBy(0, -1, pressed)
+	local bPressed = playdate.buttonIsPressed(playdate.kButtonB)
+	self.grid:moveBy(0, -1, pressed or bPressed)
 	if playdate.buttonIsPressed(playdate.kButtonA) then
-		self:fill(false)
+	self:fill(false)
+	elseif bPressed then
+		self:translate()
 	end
 end
 
