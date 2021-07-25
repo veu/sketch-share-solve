@@ -7,6 +7,12 @@ local NUM_MAP = {
 	[12] = "C", [13] = "D", [14] = "E", [15] = "F",
 }
 
+local DONE_NUMBERS = {
+	DoneNumbersDisabled,
+	DoneNumbersLine,
+	DoneNumbers,
+}
+
 class("GridNumbers").extends(gfx.sprite)
 
 function GridNumbers:init()
@@ -19,17 +25,18 @@ function GridNumbers:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbers:enter(puzzle, solution, x, y, withHints)
+function GridNumbers:enter(puzzle, solution, x, y, showHints)
 	self.puzzle = puzzle
 	self.gridNumbers = Numbers(puzzle, puzzle.grid)
 	self.solutionNumbers = Numbers(puzzle, solution)
-	self.doneNumbers = withHints and DoneNumbers(
+
+	self.doneNumbers = DONE_NUMBERS[showHints](
 		puzzle,
 		self.gridNumbers,
 		self.solutionNumbers,
 		solution,
-		withHints
-	) or DoneNumbersDisabled(puzzle)
+		showHints
+	)
 	self.gridX = x
 	self.gridY = y
 

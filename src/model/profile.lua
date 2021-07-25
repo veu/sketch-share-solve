@@ -7,7 +7,10 @@ function Profile:init(profile, save)
 	self.name = profile.name
 	self.created = profile.created
 	self.played = profile.played
-	self.options = profile.options or {}
+	self.options = profile.options or {
+		showTimer = false,
+		showHints = HINTS_ID_BLOCKS,
+	}
 
 	if profile.avatar then
 		self._avatar = profile.avatar

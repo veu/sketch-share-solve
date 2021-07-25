@@ -17,6 +17,7 @@ import "input/noop"
 
 import "model/done-numbers"
 import "model/done-numbers-disabled"
+import "model/done-numbers-line"
 import "model/numbers"
 import "model/profile"
 import "model/puzzle"
@@ -335,8 +336,20 @@ optionsSidebar.onResetProgress = function ()
 	showModal("This will reset " .. numPlayed .. " played puzzles.", "Reset progress")
 end
 
+optionsSidebar.onHintsDown = function ()
+	context.player.options.showHints = math.max(1, context.player.options.showHints - 1)
+	context.player:save(context)
+	switch(nil, optionsSidebar)
+end
+
+optionsSidebar.onHintsUp = function ()
+	context.player.options.showHints = math.min(3, context.player.options.showHints + 1)
+	context.player:save(context)
+	switch(nil, optionsSidebar)
+end
+
 optionsSidebar.onToggleHints = function ()
-	context.player.options.hintsDisabled = not context.player.options.hintsDisabled
+	context.player.options.showHints = context.player.options.showHints % 3 + 1
 	context.player:save(context)
 	switch(nil, optionsSidebar)
 end

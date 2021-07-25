@@ -22,7 +22,7 @@ function Grid:init(withNumbers)
 	end
 end
 
-function Grid:enter(puzzle, mode, withHints)
+function Grid:enter(puzzle, mode, showHints)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
@@ -54,7 +54,7 @@ function Grid:enter(puzzle, mode, withHints)
 			self.solution,
 			self.cursor.gridX,
 			self.cursor.gridY,
-			withHints
+			showHints
 		)
 		self.cursor.onMove = function (x, y)
 			self.numbers:setCursor(x, y)

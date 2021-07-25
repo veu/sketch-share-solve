@@ -17,6 +17,16 @@ function numbersToPattern(numbers)
 	return "^[^1]-" .. table.concat(patterns, "[^1][^1]-") .. "[^1]*$"
 end
 
+function numbersToLineSolvedPattern(numbers)
+	local patterns = table.create(#numbers, 0)
+
+	for i, n in ipairs(numbers) do
+		patterns[i] = "()" .. string.rep("1", n)
+	end
+
+	return "^[^1]-" .. table.concat(patterns, "[^1][^1]-") .. "[^1]*$"
+end
+
 function solutionColumnToString(puzzle, x, solution)
 	local s = ""
 

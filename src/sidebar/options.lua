@@ -5,9 +5,7 @@ function OptionsSidebar:init()
 end
 
 function OptionsSidebar:enter(context, selected)
-	local hintsText = "Hints: " .. (
-		context.player.options.hintsDisabled and "off" or "on"
-	)
+	local hintsText = "Hints: " .. HINTS_TEXT[context.player.options.showHints]
 	local timerText = "Timer: " .. (
 		context.player.options.showTimer and "on" or "off"
 	)
@@ -21,10 +19,10 @@ function OptionsSidebar:enter(context, selected)
 					self.onToggleHints()
 				end,
 				execLeft = function ()
-					self.onToggleHints()
+					self.onHintsDown()
 				end,
 				execRight = function ()
-					self.onToggleHints()
+					self.onHintsUp()
 				end
 			},
 			{
