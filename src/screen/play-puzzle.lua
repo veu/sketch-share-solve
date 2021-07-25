@@ -32,6 +32,7 @@ function PlayPuzzleScreen:leave()
 end
 
 function PlayPuzzleScreen:resetGrid()
+	self.timer:reset()
 	self.grid:reset()
 end
 

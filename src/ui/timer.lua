@@ -14,7 +14,7 @@ end
 
 function Timer:enter(context)
 	self.show = context.player.options.showTimer
-	playdate.resetElapsedTime()
+	self.start = math.floor(playdate.getCurrentTimeMilliseconds() / 1000)
 	self.current = 0
 	if self.show then
 		self:redraw()
@@ -26,6 +26,14 @@ end
 
 function Timer:leave()
 	self:remove()
+end
+
+function Timer:reset()
+	self.start = math.floor(playdate.getCurrentTimeMilliseconds() / 1000)
+	self.current = 0
+	if self.show then
+		self:redraw()
+	end
 end
 
 function Timer:redraw()
@@ -44,7 +52,7 @@ function Timer:redraw()
 end
 
 function Timer:update()
-	local elapsed = math.min(5940, math.floor(playdate.getElapsedTime()))
+	local elapsed = math.min(5940, math.floor(playdate.getCurrentTimeMilliseconds() / 1000) - self.start)
 	if elapsed == self.current then
 		return
 	end
