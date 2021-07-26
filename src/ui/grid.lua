@@ -170,12 +170,14 @@ function Grid:moveTowardsTop(step)
 end
 
 function Grid:startTranslating()
-	self.moveContext = {
-		startX = self.cursor.gridX,
-		startY = self.cursor.gridY,
-		grid = table.shallowcopy(self.solution)
-	}
-	self.cursor:startTranslating()
+	if not self.moveContext then
+		self.moveContext = {
+			startX = self.cursor.gridX,
+			startY = self.cursor.gridY,
+			grid = table.shallowcopy(self.solution)
+		}
+		self.cursor:startTranslating()
+	end
 end
 
 function Grid:endTranslating()
