@@ -106,6 +106,7 @@ Puzzle.createEmpty = function (width, height)
 		id = playdate.string.UUID(16),
 		grid = string.rep("0", width * height),
 		width = width,
-		height = height
+		height = height,
+		title = "",
 	})
 end

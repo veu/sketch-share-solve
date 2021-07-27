@@ -197,7 +197,7 @@ function showPuzzleKeyboard()
 		end
 	end
 
-	playdate.keyboard.show()
+	playdate.keyboard.show(context.puzzle.title)
 end
 
 function switch(newScreen, newSidebar, selected, out)
@@ -383,6 +383,7 @@ end
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
+	puzzle.title = context.puzzle.title
 	context.puzzle = puzzle
 	context.mode = MODE_CREATE
 	switch(createPuzzleScreen, createPuzzleSidebar)
@@ -487,7 +488,6 @@ testPuzzleSidebar.onResetGrid = function()
 end
 
 testPuzzleSidebar.onSave = function ()
-	context.puzzle.title = ""
 	switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
 	showPuzzleKeyboard()
 end
