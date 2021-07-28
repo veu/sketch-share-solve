@@ -7,9 +7,11 @@ function Puzzle:init(puzzle, save)
 	self.width = puzzle.width or 15
 	self.height = puzzle.height or 10
 
-	self.grid = table.create(self.width * self.height, 0)
-	for i = 1, puzzle.grid:len() do
-		self.grid[i] = 0 + puzzle.grid:sub(i, i)
+	local size = self.width * self.height
+	self.grid = table.create(size, 0)
+	local values = {string.byte(puzzle.grid, 1, size)}
+	for i = 1, size do
+		self.grid[i] = values[i] - 48
 	end
 
 	self.hasBeenSolved = false

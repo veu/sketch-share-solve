@@ -42,9 +42,10 @@ function loadAvatar(data)
 	do
 		gfx.setColor(gfx.kColorWhite)
 		local i = 1
+		local values = {string.byte(data, 1, 100)}
 		for y = 0, 9 do
 			for x = 0, 9 do
-				if data:sub(i, i) == "0" then
+				if values[i] == 48 then
 					gfx.fillRect(x, y, 1, 1)
 				end
 				i += 1
