@@ -33,6 +33,7 @@ import "screen/title"
 import "sidebar/sidebar"
 import "sidebar/create-avatar"
 import "sidebar/create-puzzle"
+import "sidebar/name-puzzle"
 import "sidebar/options"
 import "sidebar/play-puzzle"
 import "sidebar/select-avatar"
@@ -92,7 +93,7 @@ local titleScreen = TitleScreen()
 local createAvatarSidebar = CreateAvatarSidebar()
 local createPuzzleSidebar = CreatePuzzleSidebar()
 local namePlayerSidebar = SelectPlayerSidebar()
-local namePuzzleSidebar = SelectPuzzleSidebar()
+local namePuzzleSidebar = NamePuzzleSidebar()
 local optionsSidebar = OptionsSidebar()
 local playPuzzleSidebar = PlayPuzzleSidebar()
 local selectAvatarSidebar = SelectAvatarSidebar()
@@ -191,7 +192,7 @@ function showPuzzleKeyboard()
 		if size <= MAX_PUZZLE_NAME_SIZE then
 			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
 			context.puzzle.title = text
-			switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+			switch(nil, namePuzzleSidebar)
 		else
 			playdate.keyboard.text = context.puzzle.title
 		end
@@ -488,7 +489,7 @@ testPuzzleSidebar.onResetGrid = function()
 end
 
 testPuzzleSidebar.onSave = function ()
-	switch(nil, namePuzzleSidebar, PUZZLE_ID_SHOW_NAME)
+	switch(nil, namePuzzleSidebar)
 	showPuzzleKeyboard()
 end
 

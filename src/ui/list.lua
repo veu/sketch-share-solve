@@ -85,6 +85,7 @@ function List:setTarget(position)
 end
 
 function List:redraw()
+	self.needsRedraw = false
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
@@ -218,5 +219,9 @@ function List:update()
 				playdate.easingFunctions.inOutSine
 			)
 		end
+	end
+
+	if self.needsRedraw then
+		self:redraw()
 	end
 end
