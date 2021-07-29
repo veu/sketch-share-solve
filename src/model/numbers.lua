@@ -29,18 +29,18 @@ function Numbers:calcTopNumbersForColumn(x)
 	local indexes = {}
 	local i = 1
 	for y = 1, self.puzzle.height do
-		local index = x - 1 + (y - 1) * self.puzzle.width + 1
+		local index = x + (y - 1) * self.puzzle.width
 		if self.grid[index] == 1 then
 			if numbers[i] == 0 then
 				indexes[i] = y
 			end
 			numbers[i] += 1
-		elseif numbers[i] > 0 then
-			numbers[i + 1] = 0
+		elseif numbers[i] ~= 0 then
 			i += 1
+			numbers[i] = 0
 		end
 	end
-	if #numbers > 1 and numbers[#numbers] == 0 then
+	if i ~= 1 and numbers[i] == 0 then
 		table.remove(numbers)
 	end
 	self.top[x] = numbers
@@ -61,18 +61,18 @@ function Numbers:calcLeftNumbersForRow(y)
 	local indexes = {}
 	local i = 1
 	for x = 1, self.puzzle.width do
-		local index = x - 1 + (y - 1) * self.puzzle.width + 1
+		local index = x + (y - 1) * self.puzzle.width
 		if self.grid[index] == 1 then
 			if numbers[i] == 0 then
 				indexes[i] = x
 			end
 			numbers[i] += 1
-		elseif numbers[i] > 0 then
-			numbers[i + 1] = 0
+		elseif numbers[i] ~= 0 then
 			i += 1
+			numbers[i] = 0
 		end
 	end
-	if #numbers > 1 and numbers[#numbers] == 0 then
+	if i ~= 1 and numbers[i] == 0 then
 		table.remove(numbers)
 	end
 	self.left[y] = numbers

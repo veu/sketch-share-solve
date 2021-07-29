@@ -39,14 +39,7 @@ function solutionColumnToString(puzzle, x, solution)
 end
 
 function solutionRowToString(puzzle, y, solution)
-	local s = ""
-
-	for x = 1, puzzle.width do
-		local index = x - 1 + (y - 1) * puzzle.width + 1
-		s = s .. solution[index]
-	end
-
-	return s
+	return table.concat(solution, "", (y - 1) * puzzle.width + 1, y * puzzle.width)
 end
 
 function reverseIndexes(indexes, size)

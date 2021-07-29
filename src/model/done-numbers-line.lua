@@ -138,7 +138,6 @@ function DoneNumbersLine:calcTopNumbersForColumn(x)
 end
 
 function DoneNumbersLine:matchTop(x)
-	print("heyo")
 	local solutionString = solutionColumnToString(self.puzzle, x, self.solution)
 	local numbers = self.gridNumbers.top[x]
 

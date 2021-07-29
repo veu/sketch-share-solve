@@ -18,8 +18,9 @@ function Puzzle:init(puzzle, save)
 end
 
 function Puzzle:isSolved(solution)
-	for i, v in pairs(self.grid) do
-		if v ~= solution[i] & 1 then
+	local grid = self.grid
+	for i = 1, self.width * self.height do
+		if grid[i] ~= solution[i] & 1 then
 			return false
 		end
 	end
@@ -80,15 +81,16 @@ end
 
 function Puzzle:delete(context)
 	local puzzleIndex = nil
-	for i, id in pairs(context.creator.created) do
-		if id == self.id then
+	local created = context.creator.created
+	for i = 1, #created do
+		if created[i] == self.id then
 			puzzleIndex = i
+			break
 		end
 	end
 
 	if puzzleIndex then
-		table.remove(context.creator.created, puzzleIndex)
-		context.creator:save(context)
+		table.remove(created, puzzleIndex)
 	end
 
 	context.save.puzzles[self.id] = nil
