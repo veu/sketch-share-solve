@@ -168,7 +168,7 @@ function showPlayerKeyboard(mode)
 end
 
 function showPuzzleKeyboard()
-	local invalid = true
+	local invalid = #context.puzzle.title == 0
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
