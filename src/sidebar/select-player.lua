@@ -15,24 +15,21 @@ function SelectPlayerSidebar:enter(context, selected)
 	}
 
 	local selectedIndex = 1
-	local i = 1
-	for _, id in pairs(context.save.profileList) do
+	for i, id in ipairs(context.save.profileList) do
 		local profile = Profile.load(context, id)
-		if not profile.hidden then
-			if profile.id == selected then
-				selectedIndex = i
-			end
-			local isRenamedPlayer =
-				selected == PLAYER_ID_SHOW_RENAME and profile.id == context.player.id
-			table.insert(config.menuItems, {
-				text = isRenamedPlayer and context.player.name or profile.name,
-				avatar = profile.avatar,
-				ref = profile,
-				selected = profile.id == selected or isRenamedPlayer,
-				showCursor = isRenamedPlayer,
-			})
-			i += 1
+		if profile.id == selected then
+			selectedIndex = i
 		end
+		local isRenamedPlayer =
+			selected == PLAYER_ID_SHOW_RENAME and profile.id == context.player.id
+
+		table.insert(config.menuItems, {
+			text = isRenamedPlayer and context.player.name or profile.name,
+			avatar = profile.avatar,
+			ref = profile,
+			selected = profile.id == selected or isRenamedPlayer,
+			showCursor = isRenamedPlayer,
+		})
 	end
 
 	if selected == PLAYER_ID_SHOW_NAME then

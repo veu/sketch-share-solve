@@ -2,9 +2,7 @@ class("Profile").extends()
 
 function Profile:init(profile, save)
 	self.id = profile.id
-	self._save = save
-	self.hidden = profile.hidden or false
-	self.name = profile.name
+	self._save = save	self.name = profile.name
 	self.created = profile.created
 	self.played = profile.played
 	self.options = profile.options or {
@@ -24,7 +22,6 @@ end
 function Profile:save(context)
 	local profile = {
 		id = self.id,
-		hidden = self.hidden,
 		name = self.name,
 		created = self.created,
 		played = self.played,
@@ -48,25 +45,23 @@ function Profile:save(context)
 end
 
 function Profile:delete(context)
-	-- hide profile if player has created puzzles
-	if #self.created > 0 then
-		self.hidden = true
-		self:save(context)
-	else
-		local profileIndex = nil
-		for i, id in pairs(context.save.profileList) do
-			if id == self.id then
-				profileIndex = i
-			end
-		end
-
-		if profileIndex then
-			table.remove(context.save.profileList, profileIndex)
-		end
-		context.save.profiles[self.id] = nil
-
-		save(context)
+	for i = 1, #self.created do
+		context.save.puzzles[self.created[i]] = nil
 	end
+
+	local profileIndex = nil
+	for i, id in pairs(context.save.profileList) do
+		if id == self.id then
+			profileIndex = i
+		end
+	end
+
+	if profileIndex then
+		context.save.profileList[profileIndex] = nil
+	end
+	context.save.profiles[self.id] = nil
+
+	save(context)
 end
 
 function Profile:setAvatar(avatar)
@@ -114,7 +109,6 @@ end
 function Profile.createEmpty()
 	return Profile({
 		id = playdate.string.UUID(16),
-		hidden = false,
 		avatar = saveAvatar(imgAvatars:getImage(AVATAR_ID_NIL)),
 		name = "Player",
 		created = {},

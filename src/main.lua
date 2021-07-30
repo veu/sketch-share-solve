@@ -318,7 +318,7 @@ optionsSidebar.onDelete = function ()
 		delete()
 	else
 		context.modal.onOK = delete
-		showModal("Deleting your profile won’t delete your puzzles. Continue anyway?", "Delete")
+		showModal("Deleting your profile will delete your created puzzles as well. Continue anyway?", "Delete")
 	end
 end
 
