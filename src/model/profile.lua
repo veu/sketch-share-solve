@@ -9,6 +9,7 @@ function Profile:init(profile, save)
 		showTimer = false,
 		showHints = HINTS_ID_BLOCKS,
 	}
+	self.sketch = profile.sketch
 
 	if profile.avatar then
 		self._avatar = profile.avatar
@@ -26,7 +27,8 @@ function Profile:save(context)
 		created = self.created,
 		played = self.played,
 		options = self.options,
-		avatar = self._avatar
+		avatar = self._avatar,
+		sketch = self.sketch
 	}
 
 	context.save.profiles[self.id] = profile

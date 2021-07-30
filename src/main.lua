@@ -233,6 +233,8 @@ end
 
 createPuzzleScreen.onChanged = function ()
 	context.puzzle.hasBeenSolved = false
+	context.player.sketch = table.concat(context.puzzle.grid)
+	context.player:save(context)
 	switch(nil, createPuzzleSidebar)
 end
 
@@ -439,7 +441,17 @@ selectModeSidebar.onSelected = function(selectedMode)
 	if context.mode == MODE_PLAY then
 		switch(nil, selectCreatorSidebar)
 	elseif context.mode == MODE_CREATE then
-		context.puzzle = Puzzle.createEmpty()
+		local puzzle = Puzzle.createEmpty()
+		if context.player.sketch then
+			local size = puzzle.width * puzzle.height
+			local grid = table.create(size, 0)
+			local values = {string.byte(context.player.sketch, 1, size)}
+			for i = 1, size do
+				grid[i] = values[i] - 48
+			end
+			puzzle.grid = grid
+		end
+		context.puzzle = puzzle
 		switch(createPuzzleScreen, createPuzzleSidebar)
 	else
 		switch(nil, optionsSidebar)
