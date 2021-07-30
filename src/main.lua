@@ -176,7 +176,7 @@ function showPuzzleKeyboard()
 		else
 			context.puzzle:save(context)
 
-			switch(titleScreen, selectModeSidebar, nil, true)
+			switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
 		end
 	end
 
