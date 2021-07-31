@@ -174,8 +174,11 @@ function showPuzzleKeyboard()
 		if invalid then
 			switch(solvedPuzzleScreen, testPuzzleSidebar, nil, true)
 		else
+			context.player.sketch = nil
 			context.puzzle:save(context)
 
+			context.creator = context.player
+			context.mode = MODE_PLAY
 			switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
 		end
 	end
