@@ -175,6 +175,7 @@ function showPuzzleKeyboard()
 			switch(solvedPuzzleScreen, testPuzzleSidebar, nil, true)
 		else
 			context.player.sketch = nil
+			context.player:save(context)
 			context.puzzle:save(context)
 
 			context.creator = context.player
@@ -290,18 +291,24 @@ end
 createPuzzleSidebar.onFlip = function()
 	context.screen:flipGrid()
 	context.puzzle.hasBeenSolved = false
+	context.player.sketch = table.concat(context.puzzle.grid)
+	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP)
 end
 
 createPuzzleSidebar.onInvertColors = function()
 	context.screen:invertGrid()
 	context.puzzle.hasBeenSolved = false
+	context.player.sketch = table.concat(context.puzzle.grid)
+	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_INVERT_COLORS)
 end
 
 createPuzzleSidebar.onResetGrid = function()
 	context.screen:resetGrid()
 	context.puzzle.hasBeenSolved = false
+	context.player.sketch = table.concat(context.puzzle.grid)
+	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_RESET_GRID)
 end
 
