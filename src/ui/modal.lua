@@ -51,21 +51,12 @@ function Modal:draw(text, ok, cancel)
 		gfx.fillRoundRect(20, 20, 360, 200, 8)
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawRoundRect(20, 20, 360, 200, 8)
+		gfx.setFont(fontText)
 		gfx.drawTextInRect(text, 40, 40, 320, 160)
 
-		self:drawButton("B", cancel or "Cancel", 40, 180)
-		self:drawButton("A", ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
+		drawButton(playdate.kButtonB, cancel or "Cancel", 40, 180)
+		drawButton(playdate.kButtonA, ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
 	end
 	gfx.popContext()
 	self:markDirty()
-end
-
-function Modal:drawButton(button, text, x, y)
-	gfx.setColor(gfx.kColorBlack)
-	gfx.fillCircleInRect(x - 1, y - 3, 23, 23)
-	gfx.setImageDrawMode(gfx.kDrawModeInverted)
-	gfx.drawText(button, button == "A" and x + 6 or x + 7, y)
-	gfx.setImageDrawMode(gfx.kDrawModeCopy)
-	gfx.setColor(gfx.kColorBlack)
-	gfx.drawText(text, x + 28, y)
 end

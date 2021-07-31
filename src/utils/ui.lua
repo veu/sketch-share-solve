@@ -36,6 +36,17 @@ function drawRightTextRect(x, y, w, h, text)
 	gfx.drawText(text, x + w - width - 5, y + 6)
 end
 
+function drawButton(button, text, x, y)
+	gfx.setColor(gfx.kColorBlack)
+	gfx.fillCircleInRect(x, y - 3, 21, 21)
+	gfx.setImageDrawMode(gfx.kDrawModeInverted)
+	gfx.setFont(fontText)
+	gfx.drawText(button == playdate.kButtonA and "A" or "B", x + 6, y)
+	gfx.setImageDrawMode(gfx.kDrawModeCopy)
+	gfx.setColor(gfx.kColorBlack)
+	gfx.drawText(text, x + 26, y)
+end
+
 function loadAvatar(data)
 	local image = gfx.image.new(10, 10, gfx.kColorBlack)
 	gfx.lockFocus(image)
