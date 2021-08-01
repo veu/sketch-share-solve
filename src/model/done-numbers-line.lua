@@ -48,7 +48,7 @@ end
 
 function DoneNumbersLine:calcLeftNumbersForRow(y)
 	if self.gridNumbers.left[y][1] == 0 then
-		self.left[y] = { true }
+		self.left[y] = { self.solutionNumbers.left[y][1] == 0 }
 	else
 		self.left[y] = {}
 		-- layout blocks from left and right
@@ -124,7 +124,7 @@ end
 
 function DoneNumbersLine:calcTopNumbersForColumn(x)
 	if self.gridNumbers.top[x][1] == 0 then
-		self.top[x] = { true }
+		self.top[x] = { self.solutionNumbers.top[x][1] == 0  }
 	else
 		self.top[x] = {}
 		-- layout blocks from both top and bottom
