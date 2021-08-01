@@ -3,7 +3,7 @@ class("PlayPuzzleScreen").extends(Screen)
 function PlayPuzzleScreen:init()
 	PlayPuzzleScreen.super.init(self)
 
-	self.grid = Grid(true)
+	self.grid = Grid()
 	self.timer = Timer()
 
 	self.onChanged = function () end

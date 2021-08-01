@@ -8,6 +8,13 @@ function Numbers:init(puzzle, grid)
 	self:calcLeftNumbers()
 end
 
+function Numbers:updateAll(grid)
+	self.grid = grid
+
+	self:calcTopNumbers()
+	self:calcLeftNumbers()
+end
+
 function Numbers:updatePosition(grid, x, y)
 	self.grid = grid
 

@@ -10,7 +10,7 @@ end
 
 function CreatePuzzleScreen:enter(context)
 	self.puzzle = context.puzzle
-	self.grid:enter(self.puzzle, MODE_CREATE)
+	self.grid:enter(self.puzzle, MODE_CREATE, HINTS_ID_OFF)
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution
 		self.onChanged()

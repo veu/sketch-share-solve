@@ -44,14 +44,23 @@ function GridNumbers:enter(puzzle, solution, x, y, showHints)
 	self:redraw()
 end
 
-function GridNumbers:updateForPosition(solution)
-	self.solutionNumbers:updatePosition(solution, self.gridX, self.gridY)
-	self.doneNumbers:updatePosition(
-		self.solutionNumbers,
-		solution,
-		self.gridX,
-		self.gridY
-	)
+function GridNumbers:updateAll(solution)
+	self.gridNumbers:updateAll(solution)
+	self:redraw()
+end
+
+function GridNumbers:updateForPosition(solution, mode)
+	if mode == MODE_CREATE then
+		self.gridNumbers:updatePosition(solution, self.gridX, self.gridY)
+	else
+		self.solutionNumbers:updatePosition(solution, self.gridX, self.gridY)
+		self.doneNumbers:updatePosition(
+			self.solutionNumbers,
+			solution,
+			self.gridX,
+			self.gridY
+		)
+	end
 
 	self:redrawPosition()
 end
@@ -60,9 +69,14 @@ function GridNumbers:leave()
 	self:remove()
 end
 
-function GridNumbers:reset(solution)
-	self.solutionNumbers = Numbers(self.puzzle, solution)
-	self.doneNumbers:updateAll(self.solutionNumbers, solution)
+function GridNumbers:reset(solution, mode)
+	if mode == MODE_CREATE then
+		self.gridNumbers:updateAll(solution)
+	else
+		self.solutionNumbers = Numbers(self.puzzle, solution)
+		self.doneNumbers:updateAll(self.solutionNumbers, solution)
+	end
+
 	self:redraw()
 end
 

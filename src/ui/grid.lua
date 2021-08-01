@@ -2,7 +2,7 @@ local gfx <const> = playdate.graphics
 
 class("Grid").extends(gfx.sprite)
 
-function Grid:init(withNumbers)
+function Grid:init()
 	Grid.super.init(self)
 
 	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
@@ -16,10 +16,7 @@ function Grid:init(withNumbers)
 	self.onUpdateSolution = function() end
 
 	self.cursor = Cursor()
-
-	if withNumbers then
-		self.numbers = GridNumbers()
-	end
+	self.numbers = GridNumbers()
 end
 
 function Grid:enter(puzzle, mode, showHints)
@@ -111,11 +108,13 @@ function Grid:addAnimation(index, old, new)
 end
 
 function Grid:invert()
-	for i = 1, #self.solution do
-		self.solution[i] = self.solution[i] == 1 and 0 or 1
+	local solution = self.solution
+	for i = 1, #solution do
+		solution[i] = solution[i] == 1 and 0 or 1
 	end
 
-	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self.tilemap:setTiles(solution, self.puzzle.width)
+	self.numbers:updateAll(solution)
 	self:redraw()
 end
 
@@ -131,6 +130,7 @@ function Grid:flip()
 
 	self.solution = solution
 	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self.numbers:updateAll(solution)
 	self:redraw()
 end
 
@@ -146,7 +146,7 @@ function Grid:reset()
 	end
 
 	if self.numbers then
-		self.numbers:reset(self.solution)
+		self.numbers:reset(self.solution, self.mode)
 	end
 
 	self.tilemap:setTiles(self.solution, self.puzzle.width)
@@ -208,12 +208,13 @@ function Grid:translate()
 
 	self.solution = solution
 	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self.numbers:updateAll(solution)
 	self:redraw()
 end
 
 function Grid:onUpdateSolution_(index)
 	if self.numbers then
-		self.numbers:updateForPosition(self.solution)
+		self.numbers:updateForPosition(self.solution, self.mode)
 	end
 
 	self:redrawPosition(self.cursor.x, self.cursor.y)
