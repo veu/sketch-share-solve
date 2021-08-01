@@ -2,7 +2,7 @@ local gfx <const> = playdate.graphics
 
 class("Grid").extends(gfx.sprite)
 
-function Grid:init()
+function Grid:init(withNumbers)
 	Grid.super.init(self)
 
 	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
@@ -16,7 +16,9 @@ function Grid:init()
 	self.onUpdateSolution = function() end
 
 	self.cursor = Cursor()
-	self.numbers = GridNumbers()
+	if withNumbers then
+		self.numbers = GridNumbers()
+	end
 end
 
 function Grid:enter(puzzle, mode, showHints)
