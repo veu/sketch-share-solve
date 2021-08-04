@@ -582,7 +582,12 @@ function playdate.update()
 		playdate.isCrankDocked()
 	then
 		playdate.ui.crankIndicator:update()
-	elseif playdate.keyboard.isVisible() or context.screen.cantIdle then
+	elseif
+		playdate.keyboard.isVisible() or
+		context.screen.cantIdle or
+		playdate.buttonIsPressed(playdate.kButtonDown) or
+		playdate.buttonIsPressed(playdate.kButtonUp)
+	then
 		idleCounter = 0
 	else
 		idleCounter += 1
