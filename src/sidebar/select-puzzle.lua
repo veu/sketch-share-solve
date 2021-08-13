@@ -50,6 +50,7 @@ function SelectPuzzleSidebar:update()
 			self.lastLoaded = i
 		else
 			self.finishedLoading = true
+			self.list.needsRedraw = true
 		end
 	end
 end
