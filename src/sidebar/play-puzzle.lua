@@ -23,28 +23,32 @@ function PlayPuzzleSidebar:enter(context)
 		}
 	}
 
-	if puzzle.hasBeenSolved and player.id == PLAYER_ID_QUICK_PLAY then
-		table.insert(config.menuItems, {
-			text = "Solve another",
-			exec = function()
-				self.onNext()
-			end
-		})
-	end
-
-	if creator.id == player.id then
-		table.insert(config.menuItems, {
-			text = "Remix puzzle",
-			exec = function()
-				self.onRemixPuzzle()
-			end
-		})
-		table.insert(config.menuItems, {
-			text = "Delete puzzle",
-			exec = function()
-				self.onDeletePuzzle()
-			end
-		})
+	if player.id == PLAYER_ID_QUICK_PLAY then
+		if puzzle.hasBeenSolved then
+			table.insert(config.menuItems, {
+				text = "Solve another",
+				exec = function()
+					self.onNext()
+				end
+			})
+		end
+	else
+		if creator.id == player.id or puzzle.hasBeenSolved then
+			table.insert(config.menuItems, {
+				text = "Remix puzzle",
+				exec = function()
+					self.onRemixPuzzle()
+				end
+			})
+		end
+		if creator.id == player.id then
+			table.insert(config.menuItems, {
+				text = "Delete puzzle",
+				exec = function()
+					self.onDeletePuzzle()
+				end
+			})
+		end
 	end
 
 	PlayPuzzleSidebar.super.enter(self, context, config)
