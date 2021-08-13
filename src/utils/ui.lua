@@ -109,12 +109,13 @@ function createPuzzlePreview(puzzle)
 	gfx.lockFocus(image)
 	do
 		gfx.setColor(gfx.kColorWhite)
+		local i = 1
 		for y = 1, puzzle.height do
 			for x = 1, puzzle.width do
-				local index = x - 1 + (y - 1) * puzzle.width + 1
-				if puzzle.grid[index] == 0 then
+				if puzzle.grid[i] == 0 then
 					gfx.fillRect(x - 1, y + 1, 1, 1)
 				end
+				i += 1
 			end
 		end
 	end

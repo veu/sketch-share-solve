@@ -44,11 +44,12 @@ function SelectPuzzleSidebar:update()
 	SelectPuzzleSidebar.super.update(self)
 
 	if not self.finishedLoading then
-		local i = self.lastLoaded + 1
-		if i <= #self.context.creator.created then
-			self:addItem(i)
+		for i = self.lastLoaded + 1, math.min(#self.context.creator.created, self.lastLoaded + 2) do
 			self.lastLoaded = i
-		else
+			self:addItem(i)
+		end
+
+		if self.lastLoaded == #self.context.creator.created then
 			self.finishedLoading = true
 			self.list.needsRedraw = true
 		end
