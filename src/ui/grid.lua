@@ -75,7 +75,14 @@ end
 
 function Grid:toggle(index, isStart)
 	local old = self.solution[index]
-	if old ~= 2 and (isStart or old ~= self.last) then
+	if old == 2 then
+		if isStart then
+			self.solution[index] = 0
+			self.last = 0
+			self:addAnimation(index, old, 0)
+			self:onUpdateSolution_(index)
+		end
+	elseif (isStart or old ~= self.last) then
 		local new = 1 - old
 		self.solution[index] = new
 		self.last = new
@@ -86,7 +93,14 @@ end
 
 function Grid:toggleCross(index, isStart)
 	local old = self.solution[index]
-	if old ~= 1 and (isStart or old ~= self.last) then
+	if old == 1 then
+		if isStart then
+			self.solution[index] = 0
+			self.last = 0
+			self:addAnimation(index, old, 0)
+			self:onUpdateSolution_(index)
+		end
+	elseif (isStart or old ~= self.last) then
 		local new = 2 - old
 		self.solution[index] = new
 		self.last = new
