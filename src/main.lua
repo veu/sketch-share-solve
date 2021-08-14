@@ -408,7 +408,7 @@ end
 
 playPuzzleSidebar.onNext = function ()
 	local puzzleId = context.creator.created[math.random(#context.creator.created)]
-	context.puzzle = Puzzle.load(context, puzzleId)
+	context.puzzle = Puzzle.load(context, puzzleId, context.ext.rdk)
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 
