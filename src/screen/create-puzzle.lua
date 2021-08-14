@@ -4,21 +4,24 @@ function CreatePuzzleScreen:init()
 	CreatePuzzleScreen.super.init(self)
 
 	self.grid = Grid(true)
+	self.timer = Timer()
 
 	self.onChanged = function () end
 end
 
 function CreatePuzzleScreen:enter(context)
 	self.puzzle = context.puzzle
-	self.grid:enter(self.puzzle, MODE_CREATE, HINTS_ID_OFF)
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution
 		self.onChanged()
 	end
+	self.grid:enter(self.puzzle, MODE_CREATE, HINTS_ID_OFF)
+	self.timer:enter(false, MODE_CREATE)
 end
 
 function CreatePuzzleScreen:leave()
 	self.grid:leave()
+	self.timer:leave()
 end
 
 function CreatePuzzleScreen:invertGrid()

@@ -22,7 +22,7 @@ function PlayPuzzleScreen:enter(context)
 	end
 
 	self.grid:enter(self.puzzle, MODE_PLAY, context.player.options.showHints)
-	self.timer:enter(context)
+	self.timer:enter(context.player.options.showTimer, MODE_PLAY)
 	self.cantIdle = context.player.options.showTimer
 end
 

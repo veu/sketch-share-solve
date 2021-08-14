@@ -5,19 +5,17 @@ class("Time").extends(gfx.sprite)
 function Time:init()
 	Time.super.init(self)
 
-	self.image = gfx.image.new(40, 16, gfx.kColorClear)
+	self.image = gfx.image.new(127, 72, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_TIMER)
-	self:moveTo(70, 29)
+	self:moveTo(25, 0)
 end
 
 function Time:enter(context)
-	if context.player.options.showTimer then
-		self.current = math.min(5940, context.player.lastTime)
-		self:redraw()
-		self:add()
-	end
+	self.context = context
+	self:redraw()
+	self:add()
 end
 
 function Time:leave()
@@ -28,12 +26,21 @@ function Time:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		gfx.setFont(fontText)
-		gfx.drawText(
-			string.format("%02d:%02d", math.floor(self.current / 60), self.current % 60),
-			0, 0,
-			fontText
-		)
+		if self.context.player.options.showTimer then
+			imgMode:drawImage(MODE_PLAY, 17, 10)
+
+			gfx.setColor(gfx.kColorBlack)
+			gfx.drawLine(12, 40, 115, 40)
+			gfx.setFont(fontText)
+			local time = self.context.player.lastTime
+			gfx.drawText(
+				string.format("%02d:%02d", math.floor(time / 60), time % 60),
+				45, 29 + 20,
+				fontText
+			)
+		else
+			imgMode:drawImage(MODE_PLAY, 17, 24)
+		end
 	end
 	gfx.unlockFocus()
 	self:markDirty()

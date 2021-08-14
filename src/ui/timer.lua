@@ -5,22 +5,19 @@ class("Timer").extends(gfx.sprite)
 function Timer:init()
 	Timer.super.init(self)
 
-	self.image = gfx.image.new(40, 16, gfx.kColorClear)
+	self.image = gfx.image.new(127, 72, gfx.kColorClear)
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_TIMER)
-	self:moveTo(70, 29)
+	self:moveTo(25, 0)
 end
 
-function Timer:enter(context)
-	self.show = context.player.options.showTimer
+function Timer:enter(show, mode)
+	self.show = show
+	self.mode = mode
 	self.start = math.floor(playdate.getCurrentTimeMilliseconds() / 1000)
 	self.current = 0
-	if self.show then
-		self:redraw()
-	else
-		self.image:clear(gfx.kColorClear)
-	end
+	self:redraw()
 	self:add()
 end
 
@@ -40,12 +37,20 @@ function Timer:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		gfx.setFont(fontText)
-		gfx.drawText(
-			string.format("%02d:%02d", math.floor(self.current / 60), self.current % 60),
-			0, 0,
-			fontText
-		)
+		if self.show then
+			imgMode:drawImage(self.mode, 17, 10)
+
+			gfx.setColor(gfx.kColorBlack)
+			gfx.drawLine(12, 40, 115, 40)
+			gfx.setFont(fontText)
+			gfx.drawText(
+				string.format("%02d:%02d", math.floor(self.current / 60), self.current % 60),
+				45, 29 + 20,
+				fontText
+			)
+		else
+			imgMode:drawImage(self.mode, 17, 24)
+		end
 	end
 	gfx.unlockFocus()
 	self:markDirty()
