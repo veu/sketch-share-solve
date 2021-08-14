@@ -79,7 +79,7 @@ end
 function List:setTarget(position)
 	if self.target ~= position then
 		self.target = position
-		self.animator = nil
+		self.needNewAnimator = true
 		self.idleCounter = 5
 	end
 end
@@ -211,7 +211,9 @@ function List:update()
 			if self.animator:ended() then
 				self.animator = nil
 			end
-		elseif self.idleCounter >= 5 then
+		end
+		if (not self.animator or self.needNewAnimator) and self.idleCounter >= 5 then
+			self.needNewAnimator = false
 			self.animator = gfx.animator.new(
 				200,
 				self.position,
