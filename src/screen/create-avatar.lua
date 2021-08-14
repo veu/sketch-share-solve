@@ -11,7 +11,7 @@ end
 function CreateAvatarScreen:enter(context)
 	self.puzzle = Puzzle.createEmpty(10, 10)
 	context.puzzle = self.puzzle
-	self.grid:enter(self.puzzle, MODE_CREATE)
+	self.grid:enter(self.puzzle, MODE_AVATAR)
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution
 		self.onChanged()

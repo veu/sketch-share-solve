@@ -28,9 +28,7 @@ function Grid:enter(puzzle, mode, showHints)
 
 	self.tilemap:setSize(puzzle.width, puzzle.height)
 
-	if self.mode == MODE_CREATE then
-		self.solution = table.shallowcopy(puzzle.grid)
-	else
+	if self.mode == MODE_PLAY then
 		self.solution = {}
 		for y = 1, puzzle.height do
 			for x = 1, puzzle.width do
@@ -38,14 +36,19 @@ function Grid:enter(puzzle, mode, showHints)
 				self.solution[index] = puzzle:isCellKnownEmpty(x, y) and 2 or 0
 			end
 		end
+	else
+		self.solution = table.shallowcopy(puzzle.grid)
 	end
 	self.tilemap:setTiles(self.solution, puzzle.width)
 
 	self:add()
-	self.cursor:enter(puzzle)
+	self.cursor:enter(puzzle, self.mode)
 
 	self:redraw()
-	self:moveTo(GRID_OFFSET_X + CELL * (15 - puzzle.width), GRID_OFFSET_Y)
+	self:moveTo(
+		mode == MODE_AVATAR and GRID_OFFSET_AVATAR_X or GRID_OFFSET_X + CELL * (15 - puzzle.width),
+		mode == MODE_AVATAR and GRID_OFFSET_AVATAR_Y or GRID_OFFSET_Y
+	)
 
 	if self.numbers then
 		self.numbers:enter(
@@ -219,7 +222,7 @@ function Grid:onUpdateSolution_(index)
 		self.numbers:updateForPosition(self.solution, self.mode)
 	end
 
-	self:redrawPosition(self.cursor.x, self.cursor.y)
+	self:redrawPosition(self.cursor.gridX, self.cursor.gridY)
 	self.onUpdateSolution()
 end
 

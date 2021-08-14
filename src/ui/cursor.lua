@@ -16,9 +16,13 @@ function Cursor:init()
 	self.onMove = function () end
 end
 
-function Cursor:enter(puzzle)
+function Cursor:enter(puzzle, mode)
 	self.gridX = math.floor(puzzle.width / 2)
 	self.gridY = 4
+	self.offsetX = mode == MODE_AVATAR
+		and GRID_OFFSET_AVATAR_X
+		or GRID_OFFSET_X + CELL * (15 - puzzle.width)
+	self.offsetY = mode == MODE_AVATAR and GRID_OFFSET_AVATAR_Y or GRID_OFFSET_Y
 	self.puzzle = puzzle
 	self:move()
 	self:add()
@@ -67,7 +71,7 @@ end
 
 function Cursor:move()
 	self:moveTo(
-		GRID_OFFSET_X + CELL * (15 - self.puzzle.width) + CELL * (self.gridX - 1) - 3,
-		GRID_OFFSET_Y + CELL * (self.gridY - 1) - 3
+		self.offsetX + CELL * (self.gridX - 1) - 3,
+		self.offsetY + CELL * (self.gridY - 1) - 3
 	)
 end
