@@ -6,6 +6,7 @@ function SolvedPuzzleScreen:init()
 	SolvedPuzzleScreen.super.init(self)
 
 	self.grid = Grid()
+	self.gridSolved = GridSolved()
 	self.dialog = Dialog()
 	self.time = Time()
 end
@@ -22,6 +23,7 @@ end
 
 function SolvedPuzzleScreen:leave()
 	self.grid:leave()
+	self.gridSolved:leave()
 	self.dialog:leave()
 	self.time:leave()
 end
@@ -31,6 +33,7 @@ function SolvedPuzzleScreen:update()
 		self.grid:moveTowardsTop(self.gridAnimator:currentValue())
 
 		if self.gridAnimator:ended() then
+			self.gridSolved:enter(self.puzzle)
 			self.gridAnimator = nil
 
 			playdate.timer.performAfterDelay(800, function ()
