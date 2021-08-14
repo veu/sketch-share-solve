@@ -204,14 +204,15 @@ function List:update()
 		self:setTarget(self.target + 1)
 	end
 
+	if self.animator then
+		self:setPosition(self.animator:currentValue())
+		if self.animator:ended() then
+			self.animator = nil
+		end
+	end
+
 	if self.position ~= self.target then
 		self.idleCounter += 1
-		if self.animator then
-			self:setPosition(self.animator:currentValue())
-			if self.animator:ended() then
-				self.animator = nil
-			end
-		end
 		if (not self.animator or self.needNewAnimator) and self.idleCounter >= 5 then
 			self.needNewAnimator = false
 			self.animator = gfx.animator.new(
