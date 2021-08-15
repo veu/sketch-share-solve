@@ -14,14 +14,22 @@ function PlayPuzzleSidebar:enter(context)
 		menuTitle = self:getTitle(player, creator, puzzle),
 		menuItems = {
 			{
-				text = "Restart",
-				disabled = puzzle.hasBeenSolved,
+				text = puzzle.hasBeenSolved and "See results" or "Solve",
 				exec = function()
-					context.screen:resetGrid()
+					closeSidebar()
 				end
 			}
 		}
 	}
+
+	if not puzzle.hasBeenSolved then
+		table.insert(config.menuItems, {
+			text = "Restart",
+			exec = function()
+				context.screen:resetGrid()
+			end
+		})
+	end
 
 	if player.id == PLAYER_ID_QUICK_PLAY then
 		if puzzle.hasBeenSolved then

@@ -10,81 +10,79 @@ function createDefaultInputHandler(context)
 	return {
 		crankDocked = function ()
 			resume()
-			context.isCrankDocked = true
-			context.screen:crankDocked()
-			context.sidebar:close()
+			closeSidebar()
 		end,
 
 		crankUndocked = function ()
 			resume()
-			context.isCrankDocked = false
-			context.screen:crankUndocked()
-			context.sidebar:open()
+			openSidebar()
 		end,
 
 		cranked = function (change, acceleratedChange)
 			resume()
-			local factor = 0.5 + context.settings.crankSpeed * 0.1
-			context.sidebar:cranked(-change * factor, -acceleratedChange * factor)
+			if context.isSidebarOpen then
+				local factor = 0.5 + context.settings.crankSpeed * 0.1
+				context.sidebar:cranked(-change * factor, -acceleratedChange * factor)
+			end
 		end,
 
 		downButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:downButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:downButtonDown()
+			else
+				context.screen:downButtonDown()
 			end
 		end,
 
 		leftButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:leftButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:leftButtonDown()
+			else
+				context.screen:leftButtonDown()
 			end
 		end,
 
 		rightButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:rightButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:rightButtonDown()
+			else
+				context.screen:rightButtonDown()
 			end
 		end,
 
 		upButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:upButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:upButtonDown()
+			else
+				context.screen:upButtonDown()
 			end
 		end,
 
 		AButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:AButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:AButtonDown()
+			else
+				context.screen:AButtonDown()
 			end
 		end,
 
 		BButtonDown = function ()
 			resume()
-			if playdate.isCrankDocked() then
-				context.screen:BButtonDown()
-			else
+			if context.isSidebarOpen then
 				context.sidebar:BButtonDown()
+			else
+				context.screen:BButtonDown()
 			end
 		end,
 
 		BButtonUp = function ()
 			resume()
-			if playdate.isCrankDocked() then
+			if not context.isSidebarOpen then
 				context.screen:BButtonUp()
 			end
 		end,
@@ -96,10 +94,10 @@ function createDefaultInputHandler(context)
 				elseif playdate.buttonIsPressed(button) then
 					pressed[i] = pressed[i] and pressed[i] + 1 or 0
 					if pressed[i] > 5 and pressed[i] % 5 == 0 then
-						if playdate.isCrankDocked() then
-							context.screen:buttonPressed(button)
-						else
+						if context.isSidebarOpen then
 							context.sidebar:buttonPressed(button)
+						else
+							context.screen:buttonPressed(button)
 						end
 					end
 				end

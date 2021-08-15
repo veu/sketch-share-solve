@@ -231,7 +231,9 @@ function Grid:translate()
 
 	self.solution = solution
 	self.tilemap:setTiles(self.solution, self.puzzle.width)
-	self.numbers:updateAll(solution)
+	if self.numbers then
+		self.numbers:updateAll(solution)
+	end
 	self:redraw()
 end
 

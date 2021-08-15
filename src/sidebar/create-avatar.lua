@@ -10,6 +10,12 @@ function CreateAvatarSidebar:enter(context, selected)
 		menuTitle = "Create new avatar",
 		menuItems = {
 			{
+				text = "Sketch",
+				exec = function()
+					closeSidebar()
+				end
+			},
+			{
 				text = "Save",
 				exec = function()
 					self.onSave()

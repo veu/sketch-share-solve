@@ -14,7 +14,6 @@ function Sidebar:init()
 	end
 	self.menuItems = nil
 	self.menuTitle = nil
-	self.opened = false
 
 	self.image = gfx.image.new(SIDEBAR_WIDTH + 3, 240, gfx.kColorClear)
 	self:setImage(self.image)
@@ -31,7 +30,6 @@ function Sidebar:enter(context, config, player, creator)
 	self.menuItems = config.menuItems
 	self.menuTitle = config.menuTitle
 	self.stayOpen = config.stayOpen
-	self.opened = self.stayOpen or not context.isCrankDocked
 
 	self.animator = nil
 	self.onLeft = function () end
@@ -46,18 +44,21 @@ function Sidebar:enter(context, config, player, creator)
 	end
 
 	self:add()
-	self:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
+
+	local isOpen = context.isSidebarOpen
+	self.isOpen = isOpen
+	self:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.playerAvatar:enter(config, config.player)
-	self.playerAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.playerAvatar.y)
+	self.playerAvatar:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, Sidebar.playerAvatar.y)
 	self.creatorAvatar:enter(config, config.creator)
-	self.creatorAvatar:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
+	self.creatorAvatar:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
 	self.list:moveTo()
-	self.menuBorder:moveTo(self.opened and 0 or -SIDEBAR_WIDTH + 24, 0)
+	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(context, self.menuItems, self.menuTitle)
 	self.list:select(self.cursor)
 	self:redraw()
 
-	if opened then
+	if isOpen then
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
 	end
@@ -79,9 +80,6 @@ function Sidebar:onLeft_()
 end
 
 function Sidebar:cranked(change, acceleratedChange)
-	if not self.opened then
-		return
-	end
 	local max = rawlen(self.menuItems)
 	self.cursorRaw = math.max(1, math.min(max, (self.cursorRaw - acceleratedChange / 20)))
 	local newCursor = math.floor(self.cursorRaw + 0.5)
@@ -138,6 +136,9 @@ end
 function Sidebar:AButtonDown()
 	local item = self.menuItems[self.cursor]
 	if item.disabled then
+		if item.disabledText then
+			showModal(item.disabledText)
+		end
 		return
 	end
 	if item.exec then
@@ -160,10 +161,7 @@ function Sidebar:buttonPressed(button)
 end
 
 function Sidebar:open()
-	if self.stayOpen then
-		return
-	end
-	self.opened = true
+	self.isOpen = true
 	local start = self.animator and self.animator:currentValue() or SEPARATOR_WIDTH - SIDEBAR_WIDTH
 	self.animator = gfx.animator.new(
 		400, start, 0, playdate.easingFunctions.inOutSine
@@ -172,13 +170,11 @@ function Sidebar:open()
 end
 
 function Sidebar:close()
-	if self.stayOpen then
-		self.onAbort()
-	end
 	local start = self.animator and self.animator:currentValue() or 0
 	self.animator = gfx.animator.new(
 		400, start, SEPARATOR_WIDTH - SIDEBAR_WIDTH, playdate.easingFunctions.inOutSine
 	)
+	self:redraw()
 end
 
 function Sidebar:update()
@@ -194,8 +190,8 @@ function Sidebar:update()
 			self.animator = nil
 
 			if currentValue == SEPARATOR_WIDTH - SIDEBAR_WIDTH then
-				self.opened = false
-				self:redraw()
+					self.isOpen = false
+					self:redraw()
 			end
 		end
 
@@ -222,7 +218,7 @@ function Sidebar:redraw()
 		gfx.fillRect(0, 0, SIDEBAR_WIDTH, 240)
 
 		-- shadow
-		if self.opened then
+		if self.isOpen then
 			gfx.setColor(gfx.kColorBlack)
 			gfx.setDitherPattern(0.5)
 			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)

@@ -30,6 +30,7 @@ function TitleSidebar:enter(context, selected)
 			{
 				text = "Tutorial",
 				disabled = true,
+				disabledText = "Under Construction..."
 			},
 		}
 	}

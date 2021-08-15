@@ -36,9 +36,6 @@ function SolvedPuzzleScreen:update()
 			self.gridSolved:enter(self.puzzle)
 			self.gridAnimator = nil
 
-			playdate.timer.performAfterDelay(800, function ()
-				self.showCrank = true
-			end)
 			if self.mode == MODE_CREATE then
 				self.dialog:enter("You solved it! Ready to save.")
 			else

@@ -7,7 +7,6 @@ import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/string"
 import "CoreLibs/timer"
-import "CoreLibs/ui/crankIndicator"
 
 import "constants"
 
@@ -119,12 +118,38 @@ local context = {
 	settings = nil,
 	screen = titleScreen,
 	sidebar = titleSidebar,
-	isCrankDocked = true,
+	isSidebarOpen = false,
 }
 
 local defaultInputHandler = createDefaultInputHandler(context)
 local modalInputHandler = createModalInputHandler(context)
 local noopInputHandler = createNoopInputHandler(context)
+
+local openMenuItem = nil
+
+function openSidebar()
+	if not context.isSidebarOpen then
+		context.isSidebarOpen = true
+		context.screen:sidebarOpened()
+		context.sidebar:open()
+		if openMenuItem then
+			playdate.getSystemMenu():removeMenuItem(openMenuItem)
+			openMenuItem = nil
+		end
+	end
+end
+
+function closeSidebar()
+	if context.isSidebarOpen and not context.sidebar.stayOpen then
+		context.isSidebarOpen = false
+		context.screen:sidebarClosed()
+		context.sidebar:close()
+		openMenuItem = playdate.getSystemMenu():addMenuItem("open menu", function()
+			resume()
+			openSidebar()
+		end)
+	end
+end
 
 function showModal(text, ok)
 	context.modal:enter(text, ok)
@@ -317,7 +342,11 @@ createPuzzleSidebar.onResetGrid = function()
 end
 
 createPuzzleSidebar.onTestAndSave = function ()
-	switch(playPuzzleScreen, testPuzzleSidebar)
+	if context.puzzle.hasBeenSolved then
+		switch(solvedPuzzleScreen, testPuzzleSidebar)
+	else
+		switch(playPuzzleScreen, testPuzzleSidebar)
+	end
 end
 
 optionsSidebar.onAbort = function ()
@@ -556,21 +585,18 @@ end
 context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
 
-playdate.ui.crankIndicator:start()
 context.screen:enter(context)
 context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
-if not playdate.isCrankDocked() then
-	context.isCrankDocked = false
-	context.screen:crankUndocked()
-	context.sidebar:open()
-end
+context.isSidebarOpen = true
+context.screen:sidebarOpened()
+context.sidebar:open()
 
 local showFPS = false
-local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
-	showFPS = not showFPS
-end)
+-- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
+-- 	showFPS = not showFPS
+-- end)
 
 function playdate.update()
 	context.screen:update()
@@ -581,12 +607,6 @@ function playdate.update()
 
 	gfx.sprite.update()
 	if
-		context.screen.showCrank and
-		not context.modal:isVisible() and
-		playdate.isCrankDocked()
-	then
-		playdate.ui.crankIndicator:update()
-	elseif
 		playdate.keyboard.isVisible() or
 		context.screen.cantIdle or
 		playdate.buttonIsPressed(playdate.kButtonDown) or

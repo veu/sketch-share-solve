@@ -51,7 +51,7 @@ function SelectPlayerSidebar:enter(context, selected)
 		})
 	end
 
-	if not context.isCrankDocked then
+	if context.isSidebarOpen then
 		config.player = config.menuItems[selectedIndex].avatar
 	end
 

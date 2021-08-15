@@ -5,8 +5,6 @@ class("TitleScreen").extends(Screen)
 function TitleScreen:init()
 	TitleScreen.super.init(self)
 
-	self.showCrank = true
-
 	self.title = Title()
 end
 
@@ -18,10 +16,10 @@ function TitleScreen:leave()
 	self.title:leave()
 end
 
-function TitleScreen:crankDocked()
-	self.title:crankDocked()
+function TitleScreen:sidebarClosed()
+	self.title:sidebarClosed()
 end
 
-function TitleScreen:crankUndocked()
-	self.title:crankUndocked()
+function TitleScreen:sidebarOpened()
+	self.title:sidebarOpened()
 end

@@ -10,9 +10,6 @@ function Modal:init()
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_MODAL)
 	self:setVisible(false)
-
-	self.onOK = function () end
-	self.onCancel = function () end
 end
 
 function Modal:enter(text, ok, dismiss)
@@ -22,21 +19,20 @@ function Modal:enter(text, ok, dismiss)
 end
 
 function Modal:leave()
-	self.onOK = function () end
-	self.onCancel = function () end
 	self:setVisible(false)
 	self:remove()
 end
 
 function Modal:AButtonDown()
 	self.onClose()
-	self.onOK()
+	if self.onOK then
+		self.onOK()
+	end
 	self:leave()
 end
 
 function Modal:BButtonDown()
 	self.onClose()
-	self.onCancel()
 	self:leave()
 end
 
@@ -54,8 +50,12 @@ function Modal:draw(text, ok, cancel)
 		gfx.setFont(fontText)
 		gfx.drawTextInRect(text, 40, 40, 320, 160)
 
-		drawButton(playdate.kButtonB, cancel or "Cancel", 40, 180)
-		drawButton(playdate.kButtonA, ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
+		if self.onOK then
+			drawButton(playdate.kButtonB, cancel or "Cancel", 40, 180)
+			drawButton(playdate.kButtonA, ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
+		else
+			drawButton(playdate.kButtonA, ok or "OK", 40, 180)
+		end
 	end
 	gfx.popContext()
 	self:markDirty()

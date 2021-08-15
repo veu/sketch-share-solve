@@ -7,10 +7,18 @@ end
 function CreatePuzzleSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
+		menuTitle = "Create new puzzle",
 		menuItems = {
 			{
-				text = "Test and save",
+				text = "Sketch",
+				exec = function()
+					closeSidebar()
+				end
+			},
+			{
+				text = "Solve and save",
 				disabled = context.puzzle:isTrivial(),
+				disabledText = "Please draw something before saving.",
 				exec = function()
 					self.onTestAndSave()
 				end

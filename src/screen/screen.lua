@@ -17,9 +17,11 @@ function Screen:resetGrid()
 end
 
 function Screen:AButtonDown()
+	openSidebar()
 end
 
 function Screen:BButtonDown()
+	openSidebar()
 end
 
 function Screen:BButtonUp()
@@ -37,10 +39,10 @@ end
 function Screen:upButtonDown()
 end
 
-function Screen:crankDocked()
+function Screen:sidebarOpened()
 end
 
-function Screen:crankUndocked()
+function Screen:sidebarClosed()
 end
 
 function Screen:buttonPressed()

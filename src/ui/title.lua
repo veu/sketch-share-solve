@@ -14,20 +14,20 @@ end
 function Title:enter(context)
 	self:redraw()
 	self:add()
-	self:moveTo(context.isCrankDocked and 0 or SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, 0)
+	self:moveTo(context.isSidebarOpen and SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10 or 0, 0)
 end
 
 function Title:leave()
 	self:remove()
 end
 
-function Title:crankDocked()
+function Title:sidebarClosed()
 	local start =
 		self.animator and self.animator:currentValue() or SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10
 	self.animator = gfx.animator.new(400, start, 0, playdate.easingFunctions.inOutSine)
 end
 
-function Title:crankUndocked()
+function Title:sidebarOpened()
 	local start = self.animator and self.animator:currentValue() or 0
 	self.animator = gfx.animator.new(
 		400, start, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 10, playdate.easingFunctions.inOutSine
