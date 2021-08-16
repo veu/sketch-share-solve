@@ -144,7 +144,7 @@ function closeSidebar()
 		context.isSidebarOpen = false
 		context.screen:sidebarClosed()
 		context.sidebar:close()
-		openMenuItem = playdate.getSystemMenu():addMenuItem("open menu", function()
+		openMenuItem = playdate.getSystemMenu():addMenuItem("game menu", function()
 			resume()
 			openSidebar()
 		end)
