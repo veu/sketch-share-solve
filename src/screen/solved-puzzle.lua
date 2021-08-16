@@ -40,7 +40,7 @@ function SolvedPuzzleScreen:update()
 				self.dialog:enter("You solved it! Ready to save.")
 			else
 				local title = self.puzzle.title
-				self.dialog:enter(title and "You solved \"" .. title .. "\"." or "You solved it!")
+				self.dialog:enter(title and "You solved \"" .. title .. "\". Well done!" or "You solved it!")
 			end
 		end
 	end

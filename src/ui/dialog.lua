@@ -30,11 +30,11 @@ function Dialog:redraw()
 	gfx.pushContext(self.image)
 	do
 		gfx.setDrawOffset(30, 179)
-
-		imgDialog:drawInRect(0, 0, 274, 54)
-
 		gfx.setFont(fontText)
-		gfx.drawText(self.message, 18, 19)
+		local size = gfx.getTextSize(self.message)
+		imgDialog:drawInRect(0, 0, size + 48, 54)
+
+		gfx.drawText(self.message, 28, 19)
 	end
 	gfx.popContext()
 	self:markDirty()
