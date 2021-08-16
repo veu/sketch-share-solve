@@ -589,9 +589,7 @@ context.screen:enter(context)
 context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
-context.isSidebarOpen = true
-context.screen:sidebarOpened()
-context.sidebar:open()
+openSidebar()
 
 local showFPS = false
 -- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
