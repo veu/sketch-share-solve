@@ -34,9 +34,10 @@ function Profile:save(context)
 	context.save.profiles[self.id] = profile
 
 	local hasProfile = false
-	for _, id in pairs(context.save.profileList) do
+	for _, id in ipairs(context.save.profileList) do
 		if id == profile.id then
 			hasProfile = true
+			break
 		end
 	end
 
@@ -52,9 +53,10 @@ function Profile:delete(context)
 	end
 
 	local profileIndex = nil
-	for i, id in pairs(context.save.profileList) do
+	for i, id in ipairs(context.save.profileList) do
 		if id == self.id then
 			profileIndex = i
+			break
 		end
 	end
 
@@ -84,7 +86,7 @@ function Profile:playedAllBy(creator)
 		return true
 	end
 	local prefix = creator._save and creator._save.id .. "." or ""
-	for _, id in pairs(creator.created) do
+	for _, id in ipairs(creator.created) do
 		if not self.played[prefix .. id] then
 			return false
 		end

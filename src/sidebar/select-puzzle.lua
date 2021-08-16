@@ -18,7 +18,7 @@ function SelectPuzzleSidebar:enter(context, selected)
 	}
 
 	local text = "[ Puzzle ]"
-	for i, id in pairs(creator.created) do
+	for i, id in ipairs(creator.created) do
 		config.menuItems[i] = {
 			text = text,
 			selected = id == selected

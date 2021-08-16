@@ -118,7 +118,7 @@ function PlayerAvatar:initSlide()
 	if not self.slide then
 		self.slide = gfx.image.new(20, 23 * #self.menuItems, gfx.kColorClear)
 		gfx.lockFocus(self.slide)
-		for i, item in pairs(self.menuItems) do
+		for i, item in ipairs(self.menuItems) do
 			if item.avatar == self.avatar then
 				self.position = i
 			end

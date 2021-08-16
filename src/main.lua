@@ -572,7 +572,7 @@ function save(context)
 end
 
 context.ext = {}
-for i, path in pairs(playdate.file.listFiles()) do
+for i, path in ipairs(playdate.file.listFiles()) do
 		if string.sub(path, -5, -1) == ".json" then
 			local id = string.sub(path, 0, -6)
 			if id ~= FILE_SAVE and string.sub(path, 0, 1) ~= "." then
