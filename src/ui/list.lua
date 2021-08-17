@@ -137,7 +137,14 @@ function List:redraw()
 				if item.showCursor then
 					width += 2
 				end
+
 				gfx.fillRect(23, y, width + 4, 18)
+				if self.highlightUpdate and self.cursor == i then
+					gfx.setColor(gfx.kColorBlack)
+					gfx.drawRect(23, y, width + 4, 18)
+					self.highlightUpdate = nil
+					self.needsRedraw = true
+				end
 				gfx.drawText(cellText, 25, y + 2)
 				if item.showCursor and not self.scrollAnimator then
 					gfx.setColor(gfx.kColorBlack)

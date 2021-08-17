@@ -37,4 +37,5 @@ function NamePuzzleSidebar:enter(context, selected)
 	})
 
 	NamePuzzleSidebar.super.enter(self, context, config)
+	self.list.highlightUpdate = nil
 end

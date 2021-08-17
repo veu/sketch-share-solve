@@ -56,6 +56,10 @@ function SelectPlayerSidebar:enter(context, selected)
 	end
 
 	SelectPlayerSidebar.super.enter(self, context, config)
+
+	if isNaming then
+		self.list.highlightUpdate = nil
+	end
 end
 
 function SelectPlayerSidebar:onCranked()

@@ -57,6 +57,10 @@ function Sidebar:enter(context, config, player, creator)
 	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(context, self.menuItems, self.menuTitle)
 	self.list:select(self.cursor)
+	if not context.scrolling then
+		self.list.highlightUpdate = true
+		self.list.needsRedraw = true
+	end
 	self:redraw()
 
 	if isOpen then
@@ -142,6 +146,8 @@ function Sidebar:AButtonDown()
 		end
 		return
 	end
+	self.list.highlightUpdate = true
+	self.list.needsRedraw = true
 	if item.exec then
 		item.exec()
 	else
