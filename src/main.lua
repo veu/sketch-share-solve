@@ -44,6 +44,7 @@ import "sidebar/settings"
 import "sidebar/test-puzzle"
 import "sidebar/title"
 
+import "ui/creator"
 import "ui/creator-avatar"
 import "ui/cursor"
 import "ui/dialog"
@@ -84,6 +85,7 @@ assert(imgMode, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
 imgMenuBorder = gfx.image.new("img/menu-border")
+imgRdk = gfx.image.new("img/rdk")
 
 -- screens
 local createAvatarScreen = CreateAvatarScreen()
