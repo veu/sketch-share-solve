@@ -435,6 +435,7 @@ playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
 	puzzle.title = context.puzzle.title
+	puzzle.hasBeenSolved = true
 	context.puzzle = puzzle
 	context.mode = MODE_CREATE
 	switch(createPuzzleScreen, createPuzzleSidebar)
