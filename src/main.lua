@@ -41,6 +41,7 @@ import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/select-puzzle"
 import "sidebar/settings"
+import "sidebar/share"
 import "sidebar/test-puzzle"
 import "sidebar/title"
 
@@ -61,6 +62,7 @@ import "ui/time"
 import "ui/timer"
 import "ui/title"
 
+import "utils/files"
 import "utils/numbers"
 import "utils/ui"
 
@@ -107,6 +109,7 @@ local selectPuzzleSidebar = SelectPuzzleSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
 local settingsSidebar = SettingsSidebar()
+local shareSidebar = ShareSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
 local titleSidebar = TitleSidebar()
 
@@ -498,6 +501,8 @@ selectModeSidebar.onSelected = function(selectedMode)
 		end
 		context.puzzle = puzzle
 		switch(createPuzzleScreen, createPuzzleSidebar)
+	elseif context.mode == MODE_SHARE then
+		switch(nil, shareSidebar)
 	else
 		switch(nil, optionsSidebar)
 	end
@@ -533,6 +538,33 @@ settingsSidebar.onCrankSpeedUp = function ()
 	context.settings.crankSpeed = context.settings.crankSpeed % 5 + 1
 	context.settings:save(context)
 	switch(nil, settingsSidebar)
+end
+
+shareSidebar.onAbort = function ()
+	switch(nil, selectModeSidebar, MODE_SHARE, true)
+end
+
+shareSidebar.onExportPuzzles = function ()
+	local puzzles = table.create(0, #context.player.created)
+	for i, id in ipairs(context.player.created) do
+		puzzles[id] = context.save.puzzles[id]
+	end
+	local profile = table.deepcopy(context.save.profiles[context.player.id])
+	profile.played = nil
+	profile.options = nil
+	local export = {
+		profileList = { context.player.id },
+		profiles = {
+			[context.player.id] = profile
+		},
+		puzzles = puzzles
+	}
+	local fileName = getFileNameForPlayer(context.player.name)
+	playdate.datastore.write(export, DIR_EXPORT .. "/" .. fileName, true)
+	showModal(
+		"Your puzzles have been saved in the export folder in the " .. fileName .. ".json file.\n\n" ..
+		"To share your puzzles with another player, put the file in the import directory on their Playdate."
+	)
 end
 
 testPuzzleSidebar.onAbort = function ()
@@ -573,15 +605,16 @@ function save(context)
 	playdate.datastore.write(context.save, FILE_SAVE, true)
 end
 
+playdate.file.mkdir(DIR_IMPORT)
+playdate.file.mkdir(DIR_EXPORT)
+
 context.ext = {}
-for i, path in ipairs(playdate.file.listFiles()) do
-		if string.sub(path, -5, -1) == ".json" then
-			local id = string.sub(path, 0, -6)
-			if id ~= FILE_SAVE and string.sub(path, 0, 1) ~= "." then
-				context.ext[id] = playdate.datastore.read(id)
-				context.ext[id].id = id
-			end
-		end
+for i, name in ipairs(playdate.file.listFiles(DIR_IMPORT)) do
+	if string.sub(name, -5, -1) == ".json" and string.sub(name, 0, 1) ~= "." then
+		local id = string.sub(name, 0, -6)
+		context.ext[id] = playdate.datastore.read(DIR_IMPORT .. "/" .. id)
+		context.ext[id].id = id
+	end
 end
 
 context.save = playdate.datastore.read(FILE_SAVE)

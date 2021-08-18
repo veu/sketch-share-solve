@@ -20,6 +20,11 @@ function SelectModeSidebar:enter(context, selected)
 				selected = selected == MODE_CREATE,
 			},
 			{
+				text = "Share",
+				ref = MODE_SHARE,
+				selected = selected == MODE_SHARE,
+			},
+			{
 				text = "Configure",
 				ref = MODE_OPTIONS,
 				selected = selected == MODE_OPTIONS,
