@@ -37,30 +37,34 @@ function OptionsSidebar:enter(context, selected)
 				execRight = function ()
 					self.onToggleTimer()
 				end
-			},
-			{
-				text = "Reset progress",
-				disabled = context.player:getNumPlayed() == 0,
-				selected = selected == OPTION_ID_RESET_PROGRESS,
-				exec = function ()
-					self.onResetProgress()
-				end
-			},
-			{
-				text = "Rename profile",
-				selected = selected == OPTION_ID_RENAME_PROFILE,
-				exec = function ()
-					self.onRename()
-				end
-			},
-			{
-				text = "Delete profile",
-				exec = function ()
-					self.onDelete()
-				end
-			},
+			}
 		}
 	}
+
+	if context.player:getNumPlayed() > 0 then
+		table.insert(config.menuItems, {
+			text = "Reset progress",
+			selected = selected == OPTION_ID_RESET_PROGRESS,
+			exec = function ()
+				self.onResetProgress()
+			end
+		})
+	end
+
+	table.insert(config.menuItems, {
+		text = "Rename profile",
+		selected = selected == OPTION_ID_RENAME_PROFILE,
+		exec = function ()
+			self.onRename()
+		end
+	})
+
+	table.insert(config.menuItems, {
+		text = "Delete profile",
+		exec = function ()
+			self.onDelete()
+		end
+	})
 
 	OptionsSidebar.super.enter(
 		self,
