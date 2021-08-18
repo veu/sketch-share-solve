@@ -28,9 +28,11 @@ function TitleSidebar:enter(context, selected)
 				end
 			},
 			{
-				text = "Tutorial",
-				disabled = true,
-				disabledText = "Under Construction..."
+				text = "Tutorials",
+				selected = selected == ACTION_ID_TUTORIALS,
+				exec = function ()
+					self.onTutorials()
+				end
 			},
 		}
 	}

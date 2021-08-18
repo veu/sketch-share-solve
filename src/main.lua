@@ -40,6 +40,7 @@ import "sidebar/select-creator"
 import "sidebar/select-mode"
 import "sidebar/select-player"
 import "sidebar/select-puzzle"
+import "sidebar/select-tutorial"
 import "sidebar/settings"
 import "sidebar/share"
 import "sidebar/test-puzzle"
@@ -108,6 +109,7 @@ local selectCreatorSidebar = SelectCreatorSidebar()
 local selectPuzzleSidebar = SelectPuzzleSidebar()
 local selectPlayerSidebar = SelectPlayerSidebar()
 local selectModeSidebar = SelectModeSidebar()
+local selectTutorial = SelectTutorial()
 local settingsSidebar = SettingsSidebar()
 local shareSidebar = ShareSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
@@ -525,6 +527,10 @@ selectPlayerSidebar.onSelected = function(player)
 	switch(nil, selectModeSidebar)
 end
 
+selectTutorial.onAbort = function()
+	switch(nil, titleSidebar, ACTION_ID_TUTORIALS, true)
+end
+
 settingsSidebar.onAbort = function ()
 	switch(nil, titleSidebar, ACTION_ID_SETTINGS, true)
 end
@@ -589,6 +595,10 @@ end
 
 titleSidebar.onSettings = function ()
 	switch(nil, settingsSidebar)
+end
+
+titleSidebar.onTutorials = function ()
+	switch(nil, selectTutorial)
 end
 
 titleSidebar.onQuickPlay = function ()
