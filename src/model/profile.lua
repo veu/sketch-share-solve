@@ -61,7 +61,7 @@ function Profile:delete(context)
 	end
 
 	if profileIndex then
-		context.save.profileList[profileIndex] = nil
+		table.remove(context.save.profileList, profileIndex)
 	end
 	context.save.profiles[self.id] = nil
 
