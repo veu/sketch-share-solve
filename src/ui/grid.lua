@@ -64,6 +64,9 @@ function Grid:enter(puzzle, mode, showHints, solution)
 		self.cursor.onMove = function (x, y)
 			self.numbers:setCursor(x, y)
 		end
+		if solution then
+			self.numbers:updateAllDone(solution)
+		end
 	end
 end
 

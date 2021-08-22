@@ -49,6 +49,11 @@ function GridNumbers:updateAll(solution)
 	self:redraw()
 end
 
+function GridNumbers:updateAllDone(solution)
+	self.doneNumbers:updateAll(self.solutionNumbers, solution)
+	self:redraw()
+end
+
 function GridNumbers:updateForPosition(solution, mode)
 	if mode == MODE_CREATE then
 		self.gridNumbers:updatePosition(solution, self.gridX, self.gridY)
