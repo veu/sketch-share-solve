@@ -1,17 +1,18 @@
-class("SelectTutorial").extends(Sidebar)
+class("SelectTutorialSidebar").extends(Sidebar)
 
-function SelectTutorial:init()
-	SelectTutorial.super.init(self)
+function SelectTutorialSidebar:init()
+	SelectTutorialSidebar.super.init(self)
 end
 
-function SelectTutorial:enter(context, selected)
+function SelectTutorialSidebar:enter(context, selected)
 	local config = {
 		menuTitle = "Choose a tutorial",
 		menuItems = {
 			{
 				text = "Solve tutorial",
-				disabled = true,
-				disabledText = "Under Construction..."
+				exec = function()
+						self.onSolveTutorial()
+				end
 			},
 			{
 				text = "Sketch tutorial",
@@ -21,7 +22,7 @@ function SelectTutorial:enter(context, selected)
 		}
 	}
 
-	SelectTutorial.super.enter(
+	SelectTutorialSidebar.super.enter(
 		self,
 		context,
 		config

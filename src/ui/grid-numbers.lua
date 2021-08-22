@@ -86,6 +86,11 @@ function GridNumbers:setCursor(x, y)
 	self:redrawPosition()
 end
 
+function GridNumbers:hideCursor()
+	self.cursorHidden = true
+	self:redraw()
+end
+
 function GridNumbers:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
@@ -186,7 +191,7 @@ function GridNumbers:drawLeft()
 		end
 		for y = 0, rawlen(self.gridNumbers.left) do
 			gfx.setColor(gfx.kColorBlack)
-			if y ~= self.gridY and y ~= self.gridY - 1 then
+			if self.cursorHidden or y ~= self.gridY and y ~= self.gridY - 1 then
 				gfx.setDitherPattern(0.9)
 			end
 			gfx.drawLine(CELL * -8 + 3, CELL * y, -2, CELL * y)
@@ -210,7 +215,7 @@ function GridNumbers:drawTop()
 		end
 		for x = 0, rawlen(self.gridNumbers.top) do
 			gfx.setColor(gfx.kColorBlack)
-			if x ~= self.gridX and x ~= self.gridX - 1 then
+			if self.cursorHidden or x ~= self.gridX and x ~= self.gridX - 1 then
 				gfx.setDitherPattern(0.85)
 			end
 			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -2)

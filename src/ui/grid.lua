@@ -21,19 +21,22 @@ function Grid:init(withNumbers)
 	end
 end
 
-function Grid:enter(puzzle, mode, showHints)
+function Grid:enter(puzzle, mode, showHints, solution)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
 
 	self.tilemap:setSize(puzzle.width, puzzle.height)
 
-	if self.mode == MODE_PLAY then
-		self.solution = {}
+	if solution then
+		self.solution = solution
+	elseif self.mode == MODE_PLAY then
+		self.solution = table.create(puzzle.height * puzzle.width, 0)
+		local i = 1
 		for y = 1, puzzle.height do
 			for x = 1, puzzle.width do
-				local index = x - 1 + (y - 1) * puzzle.width + 1
-				self.solution[index] = puzzle:isCellKnownEmpty(x, y) and 2 or 0
+				self.solution[i] = puzzle:isCellKnownEmpty(x, y) and 2 or 0
+				i += 1
 			end
 		end
 	else
@@ -87,7 +90,7 @@ function Grid:toggle(index, isStart)
 		self.solution[index] = new
 		self.last = new
 		self:addAnimation(index, old, new)
-		self:onUpdateSolution_(index)
+		self:onUpdateSolution_()
 	end
 end
 
@@ -105,7 +108,7 @@ function Grid:toggleCross(index, isStart)
 		self.solution[index] = new
 		self.last = new
 		self:addAnimation(index, old, new)
-		self:onUpdateSolution_(index)
+		self:onUpdateSolution_()
 	end
 end
 
@@ -186,6 +189,7 @@ end
 
 function Grid:hideCursor()
 	self.cursor:leave()
+	self.numbers:hideCursor()
 end
 
 function Grid:moveTowardsTop(step)
@@ -237,7 +241,7 @@ function Grid:translate()
 	self:redraw()
 end
 
-function Grid:onUpdateSolution_(index)
+function Grid:onUpdateSolution_()
 	if self.numbers then
 		self.numbers:updateForPosition(self.solution, self.mode)
 	end
