@@ -186,7 +186,7 @@ end
 
 function Sidebar:update()
 	if self.animator then
-		local currentValue = self.animator:currentValue()
+		local currentValue = math.floor(self.animator:currentValue() + .5)
 		self:moveTo(currentValue, 0)
 		self.playerAvatar:moveTo(currentValue, Sidebar.playerAvatar.y)
 		self.creatorAvatar:moveTo(currentValue, Sidebar.creatorAvatar.y)
@@ -198,10 +198,10 @@ function Sidebar:update()
 
 			if currentValue == SEPARATOR_WIDTH - SIDEBAR_WIDTH then
 					self.isOpen = false
-					self:redraw()
 			end
 		end
 
+		self:redraw()
 	end
 end
 
@@ -226,18 +226,17 @@ function Sidebar:redraw()
 
 		-- shadow
 		if self.isOpen then
-			gfx.setColor(gfx.kColorBlack)
-			gfx.setDitherPattern(0.5)
+			gfx.setPattern(imgPattern:getImage(5 + self.x % 2))
 			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)
 		end
 
 		local height = 242
 
 		-- draw sidebar
-		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242)
+		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242, self.x)
 
 		-- menu
-		drawStripedRect(-1, -1, SIDEBAR_WIDTH - 23, height)
+		drawStripedRect(-1, -1, SIDEBAR_WIDTH - 23, height, self.x)
 	end
 
 	gfx.unlockFocus()

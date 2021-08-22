@@ -1,25 +1,23 @@
 local gfx <const> = playdate.graphics
 
-function drawPaddedRect(x, y, w, h)
+function drawPaddedRect(x, y, w, h, ref)
 	-- outline
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(x, y, w, h)
 	-- padding
-	gfx.setColor(gfx.kColorBlack)
-	gfx.setDitherPattern(0.5)
+	gfx.setPattern(imgPattern:getImage(5 + ref % 2))
 	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
   gfx.setColor(gfx.kColorBlack)
 	gfx.drawLine(x + 23, y + 2, x + 23, y + h - 2)
 	gfx.drawLine(x + 2, y + h - 3, x + w - 2, y + h - 3)
 end
 
-function drawStripedRect(x, y, w, h)
+function drawStripedRect(x, y, w, h, ref)
 	-- outline
 	gfx.setColor(gfx.kColorBlack)
 	gfx.drawRect(x, y, w, h)
 	-- stripes
-	gfx.setColor(gfx.kColorBlack)
-	gfx.setDitherPattern(0.8, gfx.image.kDitherTypeDiagonalLine)
+	gfx.setPattern(imgPattern:getImage(1 + ref % 4))
 	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
 end
 
