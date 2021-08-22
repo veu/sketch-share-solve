@@ -25,6 +25,7 @@ function Grid:enter(puzzle, mode, showHints, solution)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
+	self.animator = nil
 
 	self.tilemap:setSize(puzzle.width, puzzle.height)
 
@@ -186,13 +187,23 @@ function Grid:getCursor()
 	return self.cursor:getIndex()
 end
 
+function Grid:jumpTo(x, y)
+	self.cursor.gridX = x
+	self.cursor.gridY = y
+	if self.numbers then
+		self.numbers:setCursor(x, y)
+	end
+end
+
 function Grid:moveBy(dx, dy, pressed)
 	self.cursor:moveBy(dx, dy, pressed)
 end
 
 function Grid:hideCursor()
 	self.cursor:leave()
-	self.numbers:hideCursor()
+	if self.numbers then
+		self.numbers:hideCursor()
+	end
 end
 
 function Grid:moveTowardsTop(step)

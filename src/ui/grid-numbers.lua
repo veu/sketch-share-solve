@@ -128,7 +128,7 @@ function GridNumbers:redrawPosition()
 		end
 		for y = math.max(0, self.gridY - 2), self.gridY + 1 do
 			gfx.setColor(gfx.kColorBlack)
-			if y ~= self.gridY and y ~= self.gridY - 1 then
+			if self.cursorHidden or y ~= self.gridY and y ~= self.gridY - 1 then
 				gfx.setDitherPattern(0.9)
 			end
 			gfx.drawLine(CELL * -8 + 3, CELL * y, -2, CELL * y)
@@ -166,7 +166,7 @@ function GridNumbers:redrawPosition()
 		end
 		for x = math.max(0, self.gridX - 2), self.gridX + 1 do
 			gfx.setColor(gfx.kColorBlack)
-			if x ~= self.gridX and x ~= self.gridX - 1 then
+			if self.cursorHidden or x ~= self.gridX and x ~= self.gridX - 1 then
 				gfx.setDitherPattern(0.85)
 			end
 			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -2)

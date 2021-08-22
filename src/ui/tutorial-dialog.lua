@@ -9,13 +9,11 @@ function TutorialDialog:init()
 	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_DIALOG)
-	self:setVisible(false)
 end
 
 function TutorialDialog:enter(message)
 	self.message = message
 
-	self:setVisible(true)
 	self:redraw()
 	self:add()
 end
