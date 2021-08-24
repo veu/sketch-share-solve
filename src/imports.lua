@@ -8,6 +8,8 @@ import "CoreLibs/sprites"
 import "CoreLibs/string"
 import "CoreLibs/timer"
 
+gfx = playdate.graphics
+
 import "constants"
 
 import "input/default"
@@ -69,8 +71,6 @@ import "ui/tutorial-dialog"
 import "utils/files"
 import "utils/numbers"
 import "utils/ui"
-
-local gfx <const> = playdate.graphics
 
 fontGrid = gfx.font.newFamily({
 	[gfx.font.kVariantNormal] = "font/grid",

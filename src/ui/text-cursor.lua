@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("TextCursor").extends(gfx.sprite)
 
 function TextCursor:init()

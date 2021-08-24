@@ -1,7 +1,5 @@
 import "imports"
 
-local gfx <const> = playdate.graphics
-
 -- screens
 local createAvatarScreen = CreateAvatarScreen()
 local createPuzzleScreen = CreatePuzzleScreen()

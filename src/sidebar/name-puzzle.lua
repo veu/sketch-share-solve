@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("NamePuzzleSidebar").extends(Sidebar)
 
 function NamePuzzleSidebar:init()

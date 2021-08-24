@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("Timer").extends(gfx.sprite)
 
 function Timer:init()

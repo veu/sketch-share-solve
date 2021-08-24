@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 function drawPaddedRect(x, y, w, h, ref)
 	-- outline
 	gfx.setColor(gfx.kColorBlack)

@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("TitleScreen").extends(Screen)
 
 function TitleScreen:init()

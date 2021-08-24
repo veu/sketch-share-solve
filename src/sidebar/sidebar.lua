@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("Sidebar").extends(gfx.sprite)
 
 function Sidebar:init()

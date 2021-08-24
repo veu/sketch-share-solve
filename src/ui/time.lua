@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("Time").extends(gfx.sprite)
 
 function Time:init()

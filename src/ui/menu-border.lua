@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("MenuBorder").extends(gfx.sprite)
 
 function MenuBorder:init()

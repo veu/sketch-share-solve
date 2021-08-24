@@ -1,5 +1,3 @@
-local gfx <const> = playdate.graphics
-
 class("Title").extends(gfx.sprite)
 
 function Title:init()
