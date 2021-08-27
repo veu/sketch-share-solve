@@ -7,7 +7,7 @@ end
 function SelectModeSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
-		menuTitle = "What do you want to do?",
+		menuTitle = "Let's play!",
 		menuItems = {
 			{
 				text = "Solve",

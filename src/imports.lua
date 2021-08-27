@@ -70,6 +70,7 @@ import "ui/tutorial-dialog"
 
 import "utils/files"
 import "utils/numbers"
+import "utils/string"
 import "utils/ui"
 
 fontGrid = gfx.font.newFamily({
@@ -77,9 +78,18 @@ fontGrid = gfx.font.newFamily({
 	[gfx.font.kVariantBold] = "font/grid-bold"
 })
 assert(fontGrid)
-
-fontText = gfx.font.new("font/text")
+fontText = gfx.font.newFamily({
+	[gfx.font.kVariantNormal] = "font/text",
+	[gfx.font.kVariantBold] = "font/text",
+	[gfx.font.kVariantItalic] = "font/text"
+})
 assert(fontText)
+fontFormatted = gfx.font.newFamily({
+	[gfx.font.kVariantNormal] = "font/text",
+	[gfx.font.kVariantBold] = "font/text-bold",
+	[gfx.font.kVariantItalic] = "font/text"
+})
+assert(fontFormatted)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 imgGrid, err = gfx.imagetable.new("img/grid")

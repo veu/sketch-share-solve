@@ -43,7 +43,7 @@ function Timer:redraw()
 			gfx.setFont(fontText)
 			gfx.drawText(
 				string.format("Time: %02d:%02d", math.floor(self.current / 60), self.current % 60),
-				27, 49,
+				21, 49,
 				fontText
 			)
 		else

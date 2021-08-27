@@ -10,7 +10,7 @@ function SelectPlayerSidebar:enter(context, selected)
 	local isNaming = selected == PLAYER_ID_SHOW_NAME or selected == PLAYER_ID_SHOW_RENAME
 	local config = {
 		menuItems = {},
-		menuTitle = isNaming and "Choose a name" or "Who is playing?",
+		menuTitle = isNaming and "Choose a name" or "Choose a profile",
 		stayOpen = isNaming
 	}
 

@@ -45,14 +45,14 @@ function Modal:draw(text, ok, cancel)
 		gfx.fillRoundRect(20, 20, 360, 200, 8)
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawRoundRect(20, 20, 360, 200, 8)
-		gfx.setFont(fontText)
-		gfx.drawTextInRect(text, 40, 40, 320, 160)
+		gfx.setFont(fontFormatted)
+		gfx.drawTextInRect(text, 40, 40, 320, 160, 4)
 
 		if self.onOK then
-			drawButton(playdate.kButtonB, cancel or "Cancel", 40, 180)
-			drawButton(playdate.kButtonA, ok or "OK", 86 + gfx.getTextSize(cancel or "Cancel"), 180)
+			gfx.drawText("*[B]* " .. (cancel or "Cancel"), 38, 180)
+			gfx.drawText("*[A]* " .. (ok or "OK"), 78 + gfx.getTextSize(cancel or "Cancel"), 180)
 		else
-			drawButton(playdate.kButtonA, ok or "OK", 40, 180)
+			gfx.drawText("*[A]* " .. (ok or "OK"), 38, 180)
 		end
 	end
 	gfx.popContext()

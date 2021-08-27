@@ -26,7 +26,7 @@ function TutorialDialog:redraw()
 	gfx.pushContext(self.image)
 	do
 		gfx.setDrawOffset(0, 0)
-		gfx.setFont(fontText)
+		gfx.setFont(fontFormatted)
 		local size = gfx.getTextSize(self.message)
 		x, y, w, h = 25 + 7, 7, 400 - 25 - 14, 72 - 14
 
@@ -38,7 +38,7 @@ function TutorialDialog:redraw()
 		gfx.setColor(gfx.kColorBlack)
 		gfx.drawRoundRect(x, y, w, h, 6)
 
-		gfx.drawTextInRect(self.message, x + 12, y + 13, w - 24, h)
+		gfx.drawTextInRect(self.message, x + 12, y + 11, w - 24, h, 4)
 	end
 	gfx.popContext()
 	self:markDirty()

@@ -79,6 +79,7 @@ function showModal(text, ok)
 end
 
 function showPlayerKeyboard(mode)
+	local text = unescapeString(context.player.name)
 	local invalid = false
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
@@ -100,29 +101,30 @@ function showPlayerKeyboard(mode)
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
-		local text = playdate.keyboard.text
-		gfx.setFont(fontText)
-		local size = gfx.getTextSize(text)
-		if size <= MAX_PUZZLE_NAME_SIZE then
-			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
-			context.player.name = text
+		local newText = playdate.keyboard.text
+		local escapedText = escapeString(newText)
+		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
+			context.player.name = escapedText
 			switch(nil, namePlayerSidebar, mode)
 		else
 			playdate.keyboard.text = context.player.name
 		end
 	end
 
-	playdate.keyboard.show(context.player.name)
+	playdate.keyboard.show(text)
 end
 
 function showPuzzleKeyboard()
-	local invalid = #context.puzzle.title == 0
+	local text = unescapeString(context.puzzle.title)
+	local invalid = #text == 0
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
 		if invalid then
 			switch(solvedPuzzleScreen, testPuzzleSidebar, nil, true)
 		else
 			context.player.sketch = nil
+			context.player:setPlayed(context.puzzle, context.player.lastTime)
 			context.player:save(context)
 			context.puzzle:save(context)
 
@@ -138,19 +140,19 @@ function showPuzzleKeyboard()
 	end
 
 	playdate.keyboard.textChangedCallback = function ()
-		local text = playdate.keyboard.text
-		gfx.setFont(fontText)
-		local size = gfx.getTextSize(text)
-		if size <= MAX_PUZZLE_NAME_SIZE then
-			invalid = rawlen(playdate.string.trimWhitespace(text)) == 0
-			context.puzzle.title = text
+		local newText = playdate.keyboard.text
+		local escapedText = escapeString(newText)
+		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
+			text = newText
+			context.puzzle.title = escapedText
 			switch(nil, namePuzzleSidebar)
 		else
-			playdate.keyboard.text = context.puzzle.title
+			playdate.keyboard.text = text
 		end
 	end
 
-	playdate.keyboard.show(context.puzzle.title)
+	playdate.keyboard.show(text)
 end
 
 function switch(newScreen, newSidebar, selected, out)
@@ -350,6 +352,7 @@ playPuzzleSidebar.onRemixPuzzle = function ()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
 	puzzle.title = context.puzzle.title
 	puzzle.hasBeenSolved = true
+	context.player.lastTime = context.player:hasPlayed(context.puzzle)
 	context.puzzle = puzzle
 	context.mode = MODE_CREATE
 	switch(createPuzzleScreen, createPuzzleSidebar)
@@ -485,8 +488,8 @@ shareSidebar.onExportPuzzles = function ()
 	local fileName = getFileNameForPlayer(context.player.name)
 	playdate.datastore.write(export, DIR_EXPORT .. "/" .. fileName, true)
 	showModal(
-		"Your puzzles have been saved in the export folder in the " .. fileName .. ".json file.\n\n" ..
-		"To share your puzzles with another player, put the file in the import directory on their Playdate."
+		"Your puzzles have been saved in the export folder in the file " .. fileName .. ".json.\n\n" ..
+		"To share your puzzles with another player, copy the file to the import folder on their Playdate."
 	)
 end
 

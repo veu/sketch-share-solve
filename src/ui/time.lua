@@ -26,22 +26,22 @@ function Time:redraw()
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		if self.context.player.options.showTimer then
+		local lastTime = self.context.player.lastTime
+		if self.context.player.options.showTimer and lastTime then
 			imgMode:drawImage(3, 17, 10)
 
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawLine(12, 40, 115, 40)
 			gfx.setFont(fontText)
-			local lastTime = self.context.player.lastTime
 			local bestTime = self.context.player:hasPlayed(self.context.puzzle) or lastTime
 			gfx.drawText(
 				string.format("Time: %02d:%02d", math.floor(lastTime / 60), lastTime % 60),
-				27, 49,
+				23, 49,
 				fontText
 			)
 			gfx.drawText(
 				string.format("Best: %02d:%02d", math.floor(bestTime / 60), bestTime % 60),
-				23, 69,
+				19, 69,
 				fontText
 			)
 		else
