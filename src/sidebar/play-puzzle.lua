@@ -41,7 +41,7 @@ function PlayPuzzleSidebar:enter(context)
 			})
 		end
 	else
-		if creator.id == player.id or puzzle.hasBeenSolved then
+		if creator.id == player.id or player:hasPlayed(puzzle) then
 			table.insert(config.menuItems, {
 				text = "Remix puzzle",
 				exec = function()
