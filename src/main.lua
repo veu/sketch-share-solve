@@ -49,6 +49,10 @@ local openMenuItem = nil
 
 function openSidebar()
 	if not context.isSidebarOpen then
+		if context.screen == createPuzzleScreen then
+			switch(nil, createPuzzleSidebar)
+		end
+
 		context.isSidebarOpen = true
 		context.screen:sidebarOpened()
 		context.sidebar:open()
@@ -188,16 +192,6 @@ end
 
 createPuzzleScreen.onChanged = function ()
 	context.puzzle.hasBeenSolved = false
-	context.player.sketch = table.concat(context.puzzle.grid)
-	context.player:save(context)
-	switch(nil, createPuzzleSidebar)
-end
-
-playPuzzleScreen.onChanged = function ()
-	if context.mode == MODE_CREATE then
-		context.puzzle.hasBeenSolved = false
-		switch(nil, testPuzzleSidebar)
-	end
 end
 
 playPuzzleScreen.onPlayed = function (time)
@@ -236,30 +230,26 @@ createAvatarSidebar.onSave = function()
 end
 
 createPuzzleSidebar.onAbort = function()
+	context.player.sketch = table.concat(context.puzzle.grid)
+	context.player:save(context)
 	switch(titleScreen, selectModeSidebar, MODE_CREATE, true)
 end
 
 createPuzzleSidebar.onFlip = function()
 	context.screen:flipGrid()
 	context.puzzle.hasBeenSolved = false
-	context.player.sketch = table.concat(context.puzzle.grid)
-	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP)
 end
 
 createPuzzleSidebar.onInvertColors = function()
 	context.screen:invertGrid()
 	context.puzzle.hasBeenSolved = false
-	context.player.sketch = table.concat(context.puzzle.grid)
-	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_INVERT_COLORS)
 end
 
 createPuzzleSidebar.onResetGrid = function()
 	context.screen:resetGrid()
 	context.puzzle.hasBeenSolved = false
-	context.player.sketch = table.concat(context.puzzle.grid)
-	context.player:save(context)
 	switch(nil, createPuzzleSidebar, ACTION_ID_RESET_GRID)
 end
 
@@ -591,6 +581,10 @@ function playdate.update()
 	else
 		idleCounter += 1
 		if idleCounter > 200 then
+			if context.screen == createPuzzleScreen then
+				context.player.sketch = table.concat(context.puzzle.grid)
+				context.player:save(context)
+			end
 			playdate.stop()
 		end
 	end

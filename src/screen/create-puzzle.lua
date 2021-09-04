@@ -20,7 +20,6 @@ function CreatePuzzleScreen:enter(context)
 	end
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution
-		print(table.concat(self.grid.solution), "")
 		self.onChanged()
 	end
 	self.grid:enter(self.puzzle, MODE_CREATE, HINTS_ID_OFF)

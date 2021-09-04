@@ -228,25 +228,27 @@ function Grid:translate()
 	local dx = self.cursor.gridX - self.moveContext.startX
 	local dy = self.cursor.gridY - self.moveContext.startY
 	local grid = self.moveContext.grid
+	local width = self.puzzle.width
+	local height = self.puzzle.height
 
 	local solution = table.create(#self.solution, 0)
-	for y = 1, self.puzzle.height do
-		for x = 1, self.puzzle.width do
-			local index = x - 1 + (y - 1) * self.puzzle.width + 1
-			if
-				1 <= x - dx and x - dx <= self.puzzle.width and
-				1 <= y - dy and y - dy <= self.puzzle.height
-			then
-				local translatedIndex = x - dx - 1 + (y - dy - 1) * self.puzzle.width + 1
+	local index = 1
+	for y = 1, height do
+		for x = 1, width do
+			local tx = x - dx
+			local ty = y - dy
+			if 1 <= tx and tx <= width and 1 <= ty and ty <= height then
+				local translatedIndex = tx - 1 + (ty - 1) * width + 1
 				solution[index] = grid[translatedIndex]
 			else
 				solution[index] = 0
 			end
+			index += 1
 		end
 	end
 
 	self.solution = solution
-	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	self.tilemap:setTiles(solution, width)
 	if self.numbers then
 		self.numbers:updateAll(solution)
 	end
@@ -274,35 +276,27 @@ function Grid:redrawPosition(gridX, gridY)
 end
 
 function Grid:redraw()
-	local isSolved = self.mode == MODE_PLAY and self.puzzle:isSolved(self.solution)
+	local width = self.puzzle.width
+	local height = self.puzzle.height
 	self.image:clear(gfx.kColorClear)
 	gfx.lockFocus(self.image)
 	do
-		-- lines
-		if isSolved then
+		-- vertical lines
+		for x = 0, width do
 			gfx.setColor(gfx.kColorBlack)
-			gfx.drawRect(0, 0, CELL * self.puzzle.width + 1, CELL * self.puzzle.height + 1)
-		else
-			for x = 0, self.puzzle.width do
-				gfx.setColor(gfx.kColorBlack)
-				gfx.setDitherPattern((isSolved or x % 5 == 0) and 0 or 0.5)
-				gfx.drawLine(
-					CELL * x,
-					0,
-					CELL * x,
-					CELL * self.puzzle.height + 1
-				)
+			if x % 5 ~= 0 then
+				gfx.setDitherPattern(0.5)
 			end
-			for y = 0, self.puzzle.height do
-				gfx.setColor(gfx.kColorBlack)
-				gfx.setDitherPattern((isSolved or y % 5 == 0) and 0 or 0.5)
-				gfx.drawLine(
-					0,
-					CELL * y,
-					CELL * self.puzzle.width + 1,
-					CELL * y
-				)
+			gfx.drawLine(CELL * x, 0, CELL * x, CELL * height + 1)
+		end
+
+		-- horizontal lines
+		for y = 0, height do
+			gfx.setColor(gfx.kColorBlack)
+			if y % 5 ~= 0 then
+				gfx.setDitherPattern(0.5)
 			end
+			gfx.drawLine(0, CELL * y, CELL * width + 1, CELL * y)
 		end
 
 		-- cells
