@@ -3,6 +3,7 @@ import "imports"
 -- screens
 local createAvatarScreen = CreateAvatarScreen()
 local createPuzzleScreen = CreatePuzzleScreen()
+local sketchTutorialScreen = SketchTutorialScreen()
 local solvedPuzzleScreen = SolvedPuzzleScreen()
 local playPuzzleScreen = PlayPuzzleScreen()
 local titleScreen = TitleScreen()
@@ -446,6 +447,10 @@ selectTutorialSidebar.onAbort = function()
 	switch(nil, titleSidebar, ACTION_ID_TUTORIALS, true)
 end
 
+selectTutorialSidebar.onSketchTutorial = function()
+	switch(sketchTutorialScreen, tutorialSidebar)
+end
+
 selectTutorialSidebar.onSolveTutorial = function()
 	switch(tutorialScreen, tutorialSidebar)
 end
@@ -554,11 +559,14 @@ end
 context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
 
+context.screen = sketchTutorialScreen
+context.sidebar = tutorialSidebar
+
 context.screen:enter(context)
 context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
-openSidebar()
+--openSidebar()
 
 local showFPS = false
 -- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()

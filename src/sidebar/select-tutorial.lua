@@ -16,8 +16,9 @@ function SelectTutorialSidebar:enter(context, selected)
 			},
 			{
 				text = "Sketch tutorial",
-				disabled = true,
-				disabledText = "Under Construction..."
+				exec = function()
+						self.onSketchTutorial()
+				end
 			},
 		}
 	}
