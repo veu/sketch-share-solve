@@ -62,7 +62,7 @@ function SelectPuzzleSidebar:addItem(i)
 	local revealed = creator.id == player.id or player:hasPlayed(puzzle)
 	local text = revealed and puzzle.title or string.format("[ Puzzle %02d ]", i)
 
-	local image = imgAvatars:getImage(AVATAR_ID_NIL)
+	local image = nil
 	if revealed then
 		image = createPuzzlePreview(puzzle)
 	end

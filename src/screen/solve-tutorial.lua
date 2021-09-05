@@ -1,7 +1,7 @@
-class("TutorialScreen").extends(Screen)
+class("SolveTutorialScreen").extends(Screen)
 
-function TutorialScreen:init()
-	TutorialScreen.super.init(self)
+function SolveTutorialScreen:init()
+	SolveTutorialScreen.super.init(self)
 
 	self.grid = Grid(true)
 	self.dialog = TutorialDialog()
@@ -129,17 +129,17 @@ local TUTORIAL = {
 	}
 }
 
-function TutorialScreen:enter(context)
+function SolveTutorialScreen:enter(context)
 	self.page = 1
 	self:loadPage()
 end
 
-function TutorialScreen:leave()
+function SolveTutorialScreen:leave()
 	self.grid:leave()
 	self.dialog:leave()
 end
 
-function TutorialScreen:loadPage()
+function SolveTutorialScreen:loadPage()
 	local page = TUTORIAL[self.page]
 	 self.puzzle = Puzzle({
 		 width = 15,
@@ -162,7 +162,7 @@ function TutorialScreen:loadPage()
 	self.cantIdle = page.steps
 end
 
-function TutorialScreen:AButtonDown()
+function SolveTutorialScreen:AButtonDown()
 	if self.page < #TUTORIAL then
 		self.page += 1
 		self:loadPage()
@@ -171,29 +171,29 @@ function TutorialScreen:AButtonDown()
 	end
 end
 
-function TutorialScreen:BButtonDown()
+function SolveTutorialScreen:BButtonDown()
 	self.dialog:setVisible(false)
 end
 
-function TutorialScreen:BButtonUp()
+function SolveTutorialScreen:BButtonUp()
 	self.dialog:setVisible(true)
 end
 
-function TutorialScreen:leftButtonDown(pressed)
+function SolveTutorialScreen:leftButtonDown(pressed)
 	if self.page > 1 then
 		self.page -= 1
 		self:loadPage()
 	end
 end
 
-function TutorialScreen:rightButtonDown(pressed)
+function SolveTutorialScreen:rightButtonDown(pressed)
 	if self.page < #TUTORIAL then
 		self.page += 1
 		self:loadPage()
 	end
 end
 
-function TutorialScreen:update()
+function SolveTutorialScreen:update()
 	if self.frame then
 		if self.frame % 20 == 0 then
 			local page = TUTORIAL[self.page]

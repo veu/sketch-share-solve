@@ -11,13 +11,6 @@ end
 
 function CreatePuzzleScreen:enter(context)
 	self.puzzle = context.puzzle
-
-	local size = self.puzzle.width * self.puzzle.height
-	self.puzzle.grid = table.create(size, 0)
-	local values = {string.byte("000010111110100000100000000010000100100010010000010000000100000010011100100000010011100100000010001000100000010110110100000001000001000000000111110000", 1, size)}
-	for i = 1, size do
-		self.puzzle.grid[i] = values[i] - 48
-	end
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution
 		self.onChanged()

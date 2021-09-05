@@ -10,12 +10,14 @@ function SelectTutorialSidebar:enter(context, selected)
 		menuItems = {
 			{
 				text = "Solve tutorial",
+				selected = selected == ACTION_ID_SOLVE_TUTORIAL,
 				exec = function()
 						self.onSolveTutorial()
 				end
 			},
 			{
 				text = "Sketch tutorial",
+				selected = selected == ACTION_ID_SKETCH_TUTORIAL,
 				exec = function()
 						self.onSketchTutorial()
 				end

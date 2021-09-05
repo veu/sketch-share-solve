@@ -5,9 +5,9 @@ local createAvatarScreen = CreateAvatarScreen()
 local createPuzzleScreen = CreatePuzzleScreen()
 local sketchTutorialScreen = SketchTutorialScreen()
 local solvedPuzzleScreen = SolvedPuzzleScreen()
+local solveTutorialScreen = SolveTutorialScreen()
 local playPuzzleScreen = PlayPuzzleScreen()
 local titleScreen = TitleScreen()
-local tutorialScreen = TutorialScreen()
 
 -- sidebars
 local createAvatarSidebar = CreateAvatarSidebar()
@@ -24,9 +24,10 @@ local selectModeSidebar = SelectModeSidebar()
 local selectTutorialSidebar = SelectTutorialSidebar()
 local settingsSidebar = SettingsSidebar()
 local shareSidebar = ShareSidebar()
+local sketchTutorialSidebar = TutorialSidebar()
+local solveTutorialSidebar = TutorialSidebar()
 local testPuzzleSidebar = TestPuzzleSidebar()
 local titleSidebar = TitleSidebar()
-local tutorialSidebar = TutorialSidebar()
 
 local context = {
 	creator = nil,
@@ -438,11 +439,11 @@ selectTutorialSidebar.onAbort = function()
 end
 
 selectTutorialSidebar.onSketchTutorial = function()
-	switch(sketchTutorialScreen, tutorialSidebar)
+	switch(sketchTutorialScreen, sketchTutorialSidebar)
 end
 
 selectTutorialSidebar.onSolveTutorial = function()
-	switch(tutorialScreen, tutorialSidebar)
+	switch(solveTutorialScreen, solveTutorialSidebar)
 end
 
 settingsSidebar.onAbort = function ()
@@ -488,6 +489,14 @@ shareSidebar.onExportPuzzles = function ()
 	)
 end
 
+sketchTutorialSidebar.onAbort = function ()
+	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SKETCH_TUTORIAL, true)
+end
+
+solveTutorialSidebar.onAbort = function ()
+	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SOLVE_TUTORIAL, true)
+end
+
 testPuzzleSidebar.onAbort = function ()
 	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
 end
@@ -524,10 +533,6 @@ titleSidebar.onQuickPlay = function ()
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 
-tutorialSidebar.onAbort = function ()
-	switch(titleScreen, selectTutorialSidebar, nil, true)
-end
-
 math.randomseed(playdate.getSecondsSinceEpoch())
 
 function save(context)
@@ -549,14 +554,11 @@ end
 context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
 
-context.screen = sketchTutorialScreen
-context.sidebar = tutorialSidebar
-
 context.screen:enter(context)
 context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
---openSidebar()
+openSidebar()
 
 local showFPS = false
 -- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
