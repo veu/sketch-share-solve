@@ -12,30 +12,35 @@ function TitleSidebar:enter(context, selected)
 				exec = function ()
 					self.onPlay()
 				end
-			},
-			{
-				text = "Quick solve",
-				selected = selected == ACTION_ID_QUICK_PLAY,
-				exec = function ()
-					self.onQuickPlay()
-				end
-			},
-			{
-				text = "Settings",
-				selected = selected == ACTION_ID_SETTINGS,
-				exec = function ()
-					self.onSettings()
-				end
-			},
-			{
-				text = "Tutorials",
-				selected = selected == ACTION_ID_TUTORIALS,
-				exec = function ()
-					self.onTutorials()
-				end
-			},
+			}
 		}
 	}
+
+	if context.ext.rdk then
+		table.insert(config.menuItems, {
+			text = "Quick solve",
+			selected = selected == ACTION_ID_QUICK_PLAY,
+			exec = function ()
+				self.onQuickPlay()
+			end
+		})
+	end
+
+	table.insert(config.menuItems, {
+		text = "Settings",
+		selected = selected == ACTION_ID_SETTINGS,
+		exec = function ()
+			self.onSettings()
+		end
+	})
+
+	table.insert(config.menuItems, {
+		text = "Tutorials",
+		selected = selected == ACTION_ID_TUTORIALS,
+		exec = function ()
+			self.onTutorials()
+		end
+	})
 
 	TitleSidebar.super.enter(self, context, config)
 end
