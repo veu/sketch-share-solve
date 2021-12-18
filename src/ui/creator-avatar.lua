@@ -73,10 +73,10 @@ function CreatorAvatar:draw(avatar)
 	gfx.pushContext(self.image)
 	do
 		gfx.setColor(gfx.kColorWhite)
-		gfx.drawLine(0, 1, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 1, 1)
-		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 1, SIDEBAR_WIDTH, 1)
+		gfx.drawLine(0, 1, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 1)
+		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 1, SIDEBAR_WIDTH - 1, 1)
 		gfx.setColor(gfx.kColorBlack)
-		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 0, SIDEBAR_WIDTH - 1, 0)
+		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 0, SIDEBAR_WIDTH - 2, 0)
 		drawRightTextRect(-1, 2, SIDEBAR_WIDTH - 23, 26, self.text)
 		gfx.setDrawOffset(AVATAR_OFFSET, 2)
 		if avatar then
@@ -107,7 +107,7 @@ function CreatorAvatar:initSlide()
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawRect(0, (i - 1) * 23 + 20, 20, 3)
 			gfx.setColor(gfx.kColorWhite)
-			gfx.drawLine(0, (i - 1) * 23 + 21, 20, (i - 1) * 23 + 21)
+			gfx.drawLine(0, (i - 1) * 23 + 21, 19, (i - 1) * 23 + 21)
 		end
 		gfx.unlockFocus()
 	end

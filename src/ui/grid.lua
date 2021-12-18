@@ -287,7 +287,7 @@ function Grid:redraw()
 			if x % 5 ~= 0 then
 				gfx.setDitherPattern(0.5)
 			end
-			gfx.drawLine(CELL * x, 0, CELL * x, CELL * height + 1)
+			gfx.drawLine(CELL * x, 0, CELL * x, CELL * height)
 		end
 
 		-- horizontal lines
@@ -296,7 +296,7 @@ function Grid:redraw()
 			if y % 5 ~= 0 then
 				gfx.setDitherPattern(0.5)
 			end
-			gfx.drawLine(0, CELL * y, CELL * width + 1, CELL * y)
+			gfx.drawLine(0, CELL * y, CELL * width, CELL * y)
 		end
 
 		-- cells

@@ -6,8 +6,8 @@ function drawPaddedRect(x, y, w, h, ref)
 	gfx.setPattern(imgPattern:getImage(5 + ref % 2))
 	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
   gfx.setColor(gfx.kColorBlack)
-	gfx.drawLine(x + 23, y + 2, x + 23, y + h - 2)
-	gfx.drawLine(x + 2, y + h - 3, x + w - 2, y + h - 3)
+	gfx.drawLine(x + 23, y + 2, x + 23, y + h - 3)
+	gfx.drawLine(x + 2, y + h - 3, x + w - 3, y + h - 3)
 end
 
 function drawStripedRect(x, y, w, h, ref)

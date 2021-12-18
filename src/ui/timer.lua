@@ -39,7 +39,7 @@ function Timer:redraw()
 			imgMode:drawImage(self.mode, 17, 10)
 
 			gfx.setColor(gfx.kColorBlack)
-			gfx.drawLine(12, 40, 115, 40)
+			gfx.drawLine(12, 40, 114, 40)
 			gfx.setFont(fontText)
 			gfx.drawText(
 				string.format("Time: %02d:%02d", math.floor(self.current / 60), self.current % 60),

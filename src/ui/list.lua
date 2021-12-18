@@ -154,7 +154,7 @@ function List:redraw()
 				end
 				if item.disabled then
 					gfx.setColor(gfx.kColorBlack)
-					gfx.drawLine(25, y + 2 + 7, 25 + width, y + 2 + 7)
+					gfx.drawLine(25, y + 2 + 7, 25 + width - 1, y + 2 + 7)
 				end
 			end
 		end

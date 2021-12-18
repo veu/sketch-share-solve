@@ -32,14 +32,14 @@ function GridNumbersBackground:redraw()
 		gfx.setColor(gfx.kColorBlack)
 		gfx.setDitherPattern(0.9)
 		for y = 0, self.puzzle.height do
-			gfx.drawLine(CELL * -8 + 3, CELL * y, -2, CELL * y)
+			gfx.drawLine(CELL * -8 + 3, CELL * y, -3, CELL * y)
 		end
 
 		-- top lines
 		gfx.setColor(gfx.kColorBlack)
 		gfx.setDitherPattern(0.85)
 		for x = 0, self.puzzle.width do
-			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -2)
+			gfx.drawLine(CELL * x, CELL * -5 + 11, CELL * x, -3)
 		end
 	end
 	gfx.unlockFocus()

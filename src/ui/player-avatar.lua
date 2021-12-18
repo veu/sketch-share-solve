@@ -92,8 +92,8 @@ function PlayerAvatar:draw(avatar)
 	gfx.pushContext(self.image)
 	do
 		gfx.setColor(gfx.kColorWhite)
-		gfx.drawLine(0, 26, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 1, 26)
-		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 26, SIDEBAR_WIDTH, 26)
+		gfx.drawLine(0, 26, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 26)
+		gfx.drawLine(SIDEBAR_WIDTH - SEPARATOR_WIDTH + 1, 26, SIDEBAR_WIDTH - 1, 26)
 		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
 		gfx.setDrawOffset(AVATAR_OFFSET, 0)
 		if avatar then
@@ -124,7 +124,7 @@ function PlayerAvatar:initSlide()
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawRect(0, (i - 1) * 23 + 20, 20, 3)
 			gfx.setColor(gfx.kColorWhite)
-			gfx.drawLine(0, (i - 1) * 23 + 21, 20, (i - 1) * 23 + 21)
+			gfx.drawLine(0, (i - 1) * 23 + 21, 19, (i - 1) * 23 + 21)
 		end
 		gfx.unlockFocus()
 	end

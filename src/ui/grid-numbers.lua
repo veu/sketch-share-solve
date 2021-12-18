@@ -154,11 +154,11 @@ function GridNumbers:redraw()
 		-- cursor
 		gfx.setColor(gfx.kColorBlack)
 		if not self.cursorHidden then
-			gfx.drawLine(CELL * -8 + 3, CELL * self.gridY - CELL, -2, CELL * self.gridY - CELL)
-			gfx.drawLine(CELL * -8 + 3, CELL * self.gridY, -2, CELL * self.gridY)
+			gfx.drawLine(CELL * -8 + 3, CELL * self.gridY - CELL, -3, CELL * self.gridY - CELL)
+			gfx.drawLine(CELL * -8 + 3, CELL * self.gridY, -3, CELL * self.gridY)
 
-			gfx.drawLine(CELL * self.gridX - CELL, CELL * -5 + 11, CELL * self.gridX - CELL, -2)
-			gfx.drawLine(CELL * self.gridX, CELL * -5 + 11, CELL * self.gridX, -2)
+			gfx.drawLine(CELL * self.gridX - CELL, CELL * -5 + 11, CELL * self.gridX - CELL, -3)
+			gfx.drawLine(CELL * self.gridX, CELL * -5 + 11, CELL * self.gridX, -3)
 		end
 	end
 	gfx.unlockFocus()
@@ -229,8 +229,8 @@ function GridNumbers:redrawLeftCursor(gridY, hide)
 	do
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 		gfx.setColor(hide and gfx.kColorClear or gfx.kColorBlack)
-		gfx.drawLine(CELL * -8 + 3, CELL * gridY - CELL, -2, CELL * gridY - CELL)
-		gfx.drawLine(CELL * -8 + 3, CELL * gridY, -2, CELL * gridY)
+		gfx.drawLine(CELL * -8 + 3, CELL * gridY - CELL, -3, CELL * gridY - CELL)
+		gfx.drawLine(CELL * -8 + 3, CELL * gridY, -3, CELL * gridY)
 	end
 	gfx.popContext()
 	self.addDirtyRect(
@@ -246,8 +246,8 @@ function GridNumbers:redrawTopCursor(gridX, hide)
 	do
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 		gfx.setColor(hide and gfx.kColorClear or gfx.kColorBlack)
-		gfx.drawLine(CELL * gridX - CELL, CELL * -5 + 11, CELL * gridX - CELL, -2)
-		gfx.drawLine(CELL * gridX, CELL * -5 + 11, CELL * gridX, -2)
+		gfx.drawLine(CELL * gridX - CELL, CELL * -5 + 11, CELL * gridX - CELL, -3)
+		gfx.drawLine(CELL * gridX, CELL * -5 + 11, CELL * gridX, -3)
 	end
 	gfx.popContext()
 	self.addDirtyRect(
