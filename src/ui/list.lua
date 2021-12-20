@@ -40,7 +40,7 @@ function List:enter(context, menuItems, menuTitle)
 		)
 	end
 
-	self:redraw()
+	self:redraw(true)
 	self:add()
 end
 
@@ -64,14 +64,13 @@ end
 
 function List:select(index)
 	self.cursor = index
-	self:redraw()
+	self.needsRedraw = true
 end
 
 function List:setPosition(position)
 	self.position = position
 
-	self:redraw()
-	self:markDirty()
+	self.needsRedraw = true
 end
 
 function List:setTarget(position)
@@ -82,18 +81,27 @@ function List:setTarget(position)
 	end
 end
 
-function List:redraw()
-	self.needsRedraw = false
-	self.image:clear(gfx.kColorClear)
+function List:redraw(drawAll)
+	self.needsRedraw = self.highlightUpdate
+	self.highlightUpdate = false
+
+	gfx.setFont(fontText)
 	gfx.lockFocus(self.image)
 	do
-		-- draw header
-		gfx.setFont(fontText)
-		gfx.setColor(gfx.kColorWhite)
 		local x = 7
 		local y = self.menuTitle and 32 or 2
 
-		if self.menuTitle then
+		-- clear
+		if drawAll then
+			self.image:clear(gfx.kColorClear)
+		else
+			gfx.setColor(gfx.kColorClear)
+			gfx.fillRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
+		end
+
+		if self.menuTitle and drawAll then
+			-- draw header
+			gfx.setColor(gfx.kColorWhite)
 			local width = gfx.getTextSize(self.menuTitle)
 			gfx.fillRect(x + 1, y + 2, width + 4, 18)
 			gfx.drawText(self.menuTitle, x + 3, y + 4)
@@ -110,52 +118,37 @@ function List:redraw()
 		-- draw list
 		gfx.setClipRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
 		gfx.setDrawOffset(x, y + 33 - 24 * (self.position - 1))
-		for i, item in ipairs(self.menuItems) do
+		for i = math.max(1, math.floor(self.position) - 1), math.min(self.position + 6, #self.menuItems) do
+			local item = self.menuItems[i]
 			local y = 24 * (i - 1)
-			if i >= self.position - 1 and i <= self.position + 6 then
-				gfx.setColor(gfx.kColorWhite)
-				gfx.fillRect(0, y - 1, 19, 19)
+			if self.cursor ~= i then
+				imgBox:drawImage(1, 0, y - 1)
+			elseif item.img then
+				item.img:draw(0, y - 1)
+			else
+				imgBox:drawImage(item.checked and 4 or 3, 0, y - 1)
+			end
+
+			local width = gfx.getTextSize(item.text) + (item.showCursor and 6 or 4)
+
+			gfx.setColor(gfx.kColorWhite)
+			gfx.fillRect(23, y, width, 18)
+			if self.highlightUpdate and self.cursor == i then
 				gfx.setColor(gfx.kColorBlack)
-				if self.cursor ~= i then
-					gfx.setPattern(imgPattern:getImage(6))
-				end
-				gfx.fillRect(1, y, 17, 17)
-				gfx.setColor(gfx.kColorWhite)
-				gfx.fillRect(2, y + 1, 15, 15)
-
-				if self.cursor == i then
-					local image = item.img or imgGrid:getImage(item.checked and 3 or 1)
-					image:draw(2, y + 1)
-				end
-
-				local cellText = item.text
-				gfx.setFont(fontText)
-				gfx.setColor(gfx.kColorWhite)
-				local width = gfx.getTextSize(cellText)
-				if item.showCursor then
-					width += 2
-				end
-
-				gfx.fillRect(23, y, width + 4, 18)
-				if self.highlightUpdate and self.cursor == i then
-					gfx.setColor(gfx.kColorBlack)
-					gfx.drawRect(23, y, width + 4, 18)
-					self.highlightUpdate = nil
-					self.needsRedraw = true
-				end
-				gfx.drawText(cellText, 25, y + 2)
-				if item.showCursor and not self.scrollAnimator then
-					gfx.setColor(gfx.kColorBlack)
-					local cursorX, cursorY = gfx.getDrawOffset()
-					self.textCursor:enter(
-						cursorX + 24 + width,
-						cursorY + y + 2
-					)
-				end
-				if item.disabled then
-					gfx.setColor(gfx.kColorBlack)
-					gfx.drawLine(25, y + 2 + 7, 25 + width - 1, y + 2 + 7)
-				end
+				gfx.drawRect(23, y, width, 18)
+			end
+			gfx.drawText(item.text, 25, y + 2)
+			if item.showCursor and not self.scrollAnimator then
+				gfx.setColor(gfx.kColorBlack)
+				local cursorX, cursorY = gfx.getDrawOffset()
+				self.textCursor:enter(
+					cursorX + 20 + width,
+					cursorY + y + 2
+				)
+			end
+			if item.disabled then
+				gfx.setColor(gfx.kColorBlack)
+				gfx.drawLine(25, y + 9, 20 + width, y + 9)
 			end
 		end
 	end

@@ -90,15 +90,16 @@ function createAvatarPreview(puzzle)
 end
 
 function createPuzzlePreview(puzzle)
-	local image = gfx.image.new(16, 16, gfx.kColorBlack)
+	local image = gfx.image.new(19, 19, gfx.kColorBlack)
 	gfx.lockFocus(image)
 	do
+		imgBox:drawImage(5, 0, 0)
 		gfx.setColor(gfx.kColorWhite)
 		local i = 1
 		for y = 1, puzzle.height do
 			for x = 1, puzzle.width do
 				if puzzle.grid[i] == 0 then
-					gfx.fillRect(x - 1, y + 1, 1, 1)
+					gfx.fillRect(x + 1, y + 3, 1, 1)
 				end
 				i += 1
 			end
