@@ -91,7 +91,7 @@ function List:redraw()
 		gfx.setFont(fontText)
 		gfx.setColor(gfx.kColorWhite)
 		local x = 7
-		local y = self.menuTitle and 33 or 2
+		local y = self.menuTitle and 32 or 2
 
 		if self.menuTitle then
 			local width = gfx.getTextSize(self.menuTitle)
