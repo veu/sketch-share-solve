@@ -117,7 +117,7 @@ function List:redraw()
 				gfx.fillRect(0, y - 1, 19, 19)
 				gfx.setColor(gfx.kColorBlack)
 				if self.cursor ~= i then
-					gfx.setDitherPattern(.5, gfx.image.kDitherTypeFloydSteinberg)
+					gfx.setPattern(imgPattern:getImage(6))
 				end
 				gfx.fillRect(1, y, 17, 17)
 				gfx.setColor(gfx.kColorWhite)
