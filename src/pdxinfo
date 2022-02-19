@@ -3,3 +3,4 @@ author=Rebecca Koenig
 description=A nonogram game you sketch yourself
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
+version=1.0
