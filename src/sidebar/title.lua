@@ -42,5 +42,13 @@ function TitleSidebar:enter(context, selected)
 		end
 	})
 
+	table.insert(config.menuItems, {
+		text = "About",
+		selected = selected == ACTION_ID_ABOUT,
+		exec = function ()
+			self.onAbout()
+		end
+	})
+
 	TitleSidebar.super.enter(self, context, config)
 end

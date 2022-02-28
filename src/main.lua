@@ -1,6 +1,7 @@
 import "imports"
 
 -- screens
+local aboutScreen = AboutScreen()
 local createAvatarScreen = CreateAvatarScreen()
 local createPuzzleScreen = CreatePuzzleScreen()
 local sketchTutorialScreen = SketchTutorialScreen()
@@ -10,6 +11,7 @@ local playPuzzleScreen = PlayPuzzleScreen()
 local titleScreen = TitleScreen()
 
 -- sidebars
+local aboutSidebar = AboutSidebar()
 local createAvatarSidebar = CreateAvatarSidebar()
 local createPuzzleSidebar = CreatePuzzleSidebar()
 local namePlayerSidebar = SelectPlayerSidebar()
@@ -207,6 +209,10 @@ playPuzzleScreen.onPlayed = function (time)
 
 		switch(solvedPuzzleScreen, playPuzzleSidebar)
 	end
+end
+
+aboutSidebar.onAbort = function ()
+	switch(titleScreen, titleSidebar, ACTION_ID_ABOUT, true)
 end
 
 createAvatarSidebar.onAbort = function ()
@@ -522,6 +528,10 @@ end
 
 titleSidebar.onTutorials = function ()
 	switch(nil, selectTutorialSidebar)
+end
+
+titleSidebar.onAbout = function ()
+	switch(aboutScreen, aboutSidebar)
 end
 
 titleSidebar.onQuickPlay = function ()

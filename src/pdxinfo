@@ -1,6 +1,6 @@
 name=Sketch, Share, Solve
-author=Rebecca Koenig
+author=RDK
 description=A nonogram game you sketch yourself
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
-version=1.0
+version=1.0.0

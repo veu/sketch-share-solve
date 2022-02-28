@@ -25,6 +25,7 @@ import "model/puzzle"
 import "model/settings"
 
 import "screen/screen"
+import "screen/about"
 import "screen/create-avatar"
 import "screen/create-puzzle"
 import "screen/play-puzzle"
@@ -34,6 +35,7 @@ import "screen/solve-tutorial"
 import "screen/title"
 
 import "sidebar/sidebar"
+import "sidebar/about"
 import "sidebar/create-avatar"
 import "sidebar/create-puzzle"
 import "sidebar/name-puzzle"
@@ -51,6 +53,7 @@ import "sidebar/test-puzzle"
 import "sidebar/title"
 import "sidebar/tutorial"
 
+import "ui/about"
 import "ui/creator"
 import "ui/creator-avatar"
 import "ui/cursor"
@@ -106,5 +109,10 @@ imgBox, err = gfx.imagetable.new("img/box")
 assert(imgBox, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
+assert(imgTitle, err)
 imgMenuBorder = gfx.image.new("img/menu-border")
+assert(imgMenuBorder, err)
 imgRdk = gfx.image.new("img/rdk")
+assert(imgRdk, err)
+imgAbout = gfx.image.new("img/about")
+assert(imgAbout, err)
