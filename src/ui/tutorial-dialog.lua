@@ -26,7 +26,7 @@ function TutorialDialog:redraw()
 	gfx.pushContext(self.image)
 	do
 		gfx.setDrawOffset(0, 0)
-		gfx.setFont(fontFormatted)
+		gfx.setFont(fontText)
 		local size = gfx.getTextSize(self.message)
 		x, y, w, h = 25 + 7, 7, 400 - 25 - 14, 72 - 14
 
