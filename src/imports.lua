@@ -24,6 +24,12 @@ import "model/profile"
 import "model/puzzle"
 import "model/settings"
 
+DONE_NUMBERS_TYPES = {
+	DoneNumbersDisabled,
+	DoneNumbersLine,
+	DoneNumbers,
+}
+
 import "screen/screen"
 import "screen/about"
 import "screen/create-avatar"
@@ -62,6 +68,8 @@ import "ui/frame"
 import "ui/grid"
 import "ui/grid-numbers"
 import "ui/grid-numbers-bg"
+import "ui/grid-numbers-left"
+import "ui/grid-numbers-top"
 import "ui/grid-solved"
 import "ui/list"
 import "ui/menu-border"
