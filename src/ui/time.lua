@@ -32,16 +32,17 @@ function Time:redraw()
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawLine(12, 40, 114, 40)
 			gfx.setFont(fontText)
+			gfx.drawText("Time:", 20, 49)
+			gfx.drawText("Best:", 20, 69)
 			local bestTime = self.context.player:hasPlayed(self.context.puzzle) or lastTime
+			gfx.setFont(fontTime)
 			gfx.drawText(
-				string.format("Time: %02d:%02d", math.floor(lastTime / 60), lastTime % 60),
-				23, 49,
-				fontText
+				string.format("%02d:%02d", math.floor(lastTime / 60), lastTime % 60),
+				63, 49
 			)
 			gfx.drawText(
-				string.format("Best: %02d:%02d", math.floor(bestTime / 60), bestTime % 60),
-				19, 69,
-				fontText
+				string.format("%02d:%02d", math.floor(bestTime / 60), bestTime % 60),
+				63, 69
 			)
 		else
 			imgMode:drawImage(3, 17, 24)

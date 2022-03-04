@@ -100,8 +100,8 @@ function List:redraw(drawAll)
 		if self.menuTitle and drawAll then
 			-- draw header
 			gfx.setColor(gfx.kColorWhite)
-			local width = gfx.getTextSize(self.menuTitle)
-			gfx.fillRect(x + 1, y + 2, width + 4, 18)
+			local width = gfx.getTextSize(self.menuTitle) + 5
+			gfx.fillRect(x + 1, y + 2, width, 18)
 			gfx.drawText(self.menuTitle, x + 3, y + 4)
 		end
 
@@ -127,7 +127,7 @@ function List:redraw(drawAll)
 				imgBox:drawImage(item.checked and 4 or 3, 0, y - 1)
 			end
 
-			local width = gfx.getTextSize(item.text) + (item.showCursor and 6 or 4)
+			local width = gfx.getTextSize(item.text) + (item.showCursor and 7 or 5)
 
 			gfx.setColor(gfx.kColorWhite)
 			gfx.fillRect(23, y, width, 18)

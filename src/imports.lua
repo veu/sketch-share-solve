@@ -94,6 +94,8 @@ fontText = gfx.font.newFamily({
 	[gfx.font.kVariantItalic] = "font/text"
 })
 assert(fontText)
+fontTime = gfx.font.new("font/time")
+assert(fontTime)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 imgGrid, err = gfx.imagetable.new("img/grid")

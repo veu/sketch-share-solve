@@ -47,7 +47,7 @@ function About:redraw()
 		gfx.setDrawOffset(216, 20)
 		gfx.setFont(fontText)
 		gfx.drawTextInRect("Sketch, Share, Solve", 0, 0, 168, 200, 4)
-		gfx.drawTextInRect("Version " .. VERSION, 0, 40, 168, 200, 4, nil, kTextAlignment.center)
+		gfx.drawTextInRect("Version " .. VERSION, 24, 40, 168, 200, 4)
 		gfx.drawTextInRect("Scan the QR code for updates, reporting bugs, and the full source code.", 0, 100, 168, 200, 4)
 	end
 	gfx.unlockFocus()

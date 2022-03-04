@@ -28,9 +28,9 @@ function Dialog:redraw()
 		gfx.setDrawOffset(30, 179)
 		gfx.setFont(fontText)
 		local size = gfx.getTextSize(self.message)
-		imgDialog:drawInRect(0, 0, size + 48, 54)
+		imgDialog:drawInRect(0, 0, size + 36, 54)
 
-		gfx.drawText(self.message, 28, 19)
+		gfx.drawText(self.message, 22, 19)
 	end
 	gfx.unlockFocus()
 	self:markDirty()
