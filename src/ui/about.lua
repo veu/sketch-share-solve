@@ -1,10 +1,8 @@
 class("About").extends(gfx.sprite)
 
 function About:init()
-	About.super.init(self)
+	About.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_TITLE)
 end
@@ -43,11 +41,11 @@ function About:update()
 end
 
 function About:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		imgAbout:draw(0, 0)
 		gfx.setDrawOffset(216, 20)
+		gfx.setFont(fontText)
 		gfx.drawTextInRect("Sketch, Share, Solve", 0, 0, 168, 200, 4)
 		gfx.drawTextInRect("Version " .. VERSION, 0, 40, 168, 200, 4, nil, kTextAlignment.center)
 		gfx.drawTextInRect("Scan the QR code for updates, reporting bugs, and the full source code.", 0, 100, 168, 200, 4)

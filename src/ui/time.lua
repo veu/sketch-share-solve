@@ -1,10 +1,9 @@
 class("Time").extends(gfx.sprite)
 
 function Time:init()
+	self.image = gfx.image.new(127, 92)
 	Time.super.init(self)
 
-	self.image = gfx.image.new(127, 92, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_TIMER)
 	self:moveTo(25, 0)

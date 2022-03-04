@@ -1,10 +1,8 @@
 class("Dialog").extends(gfx.sprite)
 
 function Dialog:init()
-	Dialog.super.init(self)
+	Dialog.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_DIALOG)
 	self:setVisible(false)
@@ -24,8 +22,8 @@ function Dialog:leave()
 end
 
 function Dialog:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setDrawOffset(30, 179)
 		gfx.setFont(fontText)
@@ -34,6 +32,6 @@ function Dialog:redraw()
 
 		gfx.drawText(self.message, 28, 19)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end

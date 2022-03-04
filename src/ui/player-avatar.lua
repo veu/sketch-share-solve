@@ -1,11 +1,9 @@
 class("PlayerAvatar").extends(gfx.sprite)
 
 function PlayerAvatar:init()
-	PlayerAvatar.super.init(self)
+	PlayerAvatar.super.init(self, gfx.image.new(SIDEBAR_WIDTH + 1, 28))
 
 	self.text = "Player"
-	self.image = gfx.image.new(SIDEBAR_WIDTH + 1, 28, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_AVATAR)
 
@@ -69,8 +67,8 @@ function PlayerAvatar:setTarget(position)
 end
 
 function PlayerAvatar:draw(avatar)
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		drawRightTextRect(-1, 0, SIDEBAR_WIDTH - 23, 26, self.text)
 		gfx.setDrawOffset(AVATAR_OFFSET, 0)
@@ -83,13 +81,12 @@ function PlayerAvatar:draw(avatar)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawRect(1, 1, 24, 24)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end
 
 function PlayerAvatar:draw(avatar)
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawLine(0, 26, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 26)
@@ -108,7 +105,7 @@ function PlayerAvatar:draw(avatar)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawRect(1, 1, 24, 24)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end
 

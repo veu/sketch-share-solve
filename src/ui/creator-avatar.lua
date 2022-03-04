@@ -1,11 +1,9 @@
 class("CreatorAvatar").extends(gfx.sprite)
 
 function CreatorAvatar:init()
-	CreatorAvatar.super.init(self)
+	CreatorAvatar.super.init(self, gfx.image.new(SIDEBAR_WIDTH + 1, 28))
 
 	self.text = "Creator"
-	self.image = gfx.image.new(SIDEBAR_WIDTH + 1, 28, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_AVATAR)
 
@@ -69,8 +67,8 @@ function CreatorAvatar:setTarget(position)
 end
 
 function CreatorAvatar:draw(avatar)
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawLine(0, 1, SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 1)
@@ -91,7 +89,7 @@ function CreatorAvatar:draw(avatar)
 		gfx.setColor(gfx.kColorWhite)
 		gfx.drawRect(1, 1, 24, 24)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end
 

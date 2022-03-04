@@ -1,10 +1,8 @@
 class("Modal").extends(gfx.sprite)
 
 function Modal:init()
-	Modal.super.init(self)
+	Modal.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_MODAL)
 	self:setVisible(false)
@@ -35,8 +33,8 @@ function Modal:BButtonDown()
 end
 
 function Modal:draw(text, ok, cancel)
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setColor(gfx.kColorBlack)
 		gfx.setDitherPattern(0.5)
@@ -55,6 +53,6 @@ function Modal:draw(text, ok, cancel)
 			gfx.drawText("Ⓐ " .. (ok or "OK"), 38, 180)
 		end
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end

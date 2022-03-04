@@ -1,10 +1,8 @@
 class("Grid").extends(gfx.sprite)
 
 function Grid:init(withNumbers)
-	Grid.super.init(self)
+	Grid.super.init(self, gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y))
 
-	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_GRID)
 
@@ -267,10 +265,12 @@ end
 function Grid:redrawPosition(gridX, gridY)
 	local x = CELL * (gridX - 1) + 1
 	local y = CELL * (gridY - 1) + 1
-	gfx.lockFocus(self.image)
-	gfx.setColor(gfx.kColorClear)
-	gfx.fillRect(x, y, CELL - 1, CELL - 1)
-	self.tilemap:draw(1, 1)
+	gfx.lockFocus(self:getImage())
+	do
+		gfx.setColor(gfx.kColorClear)
+		gfx.fillRect(x, y, CELL - 1, CELL - 1)
+		self.tilemap:draw(1, 1)
+	end
 	gfx.unlockFocus()
 	self.addDirtyRect(self.x + x, self.y + y, CELL - 1, CELL - 1)
 end
@@ -278,8 +278,8 @@ end
 function Grid:redraw()
 	local width = self.puzzle.width
 	local height = self.puzzle.height
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		-- vertical lines
 		for x = 0, width do

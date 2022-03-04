@@ -20,10 +20,8 @@ local DONE_NUMBERS = {
 class("GridNumbers").extends(gfx.sprite)
 
 function GridNumbers:init()
-	GridNumbers.super.init(self)
+	GridNumbers.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:moveTo(0, 0)
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
@@ -119,8 +117,8 @@ function GridNumbers:hideCursor()
 end
 
 function GridNumbers:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setFont(fontGrid)
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
@@ -167,7 +165,7 @@ end
 
 function GridNumbers:redrawPosition()
 	-- left numbers
-	gfx.pushContext(self.image)
+	gfx.lockFocus(self:getImage())
 	gfx.setFont(fontGrid)
 	gfx.setColor(gfx.kColorClear)
 	gfx.fillRect(27, GRID_OFFSET_Y + CELL * (self.gridY - 1), -2 - (CELL * -8 + 3), CELL + 1)
@@ -184,7 +182,7 @@ function GridNumbers:redrawPosition()
 			)
 		end
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self.addDirtyRect(
 		self.x + 27,
 		self.y + GRID_OFFSET_Y + CELL * (self.gridY - 1),
@@ -193,7 +191,7 @@ function GridNumbers:redrawPosition()
 	)
 
 	-- top numbers
-	gfx.pushContext(self.image)
+	gfx.pushContext(self:getImage())
 	gfx.setFont(fontGrid)
 	gfx.setColor(gfx.kColorClear)
 	gfx.fillRect(
@@ -225,14 +223,14 @@ function GridNumbers:redrawPosition()
 end
 
 function GridNumbers:redrawLeftCursor(gridY, hide)
-	gfx.pushContext(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 		gfx.setColor(hide and gfx.kColorClear or gfx.kColorBlack)
 		gfx.drawLine(CELL * -8 + 3, CELL * gridY - CELL, -3, CELL * gridY - CELL)
 		gfx.drawLine(CELL * -8 + 3, CELL * gridY, -3, CELL * gridY)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self.addDirtyRect(
 		self.x + GRID_OFFSET_X + CELL * (15 - self.puzzle.width) + CELL * -8 + 3,
 		self.y + GRID_OFFSET_Y + CELL * (gridY - 1),
@@ -242,14 +240,14 @@ function GridNumbers:redrawLeftCursor(gridY, hide)
 end
 
 function GridNumbers:redrawTopCursor(gridX, hide)
-	gfx.pushContext(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 		gfx.setColor(hide and gfx.kColorClear or gfx.kColorBlack)
 		gfx.drawLine(CELL * gridX - CELL, CELL * -5 + 11, CELL * gridX - CELL, -3)
 		gfx.drawLine(CELL * gridX, CELL * -5 + 11, CELL * gridX, -3)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self.addDirtyRect(
 		self.x + GRID_OFFSET_X + CELL * (15 - self.puzzle.width) + CELL * (gridX - 1),
 		self.y + GRID_OFFSET_Y + CELL * -5 + 11,

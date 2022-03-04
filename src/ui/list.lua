@@ -2,10 +2,8 @@ class("List").extends(gfx.sprite)
 
 function List:init(parent)
 	self.parent = parent
-	List.super.init(self)
+	List.super.init(self, gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240))
 
-	self.image = gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_LIST)
 	self:moveTo(0, 0)
@@ -86,14 +84,14 @@ function List:redraw(drawAll)
 	self.highlightUpdate = false
 
 	gfx.setFont(fontText)
-	gfx.lockFocus(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		local x = 7
 		local y = self.menuTitle and 32 or 2
 
 		-- clear
 		if drawAll then
-			self.image:clear(gfx.kColorClear)
+			self:getImage():clear(gfx.kColorClear)
 		else
 			gfx.setColor(gfx.kColorClear)
 			gfx.fillRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)

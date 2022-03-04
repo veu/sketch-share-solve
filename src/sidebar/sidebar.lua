@@ -1,7 +1,8 @@
 class("Sidebar").extends(gfx.sprite)
 
 function Sidebar:init()
-	Sidebar.super.init(self)
+	Sidebar.super.init(self, gfx.image.new(SIDEBAR_WIDTH + 3, 240))
+
 	self.list = List(self)
 	self.menuBorder = MenuBorder()
 	if not Sidebar.playerAvatar then
@@ -13,8 +14,6 @@ function Sidebar:init()
 	self.menuItems = nil
 	self.menuTitle = nil
 
-	self.image = gfx.image.new(SIDEBAR_WIDTH + 3, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_SIDEBAR)
 
@@ -213,8 +212,8 @@ function Sidebar:onNavigated_()
 end
 
 function Sidebar:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setFont(fontText)
 

@@ -1,15 +1,13 @@
 class("Cursor").extends(gfx.sprite)
 
-function Cursor:init()
-	Cursor.super.init(self)
-	self.type = 1
+local CURSOR_DRAW = 1
+local CURSOR_MOVE = 2
 
-	self.image = gfx.image.new(CELL + 7, CELL + 7, gfx.kColorClear)
-	self:setImage(self.image)
+function Cursor:init()
+	Cursor.super.init(self, imgCursor:getImage(CURSOR_DRAW))
+
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_CURSOR)
-
-	self:redraw()
 
 	self.onMove = function () end
 end
@@ -36,13 +34,11 @@ function Cursor:getIndex()
 end
 
 function Cursor:startTranslating()
-	self.type = 2
-	self:redraw()
+	self:setImage(imgCursor:getImage(CURSOR_MOVE))
 end
 
 function Cursor:endTranslating()
-	self.type = 1
-	self:redraw()
+	self:setImage(imgCursor:getImage(CURSOR_DRAW))
 end
 
 function Cursor:moveBy(dx, dy, pressed)
@@ -55,16 +51,6 @@ function Cursor:moveBy(dx, dy, pressed)
 	end
 	self:move()
 	self.onMove(self.gridX, self.gridY)
-end
-
-function Cursor:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
-	do
-		imgCursor:drawImage(self.type, 0, 0)
-	end
-	gfx.unlockFocus()
-	self:markDirty()
 end
 
 function Cursor:move()
