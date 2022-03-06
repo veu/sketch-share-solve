@@ -76,7 +76,9 @@ HINTS_TEXT = {
 
 
 ACTION_ID_ABOUT = "ABOUT"
+ACTION_ID_CRANK_SPEED = "CRANK_SPEED"
 ACTION_ID_FLIP = "FLIP"
+ACTION_ID_HINT_STYLE = "HINT_STYLE"
 ACTION_ID_INVERT_COLORS = "INVERT_COLORS"
 ACTION_ID_NEW_PLAYER = "NEW_PLAYER"
 ACTION_ID_RESET_GRID = "RESET_GRID"
@@ -96,15 +98,16 @@ FILE_SAVE = "save"
 
 NUM_LIST_ITEMS = 6
 
-NUM_MAP = {
-	[0] = "0", [1] = "1", [2] = "2", [3] = "3",
-	[4] = "4", [5] = "5", [6] = "6", [7] = "7",
-	[8] = "8", [9] = "9", [10] = "A", [11] = "B",
-	[12] = "C", [13] = "D", [14] = "E", [15] = "F",
+NUM_STYLE_REGULAR = 1
+NUM_STYLE_THIN = 2
+NUM_STYLE_GRAY = 3
+NUM_STYLE_INVERTED = 4
+
+NUM_STYLE_NAMES = {
+	"regular",
+	"thin",
+	"gray",
+	"inverted",
 }
-NUM_MAP_BOLD = {
-	[0] = "⓪", [1] = "①", [2] = "②", [3] = "③",
-	[4] = "④", [5] = "⑤", [6] = "⑥", [7] = "⑦",
-	[8] = "⑧", [9] = "⑨", [10] = "⑩", [11] = "⑪",
-	[12] = "⑫", [13] = "⑬", [14] = "⑭", [15] = "⑮",
-}
+
+NUM_STYLE_OFFSETS = { 21, 41, 61, 81 }

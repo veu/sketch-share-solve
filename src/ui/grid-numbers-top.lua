@@ -7,11 +7,12 @@ function GridNumbersTop:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbersTop:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints)
+function GridNumbersTop:enter(puzzle, gridNumbers, doneNumbers, x, y, hintStyle)
 	self.gridNumbers = gridNumbers
 	self.doneNumbers = doneNumbers
 	self.gridX = x
 	self.gridY = y
+	self.hintStyle = hintStyle
 
 	self:moveTo(
 		GRID_OFFSET_X + CELL * (15 - puzzle.width),
@@ -26,6 +27,11 @@ function GridNumbersTop:updateForPosition()
 	if not self.cursorHidden then
 		self:redrawCursor(self.gridX)
 	end
+end
+
+function GridNumbersTop:updateHintStyle(hintStyle)
+	self.hintStyle = hintStyle
+	self:redraw()
 end
 
 function GridNumbersTop:leave()
@@ -51,7 +57,6 @@ function GridNumbersTop:redraw()
 	self:getImage():clear(gfx.kColorClear)
 	gfx.lockFocus(self:getImage())
 	do
-		gfx.setFont(fontGrid)
 		gfx.setDrawOffset(0, GRID_OFFSET_Y)
 
 		-- numbers
@@ -59,8 +64,8 @@ function GridNumbersTop:redraw()
 			local done = self.doneNumbers.top[x]
 			local lenNumbers = #numbers
 			for i, v in ipairs(numbers) do
-				gfx.drawText(
-					done[i] and NUM_MAP[v] or NUM_MAP_BOLD[v],
+				imgGrid:drawImage(
+					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
 					CELL * (x - 1) + 1,
 					TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 				)
@@ -79,7 +84,6 @@ end
 
 function GridNumbersTop:redrawPosition()
 	gfx.pushContext(self:getImage())
-	gfx.setFont(fontGrid)
 	gfx.setColor(gfx.kColorClear)
 	gfx.fillRect(
 		CELL * (self.gridX - 1),
@@ -93,8 +97,8 @@ function GridNumbersTop:redrawPosition()
 		local done = self.doneNumbers.top[self.gridX]
 		local lenNumbers = #numbers
 		for i, v in ipairs(numbers) do
-			gfx.drawText(
-				done[i] and NUM_MAP[v] or NUM_MAP_BOLD[v],
+			imgGrid:drawImage(
+				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
 				CELL * (self.gridX - 1) + 1,
 				TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 			)

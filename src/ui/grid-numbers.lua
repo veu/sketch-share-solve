@@ -8,7 +8,7 @@ function GridNumbers:init()
 	self.background = GridNumbersBackground()
 end
 
-function GridNumbers:enter(puzzle, solution, x, y, showHints)
+function GridNumbers:enter(puzzle, solution, x, y, showHints, hintStyle)
 	self.gridNumbers = Numbers(puzzle, puzzle.grid)
 	self.solutionNumbers = Numbers(puzzle, solution)
 	self.doneNumbers = DONE_NUMBERS_TYPES[showHints](
@@ -21,9 +21,14 @@ function GridNumbers:enter(puzzle, solution, x, y, showHints)
 	self.gridX = x
 	self.gridY = y
 
-	self.numbersLeft:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, showHints)
-	self.numbersTop:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, showHints)
+	self.numbersLeft:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, hintStyle)
+	self.numbersTop:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, hintStyle)
 	self.background:enter(puzzle)
+end
+
+function GridNumbers:updateHintStyle(hintStyle)
+	self.numbersLeft:updateHintStyle(hintStyle)
+	self.numbersTop:updateHintStyle(hintStyle)
 end
 
 function GridNumbers:updateAll(solution)

@@ -7,12 +7,13 @@ function GridNumbersLeft:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbersLeft:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints)
+function GridNumbersLeft:enter(puzzle, gridNumbers, doneNumbers, x, y, hintStyle)
 	self.puzzle = puzzle
 	self.gridNumbers = gridNumbers
 	self.doneNumbers = doneNumbers
 	self.gridX = x
 	self.gridY = y
+	self.hintStyle = hintStyle
 
 	self:moveTo(SEPARATOR_WIDTH, GRID_OFFSET_Y)
 	self:add()
@@ -24,6 +25,11 @@ function GridNumbersLeft:updateForPosition()
 	if not self.cursorHidden then
 		self:redrawLeftCursor(self.gridY)
 	end
+end
+
+function GridNumbersLeft:updateHintStyle(hintStyle)
+	self.hintStyle = hintStyle
+	self:redraw()
 end
 
 function GridNumbersLeft:leave()
@@ -49,7 +55,6 @@ function GridNumbersLeft:redraw()
 	self:getImage():clear(gfx.kColorClear)
 	gfx.lockFocus(self:getImage())
 	do
-		gfx.setFont(fontGrid)
 		gfx.setDrawOffset(GRID_OFFSET_X - SEPARATOR_WIDTH + CELL * (15 - self.puzzle.width), 0)
 
 		-- numbers
@@ -57,9 +62,9 @@ function GridNumbersLeft:redraw()
 			local done = self.doneNumbers.left[y]
 			local lenNumbers = #numbers
 			for i, v in ipairs(numbers) do
-				gfx.drawText(
-					done[i] and NUM_MAP[v] or NUM_MAP_BOLD[v],
-					CELL * (i - 1 - lenNumbers),
+				imgGrid:drawImage(
+					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+					(CELL - 1) * (i - 1 - lenNumbers) - 1,
 					CELL * (y - 1) + 1
 				)
 			end
@@ -77,18 +82,17 @@ end
 
 function GridNumbersLeft:redrawPosition()
 	gfx.lockFocus(self:getImage())
-	gfx.setFont(fontGrid)
 	gfx.setColor(gfx.kColorClear)
-	gfx.fillRect(27, CELL * (self.gridY - 1), -2 - (CELL * -8 + 3), CELL + 1)
+	gfx.fillRect(0, CELL * (self.gridY - 1), CELL * 8, CELL + 1)
 	gfx.setDrawOffset(GRID_OFFSET_X - SEPARATOR_WIDTH + CELL * (15 - self.puzzle.width), 0)
 	do
 		local numbers = self.gridNumbers.left[self.gridY]
 		local done = self.doneNumbers.left[self.gridY]
 		local lenNumbers = #numbers
 		for i, v in ipairs(numbers) do
-			gfx.drawText(
-				done[i] and NUM_MAP[v] or NUM_MAP_BOLD[v],
-				CELL * (i - 1 - lenNumbers),
+			imgGrid:drawImage(
+				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+				(CELL - 1) * (i - 1 - lenNumbers) - 1,
 				CELL * (self.gridY - 1) + 1
 			)
 		end

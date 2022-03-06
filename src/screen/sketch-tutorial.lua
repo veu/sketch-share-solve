@@ -95,6 +95,7 @@ local TUTORIAL = {
 
 function SketchTutorialScreen:enter(context)
 	self.page = 1
+	self.hintStyle = context.settings.hintStyle
 	self:loadPage()
 end
 
@@ -119,11 +120,17 @@ function SketchTutorialScreen:loadPage()
 			solution[i] = values[i] - 48
 		end
 	end
-	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, solution)
+	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, self.hintStyle, solution)
 	self.grid:hideCursor()
 	self.dialog:enter(page.text)
+	self.dialog:setVisible(true)
 	self.frame = -19
 	self.cantIdle = page.steps
+end
+
+function SketchTutorialScreen:updateHintStyle(context)
+	self.hintStyle = context.settings.hintStyle
+	self.grid:updateHintStyle(self.hintStyle)
 end
 
 function SketchTutorialScreen:AButtonDown()

@@ -17,7 +17,7 @@ function Grid:init(withNumbers)
 	end
 end
 
-function Grid:enter(puzzle, mode, showHints, solution)
+function Grid:enter(puzzle, mode, showHints, hintStyle, solution)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
@@ -56,7 +56,8 @@ function Grid:enter(puzzle, mode, showHints, solution)
 			self.solution,
 			self.cursor.gridX,
 			self.cursor.gridY,
-			showHints
+			showHints,
+			hintStyle
 		)
 		self.cursor.onMove = function (x, y)
 			self.numbers:setCursor(x, y)
@@ -74,6 +75,10 @@ function Grid:leave()
 		self.numbers:leave()
 	end
 	self.animator = nil
+end
+
+function Grid:updateHintStyle(hintStyle)
+	self.numbers:updateHintStyle(hintStyle)
 end
 
 function Grid:toggle(index, isStart)

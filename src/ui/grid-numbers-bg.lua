@@ -23,7 +23,6 @@ function GridNumbersBackground:redraw()
 	self:getImage():clear(gfx.kColorClear)
 	gfx.lockFocus(self:getImage())
 	do
-		gfx.setFont(fontGrid)
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 
 		-- left lines

@@ -86,8 +86,6 @@ import "utils/numbers"
 import "utils/string"
 import "utils/ui"
 
-fontGrid = gfx.font.new("font/grid")
-assert(fontGrid)
 fontText = gfx.font.newFamily({
 	[gfx.font.kVariantNormal] = "font/text",
 	[gfx.font.kVariantBold] = "font/text",

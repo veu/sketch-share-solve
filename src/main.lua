@@ -189,6 +189,20 @@ function resume()
 	idleCounter = 0
 end
 
+local onHintStylePrevious = function ()
+	context.settings.hintStyle = (context.settings.hintStyle) % 3 + 2
+	context.settings:save(context)
+	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
+	context.screen:updateHintStyle(context)
+end
+
+local onHintStyleNext = function ()
+	context.settings.hintStyle = (context.settings.hintStyle - 1) % 3 + 2
+	context.settings:save(context)
+	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
+	context.screen:updateHintStyle(context)
+end
+
 createAvatarScreen.onChanged = function()
 	switch(nil, createAvatarSidebar)
 end
@@ -345,6 +359,9 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
+playPuzzleSidebar.onHintStyleNext = onHintStyleNext
+
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
@@ -459,14 +476,17 @@ end
 settingsSidebar.onCrankSpeedDown = function ()
 	context.settings.crankSpeed = (context.settings.crankSpeed + 3) % 5 + 1
 	context.settings:save(context)
-	switch(nil, settingsSidebar)
+	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
 
 settingsSidebar.onCrankSpeedUp = function ()
 	context.settings.crankSpeed = context.settings.crankSpeed % 5 + 1
 	context.settings:save(context)
-	switch(nil, settingsSidebar)
+	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
+
+settingsSidebar.onHintStylePrevious = onHintStylePrevious
+settingsSidebar.onHintStyleNext = onHintStyleNext
 
 shareSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_SHARE, true)
@@ -499,13 +519,22 @@ sketchTutorialSidebar.onAbort = function ()
 	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SKETCH_TUTORIAL, true)
 end
 
+sketchTutorialSidebar.onHintStylePrevious = onHintStylePrevious
+sketchTutorialSidebar.onHintStyleNext = onHintStyleNext
+
 solveTutorialSidebar.onAbort = function ()
 	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SOLVE_TUTORIAL, true)
 end
 
+solveTutorialSidebar.onHintStylePrevious = onHintStylePrevious
+solveTutorialSidebar.onHintStyleNext = onHintStyleNext
+
 testPuzzleSidebar.onAbort = function ()
 	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
 end
+
+testPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
+testPuzzleSidebar.onHintStyleNext = onHintStyleNext
 
 testPuzzleSidebar.onResetGrid = function()
 	context.screen:resetGrid()
