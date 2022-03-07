@@ -38,7 +38,7 @@ function List:enter(context, menuItems, menuTitle)
 		)
 	end
 
-	self:redraw(true)
+	self:redraw()
 	self:add()
 end
 
@@ -79,7 +79,7 @@ function List:setTarget(position)
 	end
 end
 
-function List:redraw(drawAll)
+function List:redraw()
 	self.needsRedraw = self.highlightUpdate
 	self.highlightUpdate = false
 
@@ -90,14 +90,9 @@ function List:redraw(drawAll)
 		local y = self.menuTitle and 32 or 2
 
 		-- clear
-		if drawAll then
-			self:getImage():clear(gfx.kColorClear)
-		else
-			gfx.setColor(gfx.kColorClear)
-			gfx.fillRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
-		end
+		self:getImage():clear(gfx.kColorClear)
 
-		if self.menuTitle and drawAll then
+		if self.menuTitle then
 			-- draw header
 			gfx.setColor(gfx.kColorWhite)
 			local width = gfx.getTextSize(self.menuTitle) + 5
@@ -151,7 +146,6 @@ function List:redraw(drawAll)
 		end
 	end
 	gfx.unlockFocus()
-	self:markDirty()
 end
 
 function List:moveTo(x, y)
