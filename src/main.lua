@@ -87,7 +87,7 @@ function showModal(text, ok)
 end
 
 function showPlayerKeyboard(mode)
-	local text = unescapeString(context.player.name)
+	local text = limitToMax(unescapeString(context.player.name))
 	local invalid = false
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
@@ -111,12 +111,12 @@ function showPlayerKeyboard(mode)
 	playdate.keyboard.textChangedCallback = function ()
 		local newText = playdate.keyboard.text
 		local escapedText = escapeString(newText)
-		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+		if isOverMax(escapedText) then
+			playdate.keyboard.text = context.player.name
+		else
 			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
 			context.player.name = escapedText
 			switch(nil, namePlayerSidebar, mode)
-		else
-			playdate.keyboard.text = context.player.name
 		end
 	end
 
@@ -124,7 +124,7 @@ function showPlayerKeyboard(mode)
 end
 
 function showPuzzleKeyboard()
-	local text = unescapeString(context.puzzle.title)
+	local text = limitToMax(unescapeString(context.puzzle.title))
 	local invalid = #text == 0
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
@@ -150,13 +150,13 @@ function showPuzzleKeyboard()
 	playdate.keyboard.textChangedCallback = function ()
 		local newText = playdate.keyboard.text
 		local escapedText = escapeString(newText)
-		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+		if isOverMax(escapedText) then
+			playdate.keyboard.text = text
+		else
 			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
 			text = newText
 			context.puzzle.title = escapedText
 			switch(nil, namePuzzleSidebar)
-		else
-			playdate.keyboard.text = text
 		end
 	end
 
@@ -485,6 +485,13 @@ settingsSidebar.onCrankSpeedUp = function ()
 	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
 
+settingsSidebar.onFontTypeToggle = function ()
+	context.settings.fontType = context.settings.fontType % 2 + 1
+	context.settings:save(context)
+	fontText = context.settings.fontType == 1 and fontTextThin or fontTextBold
+	switch(nil, context.sidebar, ACTION_ID_FONT_TYPE)
+end
+
 settingsSidebar.onHintStylePrevious = onHintStylePrevious
 settingsSidebar.onHintStyleNext = onHintStyleNext
 
@@ -592,6 +599,7 @@ end
 
 context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
+fontText = context.settings.fontType == FONT_TYPE_THIN and fontTextThin or fontTextBold
 
 context.screen:enter(context)
 context.sidebar:enter(context)

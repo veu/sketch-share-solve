@@ -86,12 +86,11 @@ import "utils/numbers"
 import "utils/string"
 import "utils/ui"
 
-fontText = gfx.font.newFamily({
-	[gfx.font.kVariantNormal] = "font/text",
-	[gfx.font.kVariantBold] = "font/text",
-	[gfx.font.kVariantItalic] = "font/text"
-})
-assert(fontText)
+fontTextThin = gfx.font.new("font/text-thin")
+fontTextBold = gfx.font.new("font/text-bold")
+assert(fontTextThin)
+assert(fontTextBold)
+fontText = fontTextThin
 fontTime = gfx.font.new("font/time")
 assert(fontTime)
 imgAvatars, err = gfx.imagetable.new("img/avatars")

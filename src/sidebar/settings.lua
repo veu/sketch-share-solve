@@ -22,6 +22,19 @@ function SettingsSidebar:enter(context, selected)
 				end
 			},
 			{
+				text = "Font type: " .. FONT_TYPE_NAMES[context.settings.fontType],
+				selected = selected == ACTION_ID_FONT_TYPE,
+				exec = function ()
+					self.onFontTypeToggle()
+				end,
+				execLeft = function ()
+					self.onFontTypeToggle()
+				end,
+				execRight = function ()
+					self.onFontTypeToggle()
+				end
+			},
+			{
 				text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
 				selected = selected == ACTION_ID_HINT_STYLE,
 				img = createHintStylePreview(context.settings.hintStyle),

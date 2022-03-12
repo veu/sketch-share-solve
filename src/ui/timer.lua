@@ -38,7 +38,7 @@ function Timer:redraw()
 
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawLine(12, 40, 114, 40)
-			gfx.setFont(fontText)
+			gfx.setFont(fontTextBold)
 			gfx.drawText("Time:", 20, 49)
 			gfx.setFont(fontTime)
 			gfx.drawText(
