@@ -127,7 +127,7 @@ function Grid:addAnimation(index, old, new)
 		self:redrawPosition(self.animator.x, self.animator.y)
 	end
 
-	local animator = playdate.frameTimer.new(2, 1, 3)
+	local animator = playdate.frameTimer.new(4, 1, 3)
 	animator.x = self.cursor.gridX
 	animator.y = self.cursor.gridY
 	animator.offset = new == 0 and (old == 1 and 4 or 3) or (new == 1 and 1 or 2)
