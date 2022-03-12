@@ -4,7 +4,7 @@ function PlayPuzzleSidebar:init()
 	PlayPuzzleSidebar.super.init(self)
 end
 
-function PlayPuzzleSidebar:enter(context)
+function PlayPuzzleSidebar:enter(context, selected)
 	local player = context.player
 	local creator = context.creator
 	local puzzle = context.puzzle
@@ -23,6 +23,20 @@ function PlayPuzzleSidebar:enter(context)
 	}
 
 	if not puzzle.hasBeenSolved then
+		table.insert(config.menuItems, {
+			text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
+			selected = selected == ACTION_ID_HINT_STYLE,
+			img = createHintStylePreview(context.settings.hintStyle),
+			exec = function ()
+				self.onHintStyleNext()
+			end,
+			execLeft = function ()
+				self.onHintStylePrevious()
+			end,
+			execRight = function ()
+				self.onHintStyleNext()
+			end
+		})
 		table.insert(config.menuItems, {
 			text = "Restart",
 			exec = function()

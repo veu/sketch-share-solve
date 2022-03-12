@@ -1,10 +1,8 @@
 class("Grid").extends(gfx.sprite)
 
 function Grid:init(withNumbers)
-	Grid.super.init(self)
+	Grid.super.init(self, gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y))
 
-	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_GRID)
 
@@ -19,7 +17,7 @@ function Grid:init(withNumbers)
 	end
 end
 
-function Grid:enter(puzzle, mode, showHints, solution)
+function Grid:enter(puzzle, mode, showHints, hintStyle, solution)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
@@ -58,7 +56,8 @@ function Grid:enter(puzzle, mode, showHints, solution)
 			self.solution,
 			self.cursor.gridX,
 			self.cursor.gridY,
-			showHints
+			showHints,
+			hintStyle
 		)
 		self.cursor.onMove = function (x, y)
 			self.numbers:setCursor(x, y)
@@ -76,6 +75,10 @@ function Grid:leave()
 		self.numbers:leave()
 	end
 	self.animator = nil
+end
+
+function Grid:updateHintStyle(hintStyle)
+	self.numbers:updateHintStyle(hintStyle)
 end
 
 function Grid:toggle(index, isStart)
@@ -124,7 +127,7 @@ function Grid:addAnimation(index, old, new)
 		self:redrawPosition(self.animator.x, self.animator.y)
 	end
 
-	local animator = playdate.frameTimer.new(2, 1, 3)
+	local animator = playdate.frameTimer.new(4, 1, 3)
 	animator.x = self.cursor.gridX
 	animator.y = self.cursor.gridY
 	animator.offset = new == 0 and (old == 1 and 4 or 3) or (new == 1 and 1 or 2)
@@ -267,10 +270,12 @@ end
 function Grid:redrawPosition(gridX, gridY)
 	local x = CELL * (gridX - 1) + 1
 	local y = CELL * (gridY - 1) + 1
-	gfx.lockFocus(self.image)
-	gfx.setColor(gfx.kColorClear)
-	gfx.fillRect(x, y, CELL - 1, CELL - 1)
-	self.tilemap:draw(1, 1)
+	gfx.lockFocus(self:getImage())
+	do
+		gfx.setColor(gfx.kColorClear)
+		gfx.fillRect(x, y, CELL - 1, CELL - 1)
+		self.tilemap:draw(1, 1)
+	end
 	gfx.unlockFocus()
 	self.addDirtyRect(self.x + x, self.y + y, CELL - 1, CELL - 1)
 end
@@ -278,8 +283,8 @@ end
 function Grid:redraw()
 	local width = self.puzzle.width
 	local height = self.puzzle.height
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		-- vertical lines
 		for x = 0, width do

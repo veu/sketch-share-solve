@@ -1,10 +1,8 @@
 class("GridNumbersBackground").extends(gfx.sprite)
 
 function GridNumbersBackground:init()
-	GridNumbersBackground.super.init(self)
+	GridNumbersBackground.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:moveTo(0, 0)
 	self:setZIndex(Z_INDEX_GRID_NUMBERS_BG)
@@ -22,10 +20,9 @@ function GridNumbersBackground:leave()
 end
 
 function GridNumbersBackground:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.lockFocus(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
-		gfx.setFont(fontGrid)
 		gfx.setDrawOffset(GRID_OFFSET_X + CELL * (15 - self.puzzle.width), GRID_OFFSET_Y)
 
 		-- left lines

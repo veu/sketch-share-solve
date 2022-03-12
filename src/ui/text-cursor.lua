@@ -1,8 +1,8 @@
 class("TextCursor").extends(gfx.sprite)
 
 function TextCursor:init()
-	self.image = gfx.image.new(1, 14, gfx.kColorBlack)
-	self:setImage(self.image)
+	TextCursor.super.init(self, gfx.image.new(1, 14, gfx.kColorBlack))
+
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_TEXT_CURSOR)
 

@@ -50,3 +50,6 @@ end
 
 function Screen:update()
 end
+
+function Screen:updateHintStyle(context)
+end

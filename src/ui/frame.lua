@@ -1,14 +1,12 @@
 class("Frame").extends(gfx.sprite)
 
 function Frame:init()
-	Frame.super.init(self)
+	Frame.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_FRAME)
 
-	gfx.lockFocus(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setColor(gfx.kColorBlack)
 		playdate.graphics.setLineWidth(2)

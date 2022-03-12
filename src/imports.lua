@@ -24,6 +24,12 @@ import "model/profile"
 import "model/puzzle"
 import "model/settings"
 
+DONE_NUMBERS_TYPES = {
+	DoneNumbersDisabled,
+	DoneNumbersLine,
+	DoneNumbers,
+}
+
 import "screen/screen"
 import "screen/about"
 import "screen/create-avatar"
@@ -62,6 +68,8 @@ import "ui/frame"
 import "ui/grid"
 import "ui/grid-numbers"
 import "ui/grid-numbers-bg"
+import "ui/grid-numbers-left"
+import "ui/grid-numbers-top"
 import "ui/grid-solved"
 import "ui/list"
 import "ui/menu-border"
@@ -78,23 +86,13 @@ import "utils/numbers"
 import "utils/string"
 import "utils/ui"
 
-fontGrid = gfx.font.newFamily({
-	[gfx.font.kVariantNormal] = "font/grid",
-	[gfx.font.kVariantBold] = "font/grid-bold"
-})
-assert(fontGrid)
-fontText = gfx.font.newFamily({
-	[gfx.font.kVariantNormal] = "font/text",
-	[gfx.font.kVariantBold] = "font/text",
-	[gfx.font.kVariantItalic] = "font/text"
-})
-assert(fontText)
-fontFormatted = gfx.font.newFamily({
-	[gfx.font.kVariantNormal] = "font/text",
-	[gfx.font.kVariantBold] = "font/text-bold",
-	[gfx.font.kVariantItalic] = "font/text"
-})
-assert(fontFormatted)
+fontTextThin = gfx.font.new("font/text-thin")
+fontTextBold = gfx.font.new("font/text-bold")
+assert(fontTextThin)
+assert(fontTextBold)
+fontText = fontTextThin
+fontTime = gfx.font.new("font/time")
+assert(fontTime)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
 imgGrid, err = gfx.imagetable.new("img/grid")

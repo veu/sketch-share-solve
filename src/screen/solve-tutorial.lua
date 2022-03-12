@@ -13,11 +13,11 @@ local TUTORIAL = {
 		grid = "000000000000000001000100000100001000100100100001000100000100001111100100100001000100100100001000100100100001000100100000001000100100100000000000000000",
 	},
 	{
-		text = "Before we start, if this text box is in the way, hold *(b)* to hide it and see all numbers.",
+		text = "Before we start, if this text box is in the way, hold ⓑ to hide it and see all numbers.",
 		grid = "000000000000000000011111100000000010000010000000010000010000000011111100000000010000010000000010000010000000010000010000000011111100000000000000000000",
 	},
 	{
-		text = "In the game, press *(a)* to fill an empty square or press *(a)* again to clear it.",
+		text = "In the game, press ⓐ to fill an empty square and press ⓐ again to clear it.",
 		grid = "000000000000000000000111000000000001000100000000010000010000000010000010000000010000010000000010000010000000010000010000000010000010000000000000000000",
 		steps = 5,
 		update = function (screen, step)
@@ -30,7 +30,7 @@ local TUTORIAL = {
 		end,
 	},
 	{
-		text = "The numbers tell you the size and order of blocks that have to be filled in.",
+		text = "The numbers tell you the size and order of blocks that have to be filled-in.",
 		grid = "000000000000000000000000000000001001110000000000001110000000001101110011100001101110011100000000000011100000000000000000000000000000000000000000000000",
 	},
 	{
@@ -42,7 +42,7 @@ local TUTORIAL = {
 		grid = "101010101010101000000000000000111000111000111000000000000000001100110011011000000000000000111111011111111000000000000000111111111111111000000000000000",
 	},
 	{
-		text = "Numbers become thin if the corresponding block has been filled in completely.",
+		text = "A number is highlighted if the corresponding block has been filled-in completely.",
 		grid = "000000000000000000000000000000000000000000000011100111101110000000000000000011100111101110000000000000000011100111101110000000000000000000000000000000",
 		solution = "000000000000000000000000000000000000000000000011100111000110000000000000000001100111101100000000000000000011000011101110000000000000000000000000000000",
 		hints = HINTS_ID_BLOCKS,
@@ -54,13 +54,13 @@ local TUTORIAL = {
 		hints = HINTS_ID_BLOCKS,
 	},
 	{
-		text = "If it’s unclear which block has been filled, the number will stay bold.",
+		text = "If it’s unclear which block has been completed, the number will not change.",
 		grid = "000000000000000001110011100000000000000000000001110011100000000000000000000001110011100000000000000000000001110011100000000000000000000000000000000000",
 		solution = "000000000000000111000000000000000000000000000001110000000000000000000000000000000011100000000000000000000000000000000111000000000000000000000000000000",
 		hints = HINTS_ID_BLOCKS,
 	},
 	{
-		text = "And if a line contains an error, all numbers in that line will become bold.",
+		text = "And if a line contains an error, no number in that line will be highlighted.",
 		grid = "000000000000000000000000000000000000000000000000000000000000001110011000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 		hints = HINTS_ID_BLOCKS,
 		steps = 2,
@@ -70,7 +70,11 @@ local TUTORIAL = {
 		end,
 	},
 	{
-		text = "To mark a known empty square, press *(b)* to cross it out or press *(b)* again to clear it.",
+		text = "You can change the style of these hints in the sidebar or disable them in your profile.",
+		grid = "001111111111000001000000001000001000001101000001000001101000001010011001000001011011001000001001110001000001000110001000001000000001000001111111111000",
+	},
+	{
+		text = "To mark a known empty square, press ⓑ to cross it out and press ⓑ again to clear it.",
 		grid = "000001000000000000001000000000000001000000000000001000000000000001000000000111110111101111000000000000000000000000000000000000000000000000000000000000",
 		solution = "000000000000000000000000000000000000000000000000000000000000000000000000000111110111101111000000000000000000000000000000000000000000000000000000000000",
 		hints = HINTS_ID_BLOCKS,
@@ -81,7 +85,7 @@ local TUTORIAL = {
 		end,
 	},
 	{
-		text = "This can help to place blocks on the other axis.",
+		text = "This can help placing blocks on the other axis.",
 		grid = "000001000000000000001000000000000001000000000000001000000000000001000000000111110111101111000000000000000000000000000000000000000000000000000000000000",
 		solution = "000000000000000000000000000000000000000000000000000000000000000000000000000111112111121111000000000000000000000000000000000000000000000000000000000000",
 		hints = HINTS_ID_BLOCKS,
@@ -98,7 +102,7 @@ local TUTORIAL = {
 		hints = HINTS_ID_BLOCKS,
 	},
 	{
-		text = "Finally, if you are stuck take a block, try to place it somewhere, and see if it fits.",
+		text = "Finally, if you are stuck, take a block, try to place it somewhere, and see if it fits.",
 		grid = "000000000000000000000000000000000000000000000000000101000000000000000000000000001000100000000000111000000000000000000000000000000000000000000000000000",
 		solution = "222222222222222222222222222222222222222222222222222121222222222222222222222222220000022222222220000022222222222222222222222222222222222222222222222222",
 		hints = HINTS_ID_BLOCKS,
@@ -122,7 +126,7 @@ local TUTORIAL = {
 		hints = HINTS_ID_BLOCKS,
 	},
 	{
-		text = "You’re all set. Have fun playing the game!",
+		text = "You’re all set. Have fun playing the game! ☺",
 		grid = "000000000000000000000000000000000000000000000000000101000000000000000000000000001000100000000000111000000000000000000000000000000000000000000000000000",
 		solution = "222222222222222222222222222222222222222222222222222121222222222222222222222222221222122222222222111222222222222222222222222222222222222222222222222222",
 		hints = HINTS_ID_BLOCKS,
@@ -131,6 +135,7 @@ local TUTORIAL = {
 
 function SolveTutorialScreen:enter(context)
 	self.page = 1
+	self.hintStyle = context.settings.hintStyle
 	self:loadPage()
 end
 
@@ -155,11 +160,17 @@ function SolveTutorialScreen:loadPage()
 			solution[i] = values[i] - 48
 		end
 	end
-	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, solution)
+	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, self.hintStyle, solution)
 	self.grid:hideCursor()
 	self.dialog:enter(page.text)
+	self.dialog:setVisible(true)
 	self.frame = -19
 	self.cantIdle = page.steps
+end
+
+function SolveTutorialScreen:updateHintStyle(context)
+	self.hintStyle = context.settings.hintStyle
+	self.grid:updateHintStyle(self.hintStyle)
 end
 
 function SolveTutorialScreen:AButtonDown()

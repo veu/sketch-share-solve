@@ -1,10 +1,8 @@
 class("TutorialDialog").extends(gfx.sprite)
 
 function TutorialDialog:init()
-	TutorialDialog.super.init(self)
+	TutorialDialog.super.init(self, gfx.image.new(400, 240))
 
-	self.image = gfx.image.new(400, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_DIALOG)
 end
@@ -22,13 +20,13 @@ function TutorialDialog:leave()
 end
 
 function TutorialDialog:redraw()
-	self.image:clear(gfx.kColorClear)
-	gfx.pushContext(self.image)
+	self:getImage():clear(gfx.kColorClear)
+	gfx.lockFocus(self:getImage())
 	do
 		gfx.setDrawOffset(0, 0)
-		gfx.setFont(fontFormatted)
+		gfx.setFont(fontText)
 		local size = gfx.getTextSize(self.message)
-		x, y, w, h = 25 + 7, 7, 400 - 25 - 14, 72 - 14
+		local x, y, w, h = 25 + 7, 7, 400 - 25 - 14, 72 - 14
 
 		gfx.setColor(gfx.kColorBlack)
 		gfx.setDitherPattern(0.5)
@@ -40,6 +38,6 @@ function TutorialDialog:redraw()
 
 		gfx.drawTextInRect(self.message, x + 12, y + 11, w - 24, h, 4)
 	end
-	gfx.popContext()
+	gfx.unlockFocus()
 	self:markDirty()
 end

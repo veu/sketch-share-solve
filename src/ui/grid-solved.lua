@@ -1,10 +1,9 @@
 class("GridSolved").extends(gfx.sprite)
 
 function GridSolved:init()
-	GridSolved.super.init(self)
+	self.image = gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y)
+	GridSolved.super.init(self, self.image)
 
-	self.image = gfx.image.new(1000 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_GRID_SOLVED)
 end
@@ -12,7 +11,6 @@ end
 function GridSolved:enter(puzzle)
 	self.last = 0
 	self.puzzle = puzzle
-
 	self.solution = puzzle.grid
 
 	self:add()
@@ -32,16 +30,19 @@ function GridSolved:draw()
 	self.image:clear(gfx.kColorWhite)
 	gfx.lockFocus(self.image)
 	do
+		local width = self.puzzle.width
+		local height = self.puzzle.height
+
 		-- border
 		gfx.setColor(gfx.kColorBlack)
-		gfx.drawRect(0, 0, CELL * self.puzzle.width + 1, CELL * self.puzzle.height + 1)
+		gfx.drawRect(0, 0, CELL * width + 1, CELL * height + 1)
 
 		-- cells
 		local i = 1
-		for y = 1, self.puzzle.height do
-			for x = 1, self.puzzle.width do
+		for y = 0, height - 1 do
+			for x = 0, width - 1 do
 				if self.solution[i] == 1 then
-					gfx.fillRect((x - 1) * CELL + 1, (y - 1) * CELL + 1, CELL, CELL)
+					gfx.fillRect(x * CELL + 1, y * CELL + 1, CELL, CELL)
 				end
 				i += 1
 			end

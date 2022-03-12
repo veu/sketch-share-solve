@@ -18,6 +18,20 @@ function TestPuzzleSidebar:enter(context, selected)
 				closeSidebar()
 			end
 		})
+		table.insert(config.menuItems, {
+			text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
+			selected = selected == ACTION_ID_HINT_STYLE,
+			img = createHintStylePreview(context.settings.hintStyle),
+			exec = function ()
+				self.onHintStyleNext()
+			end,
+			execLeft = function ()
+				self.onHintStylePrevious()
+			end,
+			execRight = function ()
+				self.onHintStyleNext()
+			end
+		})
 	end
 
 	table.insert(config.menuItems, {

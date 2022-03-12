@@ -2,10 +2,8 @@ class("List").extends(gfx.sprite)
 
 function List:init(parent)
 	self.parent = parent
-	List.super.init(self)
+	List.super.init(self, gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240))
 
-	self.image = gfx.image.new(SIDEBAR_WIDTH - SEPARATOR_WIDTH - 2, 240, gfx.kColorClear)
-	self:setImage(self.image)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_LIST)
 	self:moveTo(0, 0)
@@ -40,7 +38,7 @@ function List:enter(context, menuItems, menuTitle)
 		)
 	end
 
-	self:redraw(true)
+	self:redraw()
 	self:add()
 end
 
@@ -81,29 +79,24 @@ function List:setTarget(position)
 	end
 end
 
-function List:redraw(drawAll)
+function List:redraw()
 	self.needsRedraw = self.highlightUpdate
 	self.highlightUpdate = false
 
 	gfx.setFont(fontText)
-	gfx.lockFocus(self.image)
+	gfx.lockFocus(self:getImage())
 	do
 		local x = 7
 		local y = self.menuTitle and 32 or 2
 
 		-- clear
-		if drawAll then
-			self.image:clear(gfx.kColorClear)
-		else
-			gfx.setColor(gfx.kColorClear)
-			gfx.fillRect(x, y + 32, 188, 24 * NUM_LIST_ITEMS - 5)
-		end
+		self:getImage():clear(gfx.kColorClear)
 
-		if self.menuTitle and drawAll then
+		if self.menuTitle then
 			-- draw header
 			gfx.setColor(gfx.kColorWhite)
-			local width = gfx.getTextSize(self.menuTitle)
-			gfx.fillRect(x + 1, y + 2, width + 4, 18)
+			local width = gfx.getTextSize(self.menuTitle) + 5
+			gfx.fillRect(x + 1, y + 2, width, 18)
 			gfx.drawText(self.menuTitle, x + 3, y + 4)
 		end
 
@@ -129,7 +122,7 @@ function List:redraw(drawAll)
 				imgBox:drawImage(item.checked and 4 or 3, 0, y - 1)
 			end
 
-			local width = gfx.getTextSize(item.text) + (item.showCursor and 6 or 4)
+			local width = gfx.getTextSize(item.text) + (item.showCursor and 7 or 5)
 
 			gfx.setColor(gfx.kColorWhite)
 			gfx.fillRect(23, y, width, 18)
@@ -153,7 +146,6 @@ function List:redraw(drawAll)
 		end
 	end
 	gfx.unlockFocus()
-	self:markDirty()
 end
 
 function List:moveTo(x, y)

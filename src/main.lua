@@ -87,7 +87,7 @@ function showModal(text, ok)
 end
 
 function showPlayerKeyboard(mode)
-	local text = unescapeString(context.player.name)
+	local text = limitToMax(unescapeString(context.player.name))
 	local invalid = false
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
@@ -111,12 +111,12 @@ function showPlayerKeyboard(mode)
 	playdate.keyboard.textChangedCallback = function ()
 		local newText = playdate.keyboard.text
 		local escapedText = escapeString(newText)
-		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+		if isOverMax(escapedText) then
+			playdate.keyboard.text = context.player.name
+		else
 			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
 			context.player.name = escapedText
 			switch(nil, namePlayerSidebar, mode)
-		else
-			playdate.keyboard.text = context.player.name
 		end
 	end
 
@@ -124,7 +124,7 @@ function showPlayerKeyboard(mode)
 end
 
 function showPuzzleKeyboard()
-	local text = unescapeString(context.puzzle.title)
+	local text = limitToMax(unescapeString(context.puzzle.title))
 	local invalid = #text == 0
 
 	playdate.keyboard.keyboardWillHideCallback = function ()
@@ -150,13 +150,13 @@ function showPuzzleKeyboard()
 	playdate.keyboard.textChangedCallback = function ()
 		local newText = playdate.keyboard.text
 		local escapedText = escapeString(newText)
-		if gfx.getTextSize(escapedText, fontText) <= MAX_PUZZLE_NAME_SIZE then
+		if isOverMax(escapedText) then
+			playdate.keyboard.text = text
+		else
 			invalid = rawlen(playdate.string.trimWhitespace(newText)) == 0
 			text = newText
 			context.puzzle.title = escapedText
 			switch(nil, namePuzzleSidebar)
-		else
-			playdate.keyboard.text = text
 		end
 	end
 
@@ -187,6 +187,20 @@ local idleCounter = 0
 function resume()
 	playdate.start()
 	idleCounter = 0
+end
+
+local onHintStylePrevious = function ()
+	context.settings.hintStyle = (context.settings.hintStyle) % 3 + 2
+	context.settings:save(context)
+	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
+	context.screen:updateHintStyle(context)
+end
+
+local onHintStyleNext = function ()
+	context.settings.hintStyle = (context.settings.hintStyle - 1) % 3 + 2
+	context.settings:save(context)
+	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
+	context.screen:updateHintStyle(context)
 end
 
 createAvatarScreen.onChanged = function()
@@ -345,6 +359,9 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
+playPuzzleSidebar.onHintStyleNext = onHintStyleNext
+
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
@@ -459,14 +476,24 @@ end
 settingsSidebar.onCrankSpeedDown = function ()
 	context.settings.crankSpeed = (context.settings.crankSpeed + 3) % 5 + 1
 	context.settings:save(context)
-	switch(nil, settingsSidebar)
+	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
 
 settingsSidebar.onCrankSpeedUp = function ()
 	context.settings.crankSpeed = context.settings.crankSpeed % 5 + 1
 	context.settings:save(context)
-	switch(nil, settingsSidebar)
+	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
+
+settingsSidebar.onFontTypeToggle = function ()
+	context.settings.fontType = context.settings.fontType % 2 + 1
+	context.settings:save(context)
+	fontText = context.settings.fontType == 1 and fontTextThin or fontTextBold
+	switch(nil, context.sidebar, ACTION_ID_FONT_TYPE)
+end
+
+settingsSidebar.onHintStylePrevious = onHintStylePrevious
+settingsSidebar.onHintStyleNext = onHintStyleNext
 
 shareSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_SHARE, true)
@@ -499,13 +526,22 @@ sketchTutorialSidebar.onAbort = function ()
 	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SKETCH_TUTORIAL, true)
 end
 
+sketchTutorialSidebar.onHintStylePrevious = onHintStylePrevious
+sketchTutorialSidebar.onHintStyleNext = onHintStyleNext
+
 solveTutorialSidebar.onAbort = function ()
 	switch(titleScreen, selectTutorialSidebar, ACTION_ID_SOLVE_TUTORIAL, true)
 end
 
+solveTutorialSidebar.onHintStylePrevious = onHintStylePrevious
+solveTutorialSidebar.onHintStyleNext = onHintStyleNext
+
 testPuzzleSidebar.onAbort = function ()
 	switch(createPuzzleScreen, createPuzzleSidebar, nil, true)
 end
+
+testPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
+testPuzzleSidebar.onHintStyleNext = onHintStyleNext
 
 testPuzzleSidebar.onResetGrid = function()
 	context.screen:resetGrid()
@@ -563,6 +599,7 @@ end
 
 context.save = playdate.datastore.read(FILE_SAVE)
 context.settings = Settings.load(context)
+fontText = context.settings.fontType == FONT_TYPE_THIN and fontTextThin or fontTextBold
 
 context.screen:enter(context)
 context.sidebar:enter(context)

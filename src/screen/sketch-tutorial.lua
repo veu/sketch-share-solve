@@ -13,7 +13,7 @@ local TUTORIAL = {
 		grid = "000000000000000001000100000100001000100100100001000100000100001111100100100001000100100100001000100100100001000100100000001000100100100000000000000000",
 	},
 	{
-		text = "Before we start, if this text box is in the way, hold *(b)* to hide it and see all numbers.",
+		text = "Before we start, if this text box is in the way, hold ⓑ to hide it and see all numbers.",
 		grid = "000000000000000000011111100000000010000010000000010000010000000011111100000000010000010000000010000010000000010000010000000011111100000000000000000000",
 	},
 	{
@@ -63,7 +63,7 @@ local TUTORIAL = {
 		grid = "000000000000000001010000010100001101000101100001110101011100001111010111100001110101011100001101000101100001010000010100000000000000000000000000000000",
 	},
 	{
-		text = "3) Inverting the colors so the thin lines become the gaps between connected blocks.",
+		text = "3) Inverting colors so the thin lines become the gaps between connected blocks.",
 		grid = "000111111111000000101111101000000110111011000000111010111000000111101111000000111010111000000110111011000000101111101000000111111111000000000000000000",
 	},
 	{
@@ -84,17 +84,18 @@ local TUTORIAL = {
 		solution = "000110111110100001100000000010011100100010010011110000000110011110011100110011110011100110011110001000110011110110110110001111000001100000011111111000",
 	},
 	{
-		text = "The game gives you tools for drawing including moving the puzzle by holding *(b)*.",
+		text = "The game gives you tools for drawing including moving the puzzle by holding ⓑ.",
 		grid = "000000000000000000011111100000000010000010000000010000010000000011111100000000010000010000000010000010000000010000010000000011111100000000000000000000",
 	},
 	{
-		text = "But the most important tool is your creativity so go try it out! *{u}*",
+		text = "But the most important tool is your creativity so go try it out! ☺",
 		grid = "000000111000000000001000100000000010010010000000010101010000000010101010000000010010010000000001010100000000001010100000000000111000000000000111000000",
 	},
 }
 
 function SketchTutorialScreen:enter(context)
 	self.page = 1
+	self.hintStyle = context.settings.hintStyle
 	self:loadPage()
 end
 
@@ -119,11 +120,17 @@ function SketchTutorialScreen:loadPage()
 			solution[i] = values[i] - 48
 		end
 	end
-	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, solution)
+	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, self.hintStyle, solution)
 	self.grid:hideCursor()
 	self.dialog:enter(page.text)
+	self.dialog:setVisible(true)
 	self.frame = -19
 	self.cantIdle = page.steps
+end
+
+function SketchTutorialScreen:updateHintStyle(context)
+	self.hintStyle = context.settings.hintStyle
+	self.grid:updateHintStyle(self.hintStyle)
 end
 
 function SketchTutorialScreen:AButtonDown()

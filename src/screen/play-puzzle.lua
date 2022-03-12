@@ -21,7 +21,7 @@ function PlayPuzzleScreen:enter(context)
 		end
 	end
 
-	self.grid:enter(self.puzzle, MODE_PLAY, context.player.options.showHints)
+	self.grid:enter(self.puzzle, MODE_PLAY, context.player.options.showHints, context.settings.hintStyle)
 	self.timer:enter(context.player.options.showTimer, MODE_PLAY)
 	self.cantIdle = context.player.options.showTimer
 end
@@ -34,6 +34,10 @@ end
 function PlayPuzzleScreen:resetGrid()
 	self.timer:reset()
 	self.grid:reset()
+end
+
+function PlayPuzzleScreen:updateHintStyle(context)
+	self.grid:updateHintStyle(context.settings.hintStyle)
 end
 
 function PlayPuzzleScreen:AButtonDown()

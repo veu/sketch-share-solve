@@ -1,9 +1,8 @@
 class("MenuBorder").extends(gfx.sprite)
 
 function MenuBorder:init()
-	MenuBorder.super.init(self)
+	MenuBorder.super.init(self, imgMenuBorder)
 
-	self:setImage(imgMenuBorder)
 	self:setCenter(0, 0)
 	self:setZIndex(Z_INDEX_MENU_BORDER)
 end

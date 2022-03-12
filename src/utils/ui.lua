@@ -109,3 +109,16 @@ function createPuzzlePreview(puzzle)
 
 	return image
 end
+
+function createHintStylePreview(hintStyle)
+	local image = gfx.image.new(19, 19, gfx.kColorWhite)
+	gfx.lockFocus(image)
+	do
+		gfx.setColor(gfx.kColorBlack)
+		gfx.drawRect(1, 1, 17, 17)
+		imgGrid:drawImage(NUM_STYLE_OFFSETS[hintStyle] + 1, 2, 2)
+	end
+	gfx.unlockFocus(image)
+
+	return image
+end
