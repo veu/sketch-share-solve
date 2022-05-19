@@ -203,6 +203,10 @@ local onHintStyleNext = function ()
 	context.screen:updateHintStyle(context)
 end
 
+local onHint = function ()
+	context.screen:giveHint()
+end
+
 createAvatarScreen.onChanged = function()
 	switch(nil, createAvatarSidebar)
 end
@@ -361,6 +365,7 @@ end
 
 playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
 playPuzzleSidebar.onHintStyleNext = onHintStyleNext
+playPuzzleSidebar.onHint = onHint
 
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
