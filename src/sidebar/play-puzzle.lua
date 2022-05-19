@@ -38,6 +38,12 @@ function PlayPuzzleSidebar:enter(context, selected)
 			end
 		})
 		table.insert(config.menuItems, {
+			text = "Give Hint",
+			exec = function()
+				self.onHint()
+			end
+		})
+		table.insert(config.menuItems, {
 			text = "Restart",
 			exec = function()
 				context.screen:resetGrid()

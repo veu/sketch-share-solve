@@ -51,6 +51,12 @@ function Cursor:moveBy(dx, dy, pressed)
 	self:move()
 end
 
+function Cursor:moveToIndex(index)
+	self.gridX = ((index - 1) % self.puzzle.width) + 1
+	self.gridY = math.floor((index - 1) / self.puzzle.width) + 1
+	self:move()
+end
+
 function Cursor:move()
 	self:moveTo(
 		self.offsetX + CELL * (self.gridX - 1) - 3,

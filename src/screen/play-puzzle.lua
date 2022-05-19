@@ -5,6 +5,7 @@ function PlayPuzzleScreen:init()
 
 	self.grid = Grid(true)
 	self.timer = Timer()
+	self.hintCount = 0
 
 	self.onChanged = function () end
 	self.onPlayed = function () end
@@ -34,6 +35,7 @@ end
 function PlayPuzzleScreen:resetGrid()
 	self.timer:reset()
 	self.grid:reset()
+	self.hintCount = 0
 end
 
 function PlayPuzzleScreen:updateHintStyle(context)
@@ -95,3 +97,28 @@ function PlayPuzzleScreen:buttonPressed(button)
 		self:upButtonDown(true)
 	end
 end
+
+function PlayPuzzleScreen:giveHint()
+	if self.hintCount > 2 then
+		return
+	end
+	
+	local solution = self.grid.solution
+	local puzzleGrid = self.grid.puzzle.grid
+	local empties = {}
+	for index, value in pairs(solution) do
+		if value == 0 and puzzleGrid[index] == 0 then
+			table.insert(empties, index);
+		end
+	end
+	
+	if #empties == 0 then
+		return
+	end
+	
+	local cursor = self.grid.cursor
+	cursor:moveToIndex(empties[math.random(1, #empties)])
+	self.grid:toggleCross(cursor:getIndex(), true)
+	self.hintCount += 1;
+end
+
