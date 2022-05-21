@@ -4,6 +4,7 @@ function Profile:init(profile, save)
 	self.id = profile.id
 	self._save = save	self.name = profile.name
 	self.created = profile.created
+	self.createdOn = profile.createdOn
 	self.played = profile.played
 	self.options = profile.options or {
 		showTimer = false,
@@ -81,6 +82,20 @@ function Profile:getNumPlayed()
 	return numPlayed
 end
 
+function Profile:getNumPlayedBy(creator)
+	if self.id == creator.id then
+		return #creator.created
+	end
+	local prefix = creator._save and creator._save.id .. "." or ""
+	local count = 0
+	for _, id in ipairs(creator.created) do
+		if self.played[prefix .. id] then
+			count += 1
+		end
+	end
+	return count
+end
+
 function Profile:playedAllBy(creator)
 	if self.id == creator.id then
 		return true
@@ -92,6 +107,21 @@ function Profile:playedAllBy(creator)
 		end
 	end
 	return true
+end
+
+function Profile:getTimeSpentWith(creator)
+	if self.id == creator.id then
+		return 0
+	end
+	local prefix = creator._save and creator._save.id .. "." or ""
+	local time = 0
+	for _, id in ipairs(creator.created) do
+		local puzzleTime = self.played[prefix .. id]
+		if puzzleTime then
+			time += puzzleTime
+		end
+	end
+	return time
 end
 
 function Profile:hasPlayed(puzzle)
