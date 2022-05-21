@@ -4,6 +4,7 @@ import "imports"
 local aboutScreen = AboutScreen()
 local createAvatarScreen = CreateAvatarScreen()
 local createPuzzleScreen = CreatePuzzleScreen()
+local selectPuzzleScreen = SelectPuzzleScreen()
 local sketchTutorialScreen = SketchTutorialScreen()
 local solvedPuzzleScreen = SolvedPuzzleScreen()
 local solveTutorialScreen = SolveTutorialScreen()
@@ -138,7 +139,7 @@ function showPuzzleKeyboard()
 
 			context.creator = context.player
 			context.mode = MODE_PLAY
-			switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
+			switch(selectPuzzleScreen, selectPuzzleSidebar, context.puzzle.id, true)
 		end
 	end
 
@@ -343,7 +344,7 @@ playPuzzleSidebar.onAbort = function ()
 	if context.player.id == PLAYER_ID_QUICK_PLAY then
 		switch(titleScreen, titleSidebar, ACTION_ID_QUICK_PLAY, true)
 	else
-		switch(titleScreen, selectPuzzleSidebar, context.puzzle.id, true)
+		switch(selectPuzzleScreen, selectPuzzleSidebar, context.puzzle.id, true)
 	end
 end
 
@@ -351,7 +352,7 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	context.modal.onOK = function ()
 		context.puzzle:delete(context)
 		if #context.creator.created > 0 then
-			switch(titleScreen, selectPuzzleSidebar, nil, true)
+			switch(selectPuzzleScreen, selectPuzzleSidebar, nil, true)
 		else
 			switch(titleScreen, selectCreatorSidebar, nil, true)
 		end
@@ -401,11 +402,11 @@ end
 
 selectCreatorSidebar.onSelected = function(creator)
 	context.creator = creator
-	switch(nil, selectPuzzleSidebar)
+	switch(selectPuzzleScreen, selectPuzzleSidebar)
 end
 
 selectPuzzleSidebar.onAbort = function()
-	switch(nil, selectCreatorSidebar, context.creator.id, true)
+	switch(titleScreen, selectCreatorSidebar, context.creator.id, true)
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
@@ -507,6 +508,8 @@ shareSidebar.onExportPuzzles = function ()
 	local profile = table.deepcopy(context.save.profiles[context.player.id])
 	profile.played = nil
 	profile.options = nil
+	local time = playdate.getTime()
+	profile.createdOn = string.format("%d-%02d-%02d", time.year, time.month, time.day)
 	local export = {
 		profileList = { context.player.id },
 		profiles = {
