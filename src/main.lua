@@ -164,7 +164,7 @@ function showPuzzleKeyboard()
 	playdate.keyboard.show(text)
 end
 
-function switch(newScreen, newSidebar, selected, out)
+function switch(newScreen, newSidebar, selected, out, onReady)
 	playdate.inputHandlers.push(noopInputHandler, true)
 	if newScreen then
 		context.screen:leave()
@@ -178,6 +178,9 @@ function switch(newScreen, newSidebar, selected, out)
 			newScreen:enter(context)
 		end
 		playdate.inputHandlers.pop()
+		if onReady then
+			onReady()
+		end
 	end
 	context.sidebar:leave(context)
 	context.sidebar = newSidebar
@@ -247,8 +250,9 @@ end
 createAvatarSidebar.onSave = function()
 	context.player:setAvatar(createAvatarPreview(context.puzzle))
 
-	switch(titleScreen, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
-	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
+	switch(titleScreen, namePlayerSidebar, PLAYER_ID_SHOW_NAME, nil, function()
+		showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
+	end)
 end
 
 createPuzzleSidebar.onAbort = function()
@@ -302,8 +306,9 @@ optionsSidebar.onDelete = function ()
 end
 
 optionsSidebar.onRename = function ()
-	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_RENAME)
-	showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
+	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_RENAME, nil, function()
+		showPlayerKeyboard(PLAYER_ID_SHOW_RENAME)
+	end)
 end
 
 optionsSidebar.onResetProgress = function ()
@@ -392,8 +397,9 @@ end
 selectAvatarSidebar.onSelected = function(avatar)
 	context.player:setAvatar(imgAvatars:getImage(avatar))
 
-	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_NAME)
-	showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
+	switch(nil, namePlayerSidebar, PLAYER_ID_SHOW_NAME, nil, function()
+		showPlayerKeyboard(PLAYER_ID_SHOW_NAME)
+	end)
 end
 
 selectCreatorSidebar.onAbort = function()
@@ -553,8 +559,7 @@ testPuzzleSidebar.onResetGrid = function()
 end
 
 testPuzzleSidebar.onSave = function ()
-	switch(nil, namePuzzleSidebar)
-	showPuzzleKeyboard()
+	switch(nil, namePuzzleSidebar, nil, nil, showPuzzleKeyboard)
 end
 
 titleSidebar.onPlay = function ()

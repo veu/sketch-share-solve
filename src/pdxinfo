@@ -3,5 +3,5 @@ author=RDK
 description=A nonogram game you sketch yourself
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
-version=1.2.0
-buildNumber=102000
+version=1.2.1
+buildNumber=102011
