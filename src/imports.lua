@@ -43,6 +43,7 @@ import "screen/title"
 
 import "sidebar/sidebar"
 import "sidebar/about"
+import "sidebar/change-avatar"
 import "sidebar/create-avatar"
 import "sidebar/create-puzzle"
 import "sidebar/name-puzzle"
@@ -97,6 +98,7 @@ fontTime = gfx.font.new("font/time")
 assert(fontTime)
 imgAvatars, err = gfx.imagetable.new("img/avatars")
 assert(imgAvatars, err)
+nilAvatar = saveAvatar(imgAvatars:getImage(AVATAR_ID_NIL))
 imgGrid, err = gfx.imagetable.new("img/grid")
 assert(imgGrid, err)
 imgCursor, err = gfx.imagetable.new("img/cursor")

@@ -10,7 +10,7 @@ function CreateAvatarScreen:init()
 end
 
 function CreateAvatarScreen:enter(context)
-	self.puzzle = Puzzle.createEmpty(10, 10)
+	self.puzzle = Puzzle.createFromAvatar(context.player._avatar)
 	context.puzzle = self.puzzle
 	self.grid.onUpdateSolution = function ()
 		self.puzzle.grid = self.grid.solution

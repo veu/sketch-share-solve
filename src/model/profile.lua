@@ -143,7 +143,7 @@ end
 function Profile.createEmpty()
 	return Profile({
 		id = playdate.string.UUID(16),
-		avatar = saveAvatar(imgAvatars:getImage(AVATAR_ID_NIL)),
+		avatar = nilAvatar,
 		name = "Player",
 		created = {},
 		played = {}
