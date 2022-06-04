@@ -6,7 +6,7 @@ function SelectAvatarSidebar:init()
 	self.onNewPlayer = function () end
 end
 
-function SelectAvatarSidebar:enter(context)
+function SelectAvatarSidebar:enter(context, selected)
 	local config = {
 		player = imgAvatars:getImage(1),
 		menuItems = {},
@@ -22,6 +22,7 @@ function SelectAvatarSidebar:enter(context)
 
 	table.insert(config.menuItems, {
 		text = "Create new avatar",
+		selected = selected == AVATAR_ID_CREATE_AVATAR,
 		avatar = imgAvatars:getImage(AVATAR_ID_NIL),
 		exec = function()
 			self.onNewAvatar()

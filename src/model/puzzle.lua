@@ -114,3 +114,17 @@ Puzzle.createEmpty = function (width, height)
 		title = "",
 	})
 end
+
+Puzzle.createFromAvatar = function (avatar)
+	if avatar == nilAvatar then
+		return Puzzle.createEmpty(10, 10)
+	end
+
+	return Puzzle({
+		id = playdate.string.UUID(16),
+		grid = avatar,
+		width = 10,
+		height = 10,
+		title = "",
+	})
+end

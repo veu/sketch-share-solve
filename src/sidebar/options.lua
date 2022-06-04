@@ -52,6 +52,14 @@ function OptionsSidebar:enter(context, selected)
 	end
 
 	table.insert(config.menuItems, {
+		text = "Change avatar",
+		selected = selected == OPTION_ID_CHANGE_AVATAR,
+		exec = function ()
+			self.onChangeAvatar()
+		end
+	})
+
+	table.insert(config.menuItems, {
 		text = "Rename profile",
 		selected = selected == OPTION_ID_RENAME_PROFILE,
 		exec = function ()

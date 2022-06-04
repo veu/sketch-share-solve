@@ -13,6 +13,7 @@ local titleScreen = TitleScreen()
 
 -- sidebars
 local aboutSidebar = AboutSidebar()
+local changeAvatarSidebar = ChangeAvatarSidebar()
 local createAvatarSidebar = CreateAvatarSidebar()
 local createPuzzleSidebar = CreatePuzzleSidebar()
 local namePlayerSidebar = SelectPlayerSidebar()
@@ -208,7 +209,7 @@ local onHintStyleNext = function ()
 end
 
 createAvatarScreen.onChanged = function()
-	switch(nil, createAvatarSidebar)
+	switch(nil, context.sidebar)
 end
 
 createPuzzleScreen.onChanged = function ()
@@ -233,8 +234,29 @@ aboutSidebar.onAbort = function ()
 	switch(titleScreen, titleSidebar, ACTION_ID_ABOUT, true)
 end
 
+changeAvatarSidebar.onAbort = function ()
+	switch(titleScreen, optionsSidebar, OPTION_ID_CHANGE_AVATAR, true)
+end
+
+changeAvatarSidebar.onInvertGrid = function ()
+	context.screen:invertGrid()
+	switch(nil, changeAvatarSidebar, ACTION_ID_INVERT_COLORS)
+end
+
+changeAvatarSidebar.onResetGrid = function()
+	context.screen:resetGrid()
+	switch(nil, changeAvatarSidebar, ACTION_ID_RESET_GRID)
+end
+
+changeAvatarSidebar.onSave = function()
+	context.player:setAvatar(createAvatarPreview(context.puzzle))
+	context.player:save(context)
+
+	switch(titleScreen, optionsSidebar, OPTION_ID_CHANGE_AVATAR, true)
+end
+
 createAvatarSidebar.onAbort = function ()
-	switch(titleScreen, selectAvatarSidebar, nil, true)
+	switch(titleScreen, selectAvatarSidebar, AVATAR_ID_CREATE_AVATAR, true)
 end
 
 createAvatarSidebar.onInvertGrid = function ()
@@ -289,6 +311,11 @@ end
 
 optionsSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_OPTIONS, true)
+end
+
+optionsSidebar.onChangeAvatar = function ()
+	context.puzzle = nil
+	switch(createAvatarScreen, changeAvatarSidebar)
 end
 
 optionsSidebar.onDelete = function ()
