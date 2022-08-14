@@ -60,12 +60,15 @@ function GridNumbersTop:redraw()
 		gfx.setDrawOffset(0, GRID_OFFSET_Y)
 
 		-- numbers
-		for x, numbers in ipairs(self.gridNumbers.top) do
-			local done = self.doneNumbers.top[x]
+		local gridNumbers = self.gridNumbers.top
+		local doneNumbers = self.doneNumbers.top
+		for x = 1, #gridNumbers do
+			local numbers = gridNumbers[x]
+			local done = doneNumbers[x]
 			local lenNumbers = #numbers
-			for i, v in ipairs(numbers) do
+			for i = 1, lenNumbers do
 				imgGrid:drawImage(
-					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
 					CELL * (x - 1) + 1,
 					TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 				)
@@ -96,9 +99,9 @@ function GridNumbersTop:redrawPosition()
 		local numbers = self.gridNumbers.top[self.gridX]
 		local done = self.doneNumbers.top[self.gridX]
 		local lenNumbers = #numbers
-		for i, v in ipairs(numbers) do
+		for i = 1, lenNumbers do
 			imgGrid:drawImage(
-				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
 				CELL * (self.gridX - 1) + 1,
 				TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 			)

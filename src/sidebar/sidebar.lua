@@ -33,8 +33,9 @@ function Sidebar:enter(context, config, player, creator)
 
 	self.cursor = 1
 	self.cursorRaw = 1
-	for i, item in ipairs(self.menuItems) do
-		if item.selected then
+	local menuItems = self.menuItems
+	for i = 1, #menuItems do
+		if menuItems[i].selected then
 			self.cursor = i
 			self.cursorRaw = i
 			break

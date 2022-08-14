@@ -85,19 +85,25 @@ function DoneNumbersLine:matchLeft(y)
 end
 
 function DoneNumbersLine:tapBlocksLeft(y, indexLeft, indexRight)
+	local gridNumbers = self.gridNumbers.left[y]
+	local solutionNumbers = self.solutionNumbers.left[y]
+	local solutionIndexes = self.solutionNumbers.leftIndexes[y]
+	local lenSolutionNumbers = #solutionNumbers
 	local taps = {}
-	for i = 1, #self.solutionNumbers.left[y] do
+	for i = 1, lenSolutionNumbers do
 		taps[i] = {}
 	end
 
 	-- tap
-	for i, n in ipairs(self.gridNumbers.left[y]) do
+	for i = 1, #gridNumbers do
+		local n = gridNumbers[i]
 		local l = indexLeft[i]
 		local r = indexRight[i]
 
-		for k, o in ipairs(self.solutionNumbers.left[y]) do
+		for k = 1, lenSolutionNumbers do
+			local o = solutionNumbers[o]
 			if o > 0 then
-				local x = self.solutionNumbers.leftIndexes[y][k]
+				local x = solutionIndexes[k]
 				if n >= o and l <= x and x <= r then
 					table.insert(taps[k], i)
 				end
@@ -106,9 +112,11 @@ function DoneNumbersLine:tapBlocksLeft(y, indexLeft, indexRight)
 	end
 
 	-- mark as done
-	for k, tap in ipairs(taps) do
-		if #tap == 1 and self.solutionNumbers.left[y][k] == self.gridNumbers.left[y][tap[1]] then
+	for k = 1, #taps do
+		local tap = taps[k]
+		if #tap == 1 and solutionNumbers[k] == gridNumbers[tap[1]] then
 			self.left[y][tap[1]] = true
+			break
 		end
 	end
 end
@@ -161,19 +169,25 @@ function DoneNumbersLine:matchTop(x)
 end
 
 function DoneNumbersLine:tapBlocksTop(x, indexTop, indexBottom)
+	local gridNumbers = self.gridNumbers.top[x]
+	local solutionNumbers = self.solutionNumbers.top[x]
+	local solutionIndexes = self.solutionNumbers.topIndexes[x]
+	local lenSolutionNumbers = #solutionNumbers
 	local taps = {}
-	for i = 1, #self.solutionNumbers.top[x] do
+	for i = 1, lenSolutionNumbers do
 		taps[i] = {}
 	end
 
 	-- tap
-	for i, n in ipairs(self.gridNumbers.top[x]) do
+	for i = 1, #gridNumbers do
+		local n = gridNumbers[i]
 		local t = indexTop[i]
 		local b = indexBottom[i]
 
-		for k, o in ipairs(self.solutionNumbers.top[x]) do
+		for k = 1, lenSolutionNumbers do
+			local o = solutionNumbers[k]
 			if o > 0 then
-				local y = self.solutionNumbers.topIndexes[x][k]
+				local y = solutionIndexes[k]
 				if n >= o and t <= y and y + o - 1 <= b then
 					table.insert(taps[k], i)
 				end
@@ -182,8 +196,9 @@ function DoneNumbersLine:tapBlocksTop(x, indexTop, indexBottom)
 	end
 
 	-- mark as done
-	for k, tap in ipairs(taps) do
-		if #tap == 1 and self.solutionNumbers.top[x][k] == self.gridNumbers.top[x][tap[1]] then
+	for k = 1, #taps do
+		local tap = taps[k]
+		if #tap == 1 and solutionNumbers[k] == gridNumbers[tap[1]] then
 			self.top[x][tap[1]] = true
 		end
 	end

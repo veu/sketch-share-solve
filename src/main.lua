@@ -534,8 +534,10 @@ shareSidebar.onAbort = function ()
 end
 
 shareSidebar.onExportPuzzles = function ()
-	local puzzles = table.create(0, #context.player.created)
-	for i, id in ipairs(context.player.created) do
+	local created = context.player.created
+	local puzzles = table.create(0, #created)
+	for i = 1, #created do
+		local id = created[i]
 		puzzles[id] = context.save.puzzles[id]
 	end
 	local profile = table.deepcopy(context.save.profiles[context.player.id])
@@ -624,7 +626,9 @@ playdate.file.mkdir(DIR_IMPORT)
 playdate.file.mkdir(DIR_EXPORT)
 
 context.ext = {}
-for i, name in ipairs(playdate.file.listFiles(DIR_IMPORT)) do
+local files = playdate.file.listFiles(DIR_IMPORT)
+for i = 1, #files do
+	local name = files[i]
 	if string.sub(name, -5, -1) == ".json" and string.sub(name, 0, 1) ~= "." then
 		local id = string.sub(name, 0, -6)
 		context.ext[id] = playdate.datastore.read(DIR_IMPORT .. "/" .. id)

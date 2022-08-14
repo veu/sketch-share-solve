@@ -58,12 +58,15 @@ function GridNumbersLeft:redraw()
 		gfx.setDrawOffset(GRID_OFFSET_X - SEPARATOR_WIDTH + CELL * (15 - self.puzzle.width), 0)
 
 		-- numbers
-		for y, numbers in ipairs(self.gridNumbers.left) do
-			local done = self.doneNumbers.left[y]
+		local gridNumbers = self.gridNumbers.left
+		local doneNumbers = self.doneNumbers.left
+		for y = 1, #gridNumbers do
+			local numbers = gridNumbers[y]
+			local done = doneNumbers[y]
 			local lenNumbers = #numbers
-			for i, v in ipairs(numbers) do
+			for i = 1, lenNumbers do
 				imgGrid:drawImage(
-					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
 					(CELL - 1) * (i - 1 - lenNumbers) - 1,
 					CELL * (y - 1) + 1
 				)
@@ -89,9 +92,9 @@ function GridNumbersLeft:redrawPosition()
 		local numbers = self.gridNumbers.left[self.gridY]
 		local done = self.doneNumbers.left[self.gridY]
 		local lenNumbers = #numbers
-		for i, v in ipairs(numbers) do
+		for i = 1, lenNumbers do
 			imgGrid:drawImage(
-				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
 				(CELL - 1) * (i - 1 - lenNumbers) - 1,
 				CELL * (self.gridY - 1) + 1
 			)

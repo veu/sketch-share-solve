@@ -31,8 +31,9 @@ function Puzzle:isSolved(solution)
 end
 
 function Puzzle:isTrivial()
-	for i, v in ipairs(self.grid) do
-		if v == 1 then
+	local grid = self.grid
+	for i = 1, #grid do
+		if grid[i] == 1 then
 			return false
 		end
 	end

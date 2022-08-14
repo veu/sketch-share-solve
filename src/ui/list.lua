@@ -18,8 +18,8 @@ function List:enter(context, menuItems, menuTitle)
 	self.idleCounter = 0
 
 	local selected = 1
-	for i, item in ipairs(menuItems) do
-		if item.selected then
+	for i = 1, #menuItems do
+		if menuItems[i].selected then
 			selected = i
 		end
 	end

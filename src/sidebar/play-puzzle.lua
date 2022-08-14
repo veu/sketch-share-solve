@@ -81,8 +81,9 @@ function PlayPuzzleSidebar:getTitle(player, creator, puzzle)
 		return "\"" .. puzzle.title .. "\""
 	end
 
-	for i, id in ipairs(creator.created) do
-		if id == puzzle.id then
+	local created = creator.created
+	for i = 1, #created do
+		if created[i] == puzzle.id then
 			return string.format("Puzzle %02d", i)
 		end
 	end

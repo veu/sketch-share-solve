@@ -1,8 +1,8 @@
 function reverseNumbers(numbers)
 	local length = #numbers
 	local newNumbers = table.create(length, 0)
-	for i, number in ipairs(numbers) do
-		newNumbers[length - i + 1] = number
+	for i = 1, #numbers do
+		newNumbers[length - i + 1] = numbers[i]
 	end
 	return newNumbers
 end
@@ -10,8 +10,8 @@ end
 function numbersToPattern(numbers)
 	local patterns = table.create(#numbers, 0)
 
-	for i, n in ipairs(numbers) do
-		patterns[i] = "()" .. string.rep("[^2]", n)
+	for i = 1, #numbers do
+		patterns[i] = "()" .. string.rep("[^2]", numbers[i])
 	end
 
 	return "^[^1]-" .. table.concat(patterns, "[^1][^1]-") .. "[^1]*$"
@@ -20,8 +20,8 @@ end
 function numbersToLineSolvedPattern(numbers)
 	local patterns = table.create(#numbers, 0)
 
-	for i, n in ipairs(numbers) do
-		patterns[i] = "()" .. string.rep("1", n)
+	for i = 1, #numbers do
+		patterns[i] = "()" .. string.rep("1", numbers[i])
 	end
 
 	return "^[^1]-" .. table.concat(patterns, "[^1][^1]-") .. "[^1]*$"
@@ -45,8 +45,8 @@ end
 function reverseIndexes(indexes, size)
 	local length = #indexes
 	local newIndexes = table.create(length, 0)
-	for i, index in ipairs(indexes) do
-		newIndexes[length - i + 1] = size - index + 1
+	for i = 1, #indexes do
+		newIndexes[length - i + 1] = size - indexes[i] + 1
 	end
 	return newIndexes
 end
