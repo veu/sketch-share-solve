@@ -60,7 +60,7 @@ function SelectPuzzleSidebar:addItem(i)
 	local id = creator.created[i]
 	local puzzle = Puzzle.load(self.context, id, creator._save)
 	local revealed = creator.id == player.id or player:hasPlayed(puzzle)
-	local text = revealed and puzzle.title or string.format("[ Puzzle %02d ]", i)
+	local text = revealed and puzzle.title or string.format("[ Puzzle %03d ]", i)
 
 	local image = nil
 	if revealed then
