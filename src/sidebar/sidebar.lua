@@ -113,6 +113,17 @@ function Sidebar:leftButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execLeft then
 		item.execLeft()
+		return
+	end
+	local newCursor = math.max(1, self.cursor - 6)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:redraw()
+		self:onMoved()
 	end
 end
 
@@ -120,6 +131,17 @@ function Sidebar:rightButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execRight then
 		item.execRight()
+		return
+	end
+	local newCursor = math.min(rawlen(self.menuItems), self.cursor + 6)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:redraw()
+		self:onMoved()
 	end
 end
 
