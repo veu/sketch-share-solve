@@ -7,9 +7,10 @@ end
 function SelectPuzzleSidebar:enter(context, selected)
 	local creator = context.creator
 	local numCreated = #creator.created
+	local player = context.player
 
 	local config = {
-		player = context.player.avatar,
+		player = player.avatar,
 		creator = creator.avatar,
 		menuItems = table.create(numCreated, 0),
 		menuTitle = "Select a puzzle",
@@ -18,9 +19,13 @@ function SelectPuzzleSidebar:enter(context, selected)
 	local text = "[ Puzzle ]"
 	local created = creator.created
 	for i = 1, #created do
+		local puzzleId = created[i]
+		if not selected and player.id ~= creator.id and not player:hasPlayedId(puzzleId, creator) then
+			selected = puzzleId
+		end
 		config.menuItems[i] = {
 			text = text,
-			selected = created[i] == selected
+			selected = puzzleId == selected
 		}
 	end
 
@@ -30,7 +35,7 @@ function SelectPuzzleSidebar:enter(context, selected)
 	self.selected = selected
 
 	local start = self.list.position
-	for i = self.list.position, math.min(numCreated, self.list.position + 5) do
+	for i = start, math.min(numCreated, start + 5) do
 		self:addItem(i)
 	end
 	self.list.needsRedraw = true
