@@ -26,18 +26,15 @@ function Puzzle:isSolved(solution)
 	end
 
 	self.hasBeenSolved = true
-	
-	print("puzzle solved!")
+		
 	-- Play victory fanfare
 	if currentSong ~= "none" then MusicPlayer:stopSound() end
 	local function restart_music()	
 		if currentSong ~= "none" then 
-			--songs[currentSong]:play(0) 
 			MusicPlayer:playSong()
 		end 
 	end
 	sfxManager:playWithCallback("victory", restart_music)
-	--playdate.sound.sampleplayer:setFinishCallback(func, [arg])
 
 	return true
 end
