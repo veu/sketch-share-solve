@@ -5,13 +5,13 @@ local snd = playdate.sound
 local songs = {}
 local song_list = {"none","retro","chiptune","classical", "electronic", "elektro", "elevator", "gameshow"}
 songs["none"] = nil
-songs["retro"] = snd.fileplayer.new('sound/8-bit_chill')
-songs["chiptune"] = snd.fileplayer.new('sound/chiptune')
-songs["classical"] = snd.fileplayer.new('sound/classical')
-songs["electronic"] = snd.fileplayer.new('sound/electronic')
-songs["elektro"] = snd.fileplayer.new('sound/elektro')
-songs["elevator"] = snd.fileplayer.new('sound/elevator')
-songs["gameshow"] = snd.fileplayer.new('sound/gameshow')
+songs["retro"] = snd.fileplayer.new('sound/songs/8-bit_chill')
+songs["chiptune"] = snd.fileplayer.new('sound/songs/chiptune')
+songs["classical"] = snd.fileplayer.new('sound/songs/classical')
+songs["electronic"] = snd.fileplayer.new('sound/songs/electronic')
+songs["elektro"] = snd.fileplayer.new('sound/songs/elektro')
+songs["elevator"] = snd.fileplayer.new('sound/songs/elevator')
+songs["gameshow"] = snd.fileplayer.new('sound/songs/gameshow')
 
 -- set song to play when game loads
 local save_data = playdate.datastore.read(FILE_SAVE)
