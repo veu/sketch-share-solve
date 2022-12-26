@@ -90,6 +90,7 @@ import "utils/string"
 import "utils/ui"
 
 import "sound/music-player"
+import "sound/sfxManager"
 
 fontTextThin = gfx.font.new("font/text-thin")
 fontTextBold = gfx.font.new("font/text-bold")

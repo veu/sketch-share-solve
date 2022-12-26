@@ -7,7 +7,15 @@ You can find the prebuilt version on [itch.io](https://r-d-k.itch.io/sketch-shar
 
 ![](screenshot.png)
 
-Music credits:
+
+
+# Credits
+
+Game by RDK
+
+Sound design by Drew Loebach
+
+Music:
 
 "gameshow" - Gameshow Brazz by John Bartmann
 
@@ -25,5 +33,6 @@ Music credits:
 
 "classical" - Fast performed by Lloyd Rodgers
 
-Copyright: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
 all music is published in the [public domain license](https://creativecommons.org/publicdomain/zero/1.0/)
+
+Copyright: CC0 1.0 Universal: http://creativecommons.org/publicdomain/zero/1.0/
