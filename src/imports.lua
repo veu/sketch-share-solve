@@ -89,6 +89,8 @@ import "utils/numbers"
 import "utils/string"
 import "utils/ui"
 
+import "sound/music-player"
+
 fontTextThin = gfx.font.new("font/text-thin")
 fontTextBold = gfx.font.new("font/text-bold")
 assert(fontTextThin)
