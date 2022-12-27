@@ -23,7 +23,7 @@ Music:
 
 "elevator" - Bus Stop by HoliznaCC0
 
-"8-bit chill" - NPC Theme by HoliznaCC0
+"retro" - NPC Theme by HoliznaCC0
 
 "electronic" - Waiting TTTT by Loyalty Freak Music
 
