@@ -31,6 +31,6 @@ function sfxManager:playWithCallback(name, func, ...)
     end
 end
 
-function sfxManager:stopSound(name)
+function sfxManager:stopSong(name)
     self.sounds[name]:stop()
 end

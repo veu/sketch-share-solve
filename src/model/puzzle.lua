@@ -28,7 +28,7 @@ function Puzzle:isSolved(solution)
 	self.hasBeenSolved = true
 		
 	-- Play victory fanfare
-	if currentSong ~= "none" then MusicPlayer:stopSound() end
+	if currentSong ~= "none" then MusicPlayer:stopSong() end
 	local function restart_music()	
 		if currentSong ~= "none" then 
 			MusicPlayer:playSong()

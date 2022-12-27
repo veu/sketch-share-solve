@@ -89,6 +89,7 @@ function Grid:toggle(index, isStart)
 			self.last = 0
 			self:addAnimation(index, old, 0)
 			self:onUpdateSolution_(index)
+			sfxManager:playSound("select")
 		end
 	elseif (isStart or old ~= self.last) then
 		local new = 1 - old
@@ -96,6 +97,7 @@ function Grid:toggle(index, isStart)
 		self.last = new
 		self:addAnimation(index, old, new)
 		self:onUpdateSolution_()
+		sfxManager:playSound("select")
 	end
 end
 
@@ -107,6 +109,7 @@ function Grid:toggleCross(index, isStart)
 			self.last = 0
 			self:addAnimation(index, old, 0)
 			self:onUpdateSolution_(index)
+			sfxManager:playSound("scratch")
 		end
 	elseif (isStart or old ~= self.last) then
 		local new = 2 - old
@@ -114,6 +117,7 @@ function Grid:toggleCross(index, isStart)
 		self.last = new
 		self:addAnimation(index, old, new)
 		self:onUpdateSolution_()
+		sfxManager:playSound("scratch")
 	end
 end
 
