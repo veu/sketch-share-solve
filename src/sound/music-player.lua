@@ -45,7 +45,9 @@ function MusicPlayer:stopSong(name)
 	if name then 
 		self.songs[name]:stop()
 	else
-		self.songs[self.currentSong]:stop()
+		if self.currentSong ~= "none" then 
+			self.songs[self.currentSong]:stop()
+		end
 	end
 end
 
