@@ -2,6 +2,4 @@ resources
 *.pdx
 *.pdx.zip
 .nova
-
 .DS_Store
-*/.DS_Store

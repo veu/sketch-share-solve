@@ -4,4 +4,4 @@ description=A nonogram game you sketch yourself
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
 version=1.4.0
-buildNumber=10400
+buildNumber=104003
