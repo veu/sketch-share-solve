@@ -1,7 +1,7 @@
 name=Sketch, Share, Solve
 author=RDK
-description=A nonogram game you sketch yourself
+description=Playdate’s #1 nonogram game
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
-version=1.4.0
-buildNumber=104003
+version=1.5.0
+buildNumber=105001

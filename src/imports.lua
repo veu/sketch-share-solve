@@ -118,3 +118,19 @@ imgRdk = gfx.image.new("img/rdk")
 assert(imgRdk, err)
 imgAbout = gfx.image.new("img/about")
 assert(imgAbout, err)
+
+snd1 = {}
+snd2 = {}
+sndChannel = playdate.sound.channel.new()
+
+local SOUNDS = {"back", "click", "cross", "erase", "scroll", "scrollEnd", "scrollFast", "sketch"}
+for i, name in ipairs(SOUNDS) do
+	local sound1, err = playdate.sound.sampleplayer.new("sound/" .. name)
+	assert(sound1, err)
+	snd1[name] = sound1
+	sndChannel:addSource(sound1)
+	local sound2, err = playdate.sound.sampleplayer.new("sound/" .. name)
+	assert(sound2, err)
+	snd2[name] = sound2
+	sndChannel:addSource(sound2)
+end

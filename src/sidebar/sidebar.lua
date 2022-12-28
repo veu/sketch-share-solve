@@ -54,7 +54,7 @@ function Sidebar:enter(context, config, player, creator)
 	self.list:moveTo()
 	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(context, self.menuItems, self.menuTitle)
-	self.list:select(self.cursor)
+	self.list:select(self.cursor, true)
 	if not context.scrolling then
 		self.list.highlightUpdate = true
 		self.list.needsRedraw = true
@@ -106,6 +106,8 @@ function Sidebar:downButtonDown()
 		self.onNavigated(self.menuItems[self.cursor].ref)
 		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -113,6 +115,7 @@ function Sidebar:leftButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execLeft then
 		item.execLeft()
+		playEffect("back")
 		return
 	end
 	local newCursor = math.max(1, self.cursor - 6)
@@ -124,6 +127,8 @@ function Sidebar:leftButtonDown()
 		self.onNavigated(self.menuItems[self.cursor].ref)
 		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -131,6 +136,7 @@ function Sidebar:rightButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execRight then
 		item.execRight()
+		playEffect("click")
 		return
 	end
 	local newCursor = math.min(rawlen(self.menuItems), self.cursor + 6)
@@ -142,6 +148,8 @@ function Sidebar:rightButtonDown()
 		self.onNavigated(self.menuItems[self.cursor].ref)
 		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -155,6 +163,8 @@ function Sidebar:upButtonDown()
 		self.onNavigated(self.menuItems[self.cursor].ref)
 		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -168,6 +178,7 @@ function Sidebar:AButtonDown()
 	end
 	self.list.highlightUpdate = true
 	self.list.needsRedraw = true
+	playEffect("click")
 	if item.exec then
 		item.exec()
 	else
@@ -176,6 +187,7 @@ function Sidebar:AButtonDown()
 end
 
 function Sidebar:BButtonDown()
+	playEffect("back")
 	self.onAbort()
 end
 

@@ -60,7 +60,15 @@ function List:onLeft_()
 	self.onLeft()
 end
 
-function List:select(index)
+function List:select(index, initial)
+	if not initial then
+		local diff = self.cursor - index
+		if diff > 1 or diff < -1 then
+			playEffect("scrollFast")
+		else
+			playEffect("scroll")
+		end
+	end
 	self.cursor = index
 	self.needsRedraw = true
 end

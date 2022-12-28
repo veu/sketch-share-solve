@@ -47,6 +47,19 @@ function SettingsSidebar:enter(context, selected)
 				execRight = function ()
 					self.onHintStyleNext()
 				end
+			},
+			{
+				text = "Sound effects: " .. AUDIO_LEVEL_NAMES[context.settings.soundEffects],
+				selected = selected == ACTION_ID_SOUND_EFFECTS,
+				exec = function ()
+					self.onSoundEffectsUp()
+				end,
+				execLeft = function ()
+					self.onSoundEffectsDown()
+				end,
+				execRight = function ()
+					self.onSoundEffectsUp()
+				end
 			}
 		}
 	}

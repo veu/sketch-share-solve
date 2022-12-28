@@ -194,6 +194,16 @@ function resume()
 	idleCounter = 0
 end
 
+function playEffect(name)
+	if context.settings.soundEffects > 0 then
+		if snd1[name]:isPlaying() then
+			snd2[name]:play()
+		else
+			snd1[name]:play()
+		end
+	end
+end
+
 local onHintStylePrevious = function ()
 	context.settings.hintStyle = (context.settings.hintStyle) % 3 + 2
 	context.settings:save(context)
@@ -206,6 +216,20 @@ local onHintStyleNext = function ()
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
 	context.screen:updateHintStyle(context)
+end
+
+local onSoundEffectsDown <const> = function ()
+	context.settings.soundEffects = (context.settings.soundEffects + 5) % 6
+	context.settings:save(context)
+	sndChannel:setVolume(context.settings.soundEffects / 6.25 + 0.2)
+	switch(nil, context.sidebar, ACTION_ID_SOUND_EFFECTS)
+end
+
+local onSoundEffectsUp <const> = function ()
+	context.settings.soundEffects = (context.settings.soundEffects + 1) % 6
+	context.settings:save(context)
+	sndChannel:setVolume(context.settings.soundEffects / 6.25 + 0.2)
+	switch(nil, context.sidebar, ACTION_ID_SOUND_EFFECTS)
 end
 
 createAvatarScreen.onChanged = function()
@@ -528,6 +552,8 @@ end
 
 settingsSidebar.onHintStylePrevious = onHintStylePrevious
 settingsSidebar.onHintStyleNext = onHintStyleNext
+settingsSidebar.onSoundEffectsDown = onSoundEffectsDown
+settingsSidebar.onSoundEffectsUp = onSoundEffectsUp
 
 shareSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_SHARE, true)
