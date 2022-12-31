@@ -65,6 +65,14 @@ function PlayPuzzleSidebar:enter(context, selected)
 		end
 		if creator.id == player.id then
 			table.insert(config.menuItems, {
+				text = "Rotate solution",
+				selected = selected == ACTION_ID_ROTATE,
+				img = createPuzzlePreview(puzzle),
+				exec = function()
+					self.onRotatePuzzle()
+				end
+			})
+			table.insert(config.menuItems, {
 				text = "Delete puzzle",
 				exec = function()
 					self.onDeletePuzzle()

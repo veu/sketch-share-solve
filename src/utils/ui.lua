@@ -96,12 +96,32 @@ function createPuzzlePreview(puzzle)
 		imgBox:drawImage(5, 0, 0)
 		gfx.setColor(gfx.kColorWhite)
 		local i = 1
-		for y = 1, puzzle.height do
-			for x = 1, puzzle.width do
-				if puzzle.grid[i] == 0 then
-					gfx.fillRect(x + 1, y + 3, 1, 1)
+		if puzzle.rotation == 1 then
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(y + 3, puzzle.width - x + 2, 1, 1)
+					end
+					i += 1
 				end
-				i += 1
+			end
+		elseif puzzle.rotation == 2 then
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(puzzle.height - y + 5, x + 1, 1, 1)
+					end
+					i += 1
+				end
+			end
+		else
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(x + 1, y + 3, 1, 1)
+					end
+					i += 1
+				end
 			end
 		end
 	end

@@ -8,16 +8,26 @@ function TestPuzzleSidebar:enter(context, selected)
 	local config = {
 		player = context.player.avatar,
 		menuTitle = "Solve and save puzzle",
-		menuItems = {}
+		menuItems = {
+			{
+				text = context.puzzle.hasBeenSolved and "See solution" or "Solve",
+				exec = function()
+					closeSidebar()
+				end
+			}
+		}
 	}
 
-	if not context.puzzle.hasBeenSolved then
+	if context.puzzle.hasBeenSolved then
 		table.insert(config.menuItems, {
-			text = "Solve",
+			text = "Rotate solution",
+			selected = selected == ACTION_ID_ROTATE,
+			img = createPuzzlePreview(context.puzzle),
 			exec = function()
-				closeSidebar()
+				self.onRotatePuzzle()
 			end
 		})
+	else
 		table.insert(config.menuItems, {
 			text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
 			selected = selected == ACTION_ID_HINT_STYLE,

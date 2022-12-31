@@ -22,6 +22,7 @@ end
 function SolvedPuzzleScreen:leave()
 	self.grid:leave()
 	self.gridSolved:leave()
+	self.gridAnimator = nil
 	self.dialog:leave()
 	self.time:leave()
 end

@@ -422,6 +422,15 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onRotatePuzzle = function ()
+	context.puzzle:rotate(context)
+	if context.screen == solvedPuzzleScreen then
+		switch(solvedPuzzleScreen, playPuzzleSidebar, ACTION_ID_ROTATE, true)
+	else
+		switch(nil, playPuzzleSidebar, ACTION_ID_ROTATE, true)
+	end
+end
+
 playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
 playPuzzleSidebar.onHintStyleNext = onHintStyleNext
 
@@ -429,6 +438,7 @@ playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
 	puzzle.title = context.puzzle.title
+	puzzle.rotation = context.puzzle.rotation
 	puzzle.hasBeenSolved = true
 	context.player.lastTime = context.player:hasPlayed(context.puzzle)
 	context.puzzle = puzzle
@@ -617,6 +627,11 @@ testPuzzleSidebar.onResetGrid = function()
 	context.screen:resetGrid()
 	context.puzzle.hasBeenSolved = false
 	switch(nil, testPuzzleSidebar, ACTION_ID_RESET_GRID)
+end
+
+testPuzzleSidebar.onRotatePuzzle = function ()
+	context.puzzle:rotate(context)
+	switch(solvedPuzzleScreen, testPuzzleSidebar, ACTION_ID_ROTATE, true)
 end
 
 testPuzzleSidebar.onSave = function ()
