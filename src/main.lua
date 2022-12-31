@@ -308,9 +308,15 @@ createPuzzleSidebar.onAbort = function()
 end
 
 createPuzzleSidebar.onFlip = function()
-	context.screen:flipGrid()
+	context.screen:flipGridX()
 	context.puzzle.hasBeenSolved = false
 	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP)
+end
+
+createPuzzleSidebar.onFlipY = function()
+	context.screen:flipGridY()
+	context.puzzle.hasBeenSolved = false
+	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP_Y)
 end
 
 createPuzzleSidebar.onInvertColors = function()

@@ -151,12 +151,29 @@ function Grid:invert()
 	self:redraw()
 end
 
-function Grid:flip()
+function Grid:flipX()
 	local solution = table.create(#self.solution, 0)
 	for y = 1, self.puzzle.height do
 		for x = 1, self.puzzle.width do
 			local index = x - 1 + (y - 1) * self.puzzle.width + 1
 			local oldIndex = self.puzzle.width - x + (y - 1) * self.puzzle.width + 1
+			solution[index] = self.solution[oldIndex]
+		end
+	end
+
+	self.solution = solution
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	if self.numbers then
+		self.numbers:updateAll(solution)
+	end
+	self:redraw()
+end
+function Grid:flipY()
+	local solution = table.create(#self.solution, 0)
+	for y = 1, self.puzzle.height do
+		for x = 1, self.puzzle.width do
+			local index = x - 1 + (y - 1) * self.puzzle.width + 1
+			local oldIndex = x - 1 + (self.puzzle.height - y) * self.puzzle.width + 1
 			solution[index] = self.solution[oldIndex]
 		end
 	end

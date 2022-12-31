@@ -38,6 +38,13 @@ function CreatePuzzleSidebar:enter(context, selected)
 				end
 			},
 			{
+				text = "Flip vertically",
+				selected = selected == ACTION_ID_FLIP_Y,
+				exec = function()
+					self.onFlipY()
+				end
+			},
+			{
 				text = "Reset",
 				selected = selected == ACTION_ID_RESET_GRID,
 				exec = function()
