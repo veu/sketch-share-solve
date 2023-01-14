@@ -24,6 +24,13 @@ function PlayPuzzleSidebar:enter(context, selected)
 
 	if not puzzle.hasBeenSolved then
 		table.insert(config.menuItems, {
+			text = "Undo",
+			selected = selected == ACTION_ID_UNDO,
+			exec = function ()
+				self.onUndo()
+			end
+		})
+		table.insert(config.menuItems, {
 			text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
 			selected = selected == ACTION_ID_HINT_STYLE,
 			img = createHintStylePreview(context.settings.hintStyle),

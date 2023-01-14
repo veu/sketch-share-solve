@@ -1,39 +1,39 @@
 import "imports"
 
 -- screens
-local aboutScreen = AboutScreen()
-local createAvatarScreen = CreateAvatarScreen()
-local createPuzzleScreen = CreatePuzzleScreen()
-local selectPuzzleScreen = SelectPuzzleScreen()
-local sketchTutorialScreen = SketchTutorialScreen()
-local solvedPuzzleScreen = SolvedPuzzleScreen()
-local solveTutorialScreen = SolveTutorialScreen()
-local playPuzzleScreen = PlayPuzzleScreen()
-local titleScreen = TitleScreen()
+local aboutScreen <const> = AboutScreen()
+local createAvatarScreen <const> = CreateAvatarScreen()
+local createPuzzleScreen <const> = CreatePuzzleScreen()
+local selectPuzzleScreen <const> = SelectPuzzleScreen()
+local sketchTutorialScreen <const> = SketchTutorialScreen()
+local solvedPuzzleScreen <const> = SolvedPuzzleScreen()
+local solveTutorialScreen <const> = SolveTutorialScreen()
+local playPuzzleScreen <const> = PlayPuzzleScreen()
+local titleScreen <const> = TitleScreen()
 
 -- sidebars
-local aboutSidebar = AboutSidebar()
-local changeAvatarSidebar = ChangeAvatarSidebar()
-local createAvatarSidebar = CreateAvatarSidebar()
-local createPuzzleSidebar = CreatePuzzleSidebar()
-local namePlayerSidebar = SelectPlayerSidebar()
-local namePuzzleSidebar = NamePuzzleSidebar()
-local optionsSidebar = OptionsSidebar()
-local playPuzzleSidebar = PlayPuzzleSidebar()
-local selectAvatarSidebar = SelectAvatarSidebar()
-local selectCreatorSidebar = SelectCreatorSidebar()
-local selectPuzzleSidebar = SelectPuzzleSidebar()
-local selectPlayerSidebar = SelectPlayerSidebar()
-local selectModeSidebar = SelectModeSidebar()
-local selectTutorialSidebar = SelectTutorialSidebar()
-local settingsSidebar = SettingsSidebar()
-local shareSidebar = ShareSidebar()
-local sketchTutorialSidebar = TutorialSidebar()
-local solveTutorialSidebar = TutorialSidebar()
-local testPuzzleSidebar = TestPuzzleSidebar()
-local titleSidebar = TitleSidebar()
+local aboutSidebar <const> = AboutSidebar()
+local changeAvatarSidebar <const> = ChangeAvatarSidebar()
+local createAvatarSidebar <const> = CreateAvatarSidebar()
+local createPuzzleSidebar <const> = CreatePuzzleSidebar()
+local namePlayerSidebar <const> = SelectPlayerSidebar()
+local namePuzzleSidebar <const> = NamePuzzleSidebar()
+local optionsSidebar <const> = OptionsSidebar()
+local playPuzzleSidebar <const> = PlayPuzzleSidebar()
+local selectAvatarSidebar <const> = SelectAvatarSidebar()
+local selectCreatorSidebar <const> = SelectCreatorSidebar()
+local selectPuzzleSidebar <const> = SelectPuzzleSidebar()
+local selectPlayerSidebar <const> = SelectPlayerSidebar()
+local selectModeSidebar <const> = SelectModeSidebar()
+local selectTutorialSidebar <const> = SelectTutorialSidebar()
+local settingsSidebar <const> = SettingsSidebar()
+local shareSidebar <const> = ShareSidebar()
+local sketchTutorialSidebar <const> = TutorialSidebar()
+local solveTutorialSidebar <const> = TutorialSidebar()
+local testPuzzleSidebar <const> = TestPuzzleSidebar()
+local titleSidebar <const> = TitleSidebar()
 
-local context = {
+local context <const> = {
 	creator = nil,
 	puzzle = nil,
 	player = nil,
@@ -46,9 +46,10 @@ local context = {
 	isSidebarOpen = false,
 }
 
-local defaultInputHandler = createDefaultInputHandler(context)
-local modalInputHandler = createModalInputHandler(context)
-local noopInputHandler = createNoopInputHandler(context)
+local defaultInputHandler <const> = createDefaultInputHandler(context)
+local modalInputHandler <const> = createModalInputHandler(context)
+local noopInputHandler <const> = createNoopInputHandler(context)
+local undoInputHandler <const> = createUndoInputHandler(context)
 
 local openMenuItem = nil
 
@@ -56,6 +57,9 @@ function openSidebar()
 	if not context.isSidebarOpen then
 		if context.screen == createPuzzleScreen then
 			switch(nil, createPuzzleSidebar)
+		end
+		if context.undo then
+			endUndo()
 		end
 
 		context.isSidebarOpen = true
@@ -204,14 +208,30 @@ function playEffect(name)
 	end
 end
 
-local onHintStylePrevious = function ()
+function startUndo()
+	closeSidebar()
+	context.screen:startUndo()
+	if playdate.isCrankDocked() then
+		playdate.ui.crankIndicator:start()
+	end
+	context.undo = true
+	playdate.inputHandlers.push(undoInputHandler, true)
+end
+
+function endUndo()
+	context.screen:endUndo()
+	context.undo = false
+	playdate.inputHandlers.pop()
+end
+
+local onHintStylePrevious <const> = function ()
 	context.settings.hintStyle = (context.settings.hintStyle) % 3 + 2
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
 	context.screen:updateHintStyle(context)
 end
 
-local onHintStyleNext = function ()
+local onHintStyleNext <const> = function ()
 	context.settings.hintStyle = (context.settings.hintStyle - 1) % 3 + 2
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
@@ -339,6 +359,10 @@ createPuzzleSidebar.onTestAndSave = function ()
 	end
 end
 
+createPuzzleSidebar.onUndo = function ()
+	startUndo()
+end
+
 optionsSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_OPTIONS, true)
 end
@@ -439,6 +463,9 @@ end
 
 playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
 playPuzzleSidebar.onHintStyleNext = onHintStyleNext
+playPuzzleSidebar.onUndo = function ()
+	startUndo()
+end
 
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
@@ -644,6 +671,10 @@ testPuzzleSidebar.onSave = function ()
 	switch(nil, namePuzzleSidebar, nil, nil, showPuzzleKeyboard)
 end
 
+testPuzzleSidebar.onUndo = function ()
+	startUndo()
+end
+
 titleSidebar.onPlay = function ()
 	switch(nil, selectPlayerSidebar)
 end
@@ -679,7 +710,7 @@ playdate.file.mkdir(DIR_IMPORT)
 playdate.file.mkdir(DIR_EXPORT)
 
 context.ext = {}
-local files = playdate.file.listFiles(DIR_IMPORT)
+local files <const> = playdate.file.listFiles(DIR_IMPORT)
 for i = 1, #files do
 	local name = files[i]
 	if string.sub(name, -5, -1) == ".json" and string.sub(name, 0, 1) ~= "." then
@@ -731,6 +762,9 @@ function playdate.update()
 	end
 	if showFPS then
 		playdate.drawFPS(0,0)
+	end
+	if context.undo and playdate.isCrankDocked() then
+		playdate.ui.crankIndicator:update()
 	end
 	playdate.timer.updateTimers()
 	playdate.frameTimer.updateTimers()

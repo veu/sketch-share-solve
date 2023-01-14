@@ -15,6 +15,8 @@ function Grid:init(withNumbers, autoCross)
 	if withNumbers then
 		self.numbers = GridNumbers()
 	end
+
+	self.history = table.create(MAX_UNDO, 0)
 end
 
 function Grid:enter(puzzle, mode, showHints, hintStyle, autoCross, solution)
@@ -41,6 +43,10 @@ function Grid:enter(puzzle, mode, showHints, hintStyle, autoCross, solution)
 		self.solution = table.shallowcopy(puzzle.grid)
 	end
 	self.tilemap:setTiles(self.solution, puzzle.width)
+
+	self.history[1] = table.shallowcopy(self.solution)
+	self.historyFirst = 1
+	self.historyNext = 2
 
 	self:add()
 	self.cursor:enter(puzzle, self.mode)
@@ -286,7 +292,31 @@ function Grid:onUpdateSolution_(autoCross)
 	end
 
 	self:redrawPosition(self.cursor.gridX, self.cursor.gridY)
+	if self.historyFirst == self.historyNext then
+		self.historyFirst = self.historyFirst % MAX_UNDO + 1
+	end
+	self.history[self.historyNext] = table.shallowcopy(self.solution)
+	self.historyNext = self.historyNext % MAX_UNDO + 1
 	self.onUpdateSolution()
+end
+
+function Grid:getHistorySize()
+	return (self.historyNext - self.historyFirst - 1 + MAX_UNDO) % MAX_UNDO
+end
+
+function Grid:lookBackTo(offset)
+	local index = (MAX_UNDO + self.historyNext - offset - 2) % MAX_UNDO + 1
+	self.solution = self.history[index]
+	self.tilemap:setTiles(self.solution, self.puzzle.width)
+	if self.numbers then
+		self.numbers:updateAllSolution(self.solution)
+	end
+	self:redraw()
+end
+
+function Grid:goBackTo(offset)
+	local index = (MAX_UNDO + self.historyNext - offset - 2) % MAX_UNDO + 1
+	self.historyNext = index % MAX_UNDO + 1
 end
 
 function Grid:redrawPosition(gridX, gridY)

@@ -24,6 +24,13 @@ function CreatePuzzleSidebar:enter(context, selected)
 				end
 			},
 			{
+				text = "Undo",
+				selected = selected == ACTION_ID_UNDO,
+				exec = function()
+					self.onUndo()
+				end
+			},
+			{
 				text = "Invert colors",
 				selected = selected == ACTION_ID_INVERT_COLORS,
 				exec = function()

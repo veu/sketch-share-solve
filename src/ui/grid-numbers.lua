@@ -37,6 +37,14 @@ function GridNumbers:updateAll(solution)
 	self.numbersTop:redraw()
 end
 
+function GridNumbers:updateAllSolution(solution)
+	self.solutionNumbers:updateAll(solution)
+	self.doneNumbers:updateAll(self.solutionNumbers, solution)
+
+	self.numbersLeft:redraw()
+	self.numbersTop:redraw()
+end
+
 function GridNumbers:updateAllDone(solution)
 	self.doneNumbers:updateAll(self.solutionNumbers, solution)
 
