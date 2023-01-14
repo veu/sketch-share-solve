@@ -13,22 +13,59 @@ function DoneNumbers:init(puzzle, gridNumbers, solutionNumbers, solution)
 	self.solution = solution
 
 	self.left = table.create(self.puzzle.height, 0)
+	self.leftLine = table.create(self.puzzle.height, 0)
 	for y = 1, self.puzzle.height do
-		self.left[y] = { self.gridNumbers.left[y][1] == 0 }
+		if self.gridNumbers.left[y][1] == 0 then
+			self.left[y] = { true }
+			self.leftLine[y] = true
+		else
+			self.left[y] = table.create(#self.gridNumbers.left[y], 0)
+		end
 	end
 
 	self.top = table.create(self.puzzle.width, 0)
+	self.topLine = table.create(self.puzzle.width, 0)
 	for x = 1, self.puzzle.width do
-		self.top[x] = { self.gridNumbers.top[x][1] == 0 }
+		if self.gridNumbers.top[x][1] == 0 then
+			self.top[x] = { true }
+			self.topLine[x] = true
+		else
+			self.top[x] = table.create(#self.gridNumbers.top[x], 0)
+		end
 	end
 end
 
-function DoneNumbers:updatePosition(solutionNumbers, solution, x, y)
+function DoneNumbers:updatePosition(solutionNumbers, solution, x, y, autoCross)
+	local doneLeft <const> = self.leftLine[y]
+	local doneTop <const> = self.topLine[x]
+
 	self.solutionNumbers = solutionNumbers
 	self.solution = solution
 
 	self:calcLeftNumbersForRow(y)
 	self:calcTopNumbersForColumn(x)
+
+	if autoCross then
+		local width <const> = self.puzzle.width
+		local changed = false
+		if not doneLeft and self.leftLine[y] then
+			for index = (y - 1) * width + 1, y * width do
+				if solution[index] == 0 then
+					solution[index] = 2
+					changed = true
+				end
+			end
+		end
+		if not doneTop and self.topLine[x] then
+			for index = x, x + (self.puzzle.height - 1) * width, width do
+				if solution[index] == 0 then
+					solution[index] = 2
+					changed = true
+				end
+			end
+		end
+		return changed
+	end
 end
 
 function DoneNumbers:updateAll(solutionNumbers, solution)
@@ -40,7 +77,6 @@ function DoneNumbers:updateAll(solutionNumbers, solution)
 end
 
 function DoneNumbers:calcLeftNumbers()
-	self.left = table.create(self.puzzle.height, 0)
 	for y = 1, self.puzzle.height do
 		self:calcLeftNumbersForRow(y)
 	end
@@ -48,9 +84,14 @@ end
 
 function DoneNumbers:calcLeftNumbersForRow(y)
 	if self.gridNumbers.left[y][1] == 0 then
-		self.left[y] = { self.solutionNumbers.left[y][1] == 0 }
+		local isCorrect <const> = self.solutionNumbers.left[y][1] == 0
+		self.left[y][1] = isCorrect
+		self.leftLine[y] = isCorrect
 	else
-		self.left[y] = {}
+		for i = 1, #self.gridNumbers.left[y] do
+			self.left[y][i] = false
+		end
+		self.leftLine[y] = false
 		-- layout blocks from left and right
 		indexLeft, indexRight = self:matchLeft(y)
 
@@ -62,10 +103,10 @@ function DoneNumbers:calcLeftNumbersForRow(y)
 end
 
 function DoneNumbers:matchLeft(y)
-	local solutionString = solutionRowToString(self.puzzle, y, self.solution)
-	local numbers = self.gridNumbers.left[y]
+	local solutionString <const> = solutionRowToString(self.puzzle, y, self.solution)
+	local numbers <const> = self.gridNumbers.left[y]
 
-	local leftIndexes = {string.match(
+	local leftIndexes <const> = {string.match(
 		solutionString,
 		numbersToPattern(numbers)
 	)}
@@ -73,7 +114,7 @@ function DoneNumbers:matchLeft(y)
 		return nil
 	end
 
-	local rightIndexes = {string.match(
+	local rightIndexes <const> = {string.match(
 		string.reverse(solutionString),
 		numbersToPattern(reverseNumbers(numbers))
 	)}
@@ -85,24 +126,24 @@ function DoneNumbers:matchLeft(y)
 end
 
 function DoneNumbers:tapBlocksLeft(y, indexLeft, indexRight)
-	local gridNumbers = self.gridNumbers.left[y]
-	local solutionNumbers = self.solutionNumbers.left[y]
-	local solutionIndexes = self.solutionNumbers.leftIndexes[y]
-	local taps = {}
+	local gridNumbers <const> = self.gridNumbers.left[y]
+	local solutionNumbers <const> = self.solutionNumbers.left[y]
+	local solutionIndexes <const> = self.solutionNumbers.leftIndexes[y]
+	local taps <const> = {}
 	for i = 1, #solutionNumbers do
 		taps[i] = {}
 	end
 
 	-- tap
 	for i = 1, #gridNumbers do
-		local n = gridNumbers[i]
-		local l = indexLeft[i]
-		local r = indexRight[i]
+		local n <const> = gridNumbers[i]
+		local l <const> = indexLeft[i]
+		local r <const> = indexRight[i]
 
 		for k = 1, #solutionNumbers do
 			local o = solutionNumbers[k]
 			if o > 0 then
-				local x = solutionIndexes[k]
+				local x <const> = solutionIndexes[k]
 				if n >= o and l <= x and x <= r then
 					table.insert(taps[k], i)
 				end
@@ -111,28 +152,33 @@ function DoneNumbers:tapBlocksLeft(y, indexLeft, indexRight)
 	end
 
 	-- mark as done
+	local numTapped = 0
 	for k = 1, #taps do
-		local tap = taps[k]
+		local tap <const> = taps[k]
 		if #tap == 1 and solutionNumbers[k] == gridNumbers[tap[1]] then
 			self.left[y][tap[1]] = true
+			numTapped += 1
 		end
 	end
+	self.leftLine[y] = numTapped == #gridNumbers
 end
 
 function DoneNumbers:calcTopNumbers()
-	self.top = table.create(self.puzzle.width, 0)
 	for x = 1, self.puzzle.width do
-		self.top[x] = {}
-
 		self:calcTopNumbersForColumn(x)
 	end
 end
 
 function DoneNumbers:calcTopNumbersForColumn(x)
 	if self.gridNumbers.top[x][1] == 0 then
-		self.top[x] = { self.solutionNumbers.top[x][1] == 0  }
+		local isCorrect <const> = self.solutionNumbers.top[x][1] == 0
+		self.top[x][1] = isCorrect
+		self.topLine[x] = isCorrect
 	else
-		self.top[x] = {}
+		for i = 1, #self.gridNumbers.top[x] do
+			self.top[x][i] = false
+		end
+		self.topLine[x] = false
 		-- layout blocks from both top and bottom
 		indexTop, indexBottom = self:matchTop(x)
 
@@ -144,10 +190,10 @@ function DoneNumbers:calcTopNumbersForColumn(x)
 end
 
 function DoneNumbers:matchTop(x)
-	local solutionString = solutionColumnToString(self.puzzle, x, self.solution)
-	local numbers = self.gridNumbers.top[x]
+	local solutionString <const> = solutionColumnToString(self.puzzle, x, self.solution)
+	local numbers <const> = self.gridNumbers.top[x]
 
-	local topIndexes = {string.match(
+	local topIndexes <const> = {string.match(
 		solutionString,
 		numbersToPattern(numbers)
 	)}
@@ -155,7 +201,7 @@ function DoneNumbers:matchTop(x)
 		return nil
 	end
 
-	local bottomIndexes = {string.match(
+	local bottomIndexes <const> = {string.match(
 		string.reverse(solutionString),
 		numbersToPattern(reverseNumbers(numbers))
 	)}
@@ -167,22 +213,22 @@ function DoneNumbers:matchTop(x)
 end
 
 function DoneNumbers:tapBlocksTop(x, indexTop, indexBottom)
-	local gridNumbers = self.gridNumbers.top[x]
-	local solutionNumbers = self.solutionNumbers.top[x]
-	local solutionIndexes = self.solutionNumbers.topIndexes[x]
-	local taps = {}
+	local gridNumbers <const> = self.gridNumbers.top[x]
+	local solutionNumbers <const> = self.solutionNumbers.top[x]
+	local solutionIndexes <const> = self.solutionNumbers.topIndexes[x]
+	local taps <const> = {}
 	for i = 1, #solutionNumbers do
 		taps[i] = {}
 	end
 
 	-- tap
 	for i = 1, #gridNumbers do
-		local n = gridNumbers[i]
-		local t = indexTop[i]
-		local b = indexBottom[i]
+		local n <const> = gridNumbers[i]
+		local t <const> = indexTop[i]
+		local b <const> = indexBottom[i]
 
 		for k = 1, #solutionNumbers do
-			local o = solutionNumbers[k]
+			local o <const> = solutionNumbers[k]
 			if o > 0 then
 				local y = solutionIndexes[k]
 				if n >= o and t <= y and y + o - 1 <= b then
@@ -193,10 +239,13 @@ function DoneNumbers:tapBlocksTop(x, indexTop, indexBottom)
 	end
 
 	-- mark as done
+	local numTapped = 0
 	for k = 1, #taps do
-		local tap = taps[k]
+		local tap <const> = taps[k]
 		if #tap == 1 and solutionNumbers[k] == gridNumbers[tap[1]] then
 			self.top[x][tap[1]] = true
+			numTapped += 1
 		end
 	end
+	self.topLine[x] = numTapped == #gridNumbers
 end

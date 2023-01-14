@@ -11,18 +11,17 @@ end
 function GridNumbers:enter(puzzle, solution, x, y, showHints, hintStyle)
 	self.gridNumbers = Numbers(puzzle, puzzle.grid)
 	self.solutionNumbers = Numbers(puzzle, solution)
-	self.doneNumbers = DONE_NUMBERS_TYPES[showHints](
+	self.doneNumbers = DoneNumbers(
 		puzzle,
 		self.gridNumbers,
 		self.solutionNumbers,
-		solution,
-		showHints
+		solution
 	)
 	self.gridX = x
 	self.gridY = y
 
-	self.numbersLeft:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, hintStyle)
-	self.numbersTop:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, hintStyle)
+	self.numbersLeft:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, showHints, hintStyle)
+	self.numbersTop:enter(puzzle, self.gridNumbers, self.doneNumbers, x, y, showHints, hintStyle)
 	self.background:enter(puzzle)
 end
 
@@ -45,21 +44,25 @@ function GridNumbers:updateAllDone(solution)
 	self.numbersTop:redraw()
 end
 
-function GridNumbers:updateForPosition(solution, mode)
+function GridNumbers:updateForPosition(solution, mode, autoCross)
+	local didAutoCross = false
 	if mode == MODE_CREATE then
 		self.gridNumbers:updatePosition(solution, self.gridX, self.gridY)
 	else
 		self.solutionNumbers:updatePosition(solution, self.gridX, self.gridY)
-		self.doneNumbers:updatePosition(
+		didAutoCross = self.doneNumbers:updatePosition(
 			self.solutionNumbers,
 			solution,
 			self.gridX,
-			self.gridY
+			self.gridY,
+			autoCross
 		)
 	end
 
 	self.numbersLeft:updateForPosition()
 	self.numbersTop:updateForPosition()
+
+	return didAutoCross
 end
 
 function GridNumbers:leave()

@@ -7,11 +7,12 @@ function GridNumbersTop:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbersTop:enter(puzzle, gridNumbers, doneNumbers, x, y, hintStyle)
+function GridNumbersTop:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints, hintStyle)
 	self.gridNumbers = gridNumbers
 	self.doneNumbers = doneNumbers
 	self.gridX = x
 	self.gridY = y
+	self.showHints = showHints
 	self.hintStyle = hintStyle
 
 	self:moveTo(
@@ -60,15 +61,20 @@ function GridNumbersTop:redraw()
 		gfx.setDrawOffset(0, GRID_OFFSET_Y)
 
 		-- numbers
-		local gridNumbers = self.gridNumbers.top
-		local doneNumbers = self.doneNumbers.top
+		local gridNumbers <const> = self.gridNumbers.top
+		local doneNumbers <const> = self.doneNumbers.top
+		local doneNumbersLine <const> = self.doneNumbers.topLine
 		for x = 1, #gridNumbers do
-			local numbers = gridNumbers[x]
-			local done = doneNumbers[x]
-			local lenNumbers = #numbers
+			local numbers <const> = gridNumbers[x]
+			local done <const> = doneNumbers[x]
+			local doneLine <const> = doneNumbersLine[x]
+			local lenNumbers <const> = #numbers
 			for i = 1, lenNumbers do
+				local isDone <const> =
+					self.showHints ~= HINTS_ID_OFF and doneLine or
+					self.showHints == HINTS_ID_BLOCKS and done[i]
 				imgGrid:drawImage(
-					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
+					NUM_STYLE_OFFSETS[isDone and self.hintStyle or 1] + numbers[i],
 					CELL * (x - 1) + 1,
 					TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 				)
@@ -96,13 +102,18 @@ function GridNumbersTop:redrawPosition()
 	)
 	gfx.setDrawOffset(0, GRID_OFFSET_Y)
 	do
-		local numbers = self.gridNumbers.top[self.gridX]
-		local done = self.doneNumbers.top[self.gridX]
-		local lenNumbers = #numbers
+		local x <const> = self.gridX
+		local numbers <const> = self.gridNumbers.top[x]
+		local done <const> = self.doneNumbers.top[x]
+		local doneLine <const> = self.doneNumbers.topLine[x]
+		local lenNumbers <const> = #numbers
 		for i = 1, lenNumbers do
+			local isDone <const> =
+				self.showHints ~= HINTS_ID_OFF and doneLine or
+				self.showHints == HINTS_ID_BLOCKS and done[i]
 			imgGrid:drawImage(
-				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + numbers[i],
-				CELL * (self.gridX - 1) + 1,
+				NUM_STYLE_OFFSETS[isDone and self.hintStyle or 1] + numbers[i],
+				CELL * (x - 1) + 1,
 				TOP_NUMBER_HEIGHT * (i - 1 - lenNumbers) - 2
 			)
 		end

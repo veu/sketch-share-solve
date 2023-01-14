@@ -17,18 +17,10 @@ import "input/modal"
 import "input/noop"
 
 import "model/done-numbers"
-import "model/done-numbers-disabled"
-import "model/done-numbers-line"
 import "model/numbers"
 import "model/profile"
 import "model/puzzle"
 import "model/settings"
-
-DONE_NUMBERS_TYPES = {
-	DoneNumbersDisabled,
-	DoneNumbersLine,
-	DoneNumbers,
-}
 
 import "screen/screen"
 import "screen/about"

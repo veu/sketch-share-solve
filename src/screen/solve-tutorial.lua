@@ -160,7 +160,7 @@ function SolveTutorialScreen:loadPage()
 			solution[i] = values[i] - 48
 		end
 	end
-	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, self.hintStyle, solution)
+	self.grid:enter(self.puzzle, MODE_TUTORIAL, page.hints or HINTS_ID_OFF, self.hintStyle, false, solution)
 	self.grid:hideCursor()
 	self.dialog:enter(page.text)
 	self.dialog:setVisible(true)

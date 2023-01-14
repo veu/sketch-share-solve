@@ -1,6 +1,6 @@
 class("Grid").extends(gfx.sprite)
 
-function Grid:init(withNumbers)
+function Grid:init(withNumbers, autoCross)
 	Grid.super.init(self, gfx.image.new(400 - GRID_OFFSET_X, 240 - GRID_OFFSET_Y))
 
 	self:setCenter(0, 0)
@@ -17,11 +17,12 @@ function Grid:init(withNumbers)
 	end
 end
 
-function Grid:enter(puzzle, mode, showHints, hintStyle, solution)
+function Grid:enter(puzzle, mode, showHints, hintStyle, autoCross, solution)
 	self.last = 0
 	self.puzzle = puzzle
 	self.mode = mode
 	self.animator = nil
+	self.autoCross = autoCross
 
 	self.tilemap:setSize(puzzle.width, puzzle.height)
 
@@ -82,37 +83,37 @@ function Grid:updateHintStyle(hintStyle)
 end
 
 function Grid:toggle(index, isStart)
-	local old = self.solution[index]
+	local old <const> = self.solution[index]
 	if old == 2 then
 		if isStart then
 			self.solution[index] = 0
 			self.last = 0
 			self:addAnimation(index, old, 0)
-			self:onUpdateSolution_(index)
+			self:onUpdateSolution_()
 			playEffect(new == 1 and "sketch" or "erase")
 		end
 	elseif (isStart or old ~= self.last) then
-		local new = 1 - old
+		local new <const> = 1 - old
 		self.solution[index] = new
 		self.last = new
 		self:addAnimation(index, old, new)
-		self:onUpdateSolution_()
+		self:onUpdateSolution_(self.autoCross and new == 1)
 		playEffect(new == 1 and "sketch" or "erase")
 	end
 end
 
 function Grid:toggleCross(index, isStart)
-	local old = self.solution[index]
+	local old <const> = self.solution[index]
 	if old == 1 then
 		if isStart then
 			self.solution[index] = 0
 			self.last = 0
 			self:addAnimation(index, old, 0)
-			self:onUpdateSolution_(index)
+			self:onUpdateSolution_()
 			playEffect(new == 2 and "cross" or "erase")
 		end
 	elseif (isStart or old ~= self.last) then
-		local new = 2 - old
+		local new <const> = 2 - old
 		self.solution[index] = new
 		self.last = new
 		self:addAnimation(index, old, new)
@@ -131,7 +132,7 @@ function Grid:addAnimation(index, old, new)
 		self:redrawPosition(self.animator.x, self.animator.y)
 	end
 
-	local animator = playdate.frameTimer.new(4, 1, 3)
+	local animator <const> = playdate.frameTimer.new(4, 1, 3)
 	animator.x = self.cursor.gridX
 	animator.y = self.cursor.gridY
 	animator.offset = new == 0 and (old == 1 and 4 or 3) or (new == 1 and 1 or 2)
@@ -139,7 +140,7 @@ function Grid:addAnimation(index, old, new)
 end
 
 function Grid:invert()
-	local solution = self.solution
+	local solution <const> = self.solution
 	for i = 1, #solution do
 		solution[i] = solution[i] == 1 and 0 or 1
 	end
@@ -152,11 +153,11 @@ function Grid:invert()
 end
 
 function Grid:flipX()
-	local solution = table.create(#self.solution, 0)
+	local solution <const> = table.create(#self.solution, 0)
 	for y = 1, self.puzzle.height do
 		for x = 1, self.puzzle.width do
-			local index = x - 1 + (y - 1) * self.puzzle.width + 1
-			local oldIndex = self.puzzle.width - x + (y - 1) * self.puzzle.width + 1
+			local index <const> = x - 1 + (y - 1) * self.puzzle.width + 1
+			local oldIndex <const> = self.puzzle.width - x + (y - 1) * self.puzzle.width + 1
 			solution[index] = self.solution[oldIndex]
 		end
 	end
@@ -169,11 +170,11 @@ function Grid:flipX()
 	self:redraw()
 end
 function Grid:flipY()
-	local solution = table.create(#self.solution, 0)
+	local solution <const> = table.create(#self.solution, 0)
 	for y = 1, self.puzzle.height do
 		for x = 1, self.puzzle.width do
-			local index = x - 1 + (y - 1) * self.puzzle.width + 1
-			local oldIndex = x - 1 + (self.puzzle.height - y) * self.puzzle.width + 1
+			local index <const> = x - 1 + (y - 1) * self.puzzle.width + 1
+			local oldIndex <const> = x - 1 + (self.puzzle.height - y) * self.puzzle.width + 1
 			solution[index] = self.solution[oldIndex]
 		end
 	end
@@ -190,7 +191,7 @@ function Grid:reset()
 	self.solution = {}
 	for y = 1, self.puzzle.height do
 		for x = 1, self.puzzle.width do
-			local index = x - 1 + (y - 1) * self.puzzle.width + 1
+			local index <const> = x - 1 + (y - 1) * self.puzzle.width + 1
 			self.solution[index] =
 				self.mode == MODE_PLAY and self.puzzle:isCellKnownEmpty(x, y) and 2
 				or 0
@@ -249,20 +250,20 @@ function Grid:endTranslating()
 end
 
 function Grid:translate()
-	local dx = self.cursor.gridX - self.moveContext.startX
-	local dy = self.cursor.gridY - self.moveContext.startY
-	local grid = self.moveContext.grid
-	local width = self.puzzle.width
-	local height = self.puzzle.height
+	local dx <const> = self.cursor.gridX - self.moveContext.startX
+	local dy <const> = self.cursor.gridY - self.moveContext.startY
+	local grid <const> = self.moveContext.grid
+	local width <const> = self.puzzle.width
+	local height <const> = self.puzzle.height
 
-	local solution = table.create(#self.solution, 0)
+	local solution <const> = table.create(#self.solution, 0)
 	local index = 1
 	for y = 1, height do
 		for x = 1, width do
-			local tx = x - dx
-			local ty = y - dy
+			local tx <const> = x - dx
+			local ty <const> = y - dy
 			if 1 <= tx and tx <= width and 1 <= ty and ty <= height then
-				local translatedIndex = tx - 1 + (ty - 1) * width + 1
+				local translatedIndex <const> = tx - 1 + (ty - 1) * width + 1
 				solution[index] = grid[translatedIndex]
 			else
 				solution[index] = 0
@@ -279,9 +280,9 @@ function Grid:translate()
 	self:redraw()
 end
 
-function Grid:onUpdateSolution_()
-	if self.numbers then
-		self.numbers:updateForPosition(self.solution, self.mode)
+function Grid:onUpdateSolution_(autoCross)
+	if self.numbers and self.numbers:updateForPosition(self.solution, self.mode, autoCross) then
+		self.tilemap:setTiles(self.solution, self.puzzle.width)
 	end
 
 	self:redrawPosition(self.cursor.gridX, self.cursor.gridY)
@@ -289,8 +290,8 @@ function Grid:onUpdateSolution_()
 end
 
 function Grid:redrawPosition(gridX, gridY)
-	local x = CELL * (gridX - 1) + 1
-	local y = CELL * (gridY - 1) + 1
+	local x <const> = CELL * (gridX - 1) + 1
+	local y <const> = CELL * (gridY - 1) + 1
 	gfx.lockFocus(self:getImage())
 	do
 		gfx.setColor(gfx.kColorClear)
@@ -302,8 +303,8 @@ function Grid:redrawPosition(gridX, gridY)
 end
 
 function Grid:redraw()
-	local width = self.puzzle.width
-	local height = self.puzzle.height
+	local width <const> = self.puzzle.width
+	local height <const> = self.puzzle.height
 	self:getImage():clear(gfx.kColorClear)
 	gfx.lockFocus(self:getImage())
 	do

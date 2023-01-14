@@ -390,6 +390,12 @@ optionsSidebar.onHintsUp = function ()
 	switch(nil, optionsSidebar)
 end
 
+optionsSidebar.onToggleAutoCross = function ()
+	context.player.options.autoCross = not context.player.options.autoCross
+	context.player:save(context)
+	switch(nil, optionsSidebar, ACTION_ID_TOGGLE_AUTOCROSS)
+end
+
 optionsSidebar.onToggleHints = function ()
 	context.player.options.showHints = context.player.options.showHints % 3 + 1
 	context.player:save(context)

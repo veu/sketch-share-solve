@@ -7,6 +7,7 @@ function Profile:init(profile, save)
 	self.createdOn = profile.createdOn
 	self.played = profile.played
 	self.options = profile.options or {
+		autoCross = false,
 		showTimer = false,
 		showHints = HINTS_ID_BLOCKS,
 	}
