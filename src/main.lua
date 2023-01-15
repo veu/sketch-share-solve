@@ -16,6 +16,7 @@ local aboutSidebar <const> = AboutSidebar()
 local changeAvatarSidebar <const> = ChangeAvatarSidebar()
 local createAvatarSidebar <const> = CreateAvatarSidebar()
 local createPuzzleSidebar <const> = CreatePuzzleSidebar()
+local deletePuzzlesSidebar <const> = DeletePuzzlesSidebar()
 local namePlayerSidebar <const> = SelectPlayerSidebar()
 local namePuzzleSidebar <const> = NamePuzzleSidebar()
 local optionsSidebar <const> = OptionsSidebar()
@@ -363,6 +364,40 @@ createPuzzleSidebar.onUndo = function ()
 	startUndo()
 end
 
+deletePuzzlesSidebar.onAbort = function()
+	switch(nil, settingsSidebar, ACTION_ID_DELETE_PUZZLES, true)
+end
+
+deletePuzzlesSidebar.onSelected = function (profile)
+	local save <const> = profile._save
+	if #save.profileList == 1 then
+		-- delete file
+		playdate.datastore.delete(DIR_IMPORT .. "/" .. save.id)
+		context.ext[profile._save.id] = nil
+	else
+		-- remove profile, save file
+		local savedProfileId = nil
+		for id, savedProfile in pairs(save.profiles) do
+			if savedProfile.id == profile.id then
+				savedProfileId = id
+				break
+			end
+		end
+		if savedProfileId then
+			save.profiles[savedProfileId] = nil
+			for i = 1, #save.profileList do
+				if save.profileList[i] == savedProfileId then
+					save.profileList[i] = nil
+					break
+				end
+			end
+		end
+		context.ext[profile._save.id] = save
+		playdate.datastore.write(save, DIR_IMPORT .. "/" .. profile._save.id)
+	end
+	switch(nil, deletePuzzlesSidebar)
+end
+
 optionsSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_OPTIONS, true)
 end
@@ -590,6 +625,10 @@ settingsSidebar.onCrankSpeedUp = function ()
 	context.settings.crankSpeed = context.settings.crankSpeed % 5 + 1
 	context.settings:save(context)
 	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
+end
+
+settingsSidebar.onDeletePuzzles = function ()
+		switch(nil, deletePuzzlesSidebar)
 end
 
 settingsSidebar.onFontTypeToggle = function ()

@@ -60,6 +60,13 @@ function SettingsSidebar:enter(context, selected)
 				execRight = function ()
 					self.onSoundEffectsUp()
 				end
+			},
+			{
+				text = "Delete puzzles",
+				selected = selected == ACTION_ID_DELETE_PUZZLES,
+				exec = function ()
+					self.onDeletePuzzles()
+				end,
 			}
 		}
 	}
