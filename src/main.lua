@@ -209,6 +209,18 @@ function playEffect(name)
 	end
 end
 
+function playTrack()
+	if MUSIC_ENABLED and context.settings.music > 0 and not music:isPlaying() then
+		music:play(0)
+	end
+end
+
+function stopTrack()
+	if MUSIC_ENABLED then
+		music:stop()
+	end
+end
+
 function startUndo()
 	closeSidebar()
 	context.screen:startUndo()
@@ -237,6 +249,30 @@ local onHintStyleNext <const> = function ()
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
 	context.screen:updateHintStyle(context)
+end
+
+local onMusicDown <const> = function ()
+	context.settings.music = (context.settings.music + 5) % 6
+	context.settings:save(context)
+	if context.settings.music > 0 then
+		musicChannel:setVolume(context.settings.music / 6.25 + 0.2)
+		playTrack()
+	else
+		stopTrack()
+	end
+	switch(nil, context.sidebar, ACTION_ID_MUSIC)
+end
+
+local onMusicUp <const> = function ()
+	context.settings.music = (context.settings.music + 1) % 6
+	context.settings:save(context)
+	if context.settings.music > 0 then
+		musicChannel:setVolume(context.settings.music / 6.25 + 0.2)
+		playTrack()
+	else
+		stopTrack()
+	end
+	switch(nil, context.sidebar, ACTION_ID_MUSIC)
 end
 
 local onSoundEffectsDown <const> = function ()
@@ -640,6 +676,8 @@ end
 
 settingsSidebar.onHintStylePrevious = onHintStylePrevious
 settingsSidebar.onHintStyleNext = onHintStyleNext
+settingsSidebar.onMusicDown = onMusicDown
+settingsSidebar.onMusicUp = onMusicUp
 settingsSidebar.onSoundEffectsDown = onSoundEffectsDown
 settingsSidebar.onSoundEffectsUp = onSoundEffectsUp
 
@@ -773,6 +811,8 @@ local showFPS = false
 -- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
 -- 	showFPS = not showFPS
 -- end)
+
+playTrack()
 
 function playdate.update()
 	context.screen:update()

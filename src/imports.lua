@@ -100,10 +100,10 @@ imgCursor, err = gfx.imagetable.new("img/cursor")
 assert(imgCursor, err)
 imgMode, err = gfx.imagetable.new("img/mode")
 assert(imgMode, err)
-imgPattern, err = gfx.imagetable.new("img/pattern")
-assert(imgPattern, err)
 imgBox, err = gfx.imagetable.new("img/box")
 assert(imgBox, err)
+imgSidebar, err = gfx.imagetable.new("img/sidebar")
+assert(imgSidebar, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
 assert(imgTitle, err)
@@ -128,4 +128,17 @@ for i, name in ipairs(SOUNDS) do
 	assert(sound2, err)
 	snd2[name] = sound2
 	sndChannel:addSource(sound2)
+end
+
+music = {}
+musicChannel = playdate.sound.channel.new()
+
+MUSIC_ENABLED = true
+local track, err = playdate.sound.fileplayer.new("music/dialog", 1)
+if track then
+	music = track
+	musicChannel:addSource(music)
+	music:setStopOnUnderrun(false)
+else
+	MUSIC_ENABLED = false
 end

@@ -1,24 +1,3 @@
-function drawPaddedRect(x, y, w, h, ref)
-	-- outline
-	gfx.setColor(gfx.kColorBlack)
-	gfx.drawRect(x, y, w, h)
-	-- padding
-	gfx.setPattern(imgPattern:getImage(5 + ref % 2))
-	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
-  gfx.setColor(gfx.kColorBlack)
-	gfx.drawLine(x + 23, y + 2, x + 23, y + h - 3)
-	gfx.drawLine(x + 2, y + h - 3, x + w - 3, y + h - 3)
-end
-
-function drawStripedRect(x, y, w, h, ref)
-	-- outline
-	gfx.setColor(gfx.kColorBlack)
-	gfx.drawRect(x, y, w, h)
-	-- stripes
-	gfx.setPattern(imgPattern:getImage(1 + ref % 4))
-	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
-end
-
 function drawRightTextRect(x, y, w, h, text)
 	-- background
 	gfx.setColor(gfx.kColorWhite)

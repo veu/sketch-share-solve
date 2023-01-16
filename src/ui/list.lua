@@ -154,6 +154,7 @@ function List:redraw()
 		end
 	end
 	gfx.unlockFocus()
+	self:markDirty()
 end
 
 function List:moveTo(x, y)

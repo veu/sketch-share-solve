@@ -91,7 +91,6 @@ function Sidebar:cranked(change, acceleratedChange)
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 	end
 	self:onCranked()
 end
@@ -104,7 +103,6 @@ function Sidebar:downButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -125,7 +123,6 @@ function Sidebar:leftButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -146,7 +143,6 @@ function Sidebar:rightButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -161,7 +157,6 @@ function Sidebar:upButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -247,30 +242,5 @@ function Sidebar:onNavigated_()
 end
 
 function Sidebar:redraw()
-	self:getImage():clear(gfx.kColorClear)
-	gfx.lockFocus(self:getImage())
-	do
-		gfx.setFont(fontText)
-
-		-- background
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(0, 0, SIDEBAR_WIDTH, 240)
-
-		-- shadow
-		if self.isOpen then
-			gfx.setPattern(imgPattern:getImage(5 + self.x % 2))
-			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)
-		end
-
-		local height = 242
-
-		-- draw sidebar
-		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242, self.x)
-
-		-- menu
-		drawStripedRect(-1, -1, SIDEBAR_WIDTH - 23, height, self.x)
-	end
-
-	gfx.unlockFocus()
-	self:markDirty()
+	self:setImage(imgSidebar:getImage(self.isOpen and self.x % 4 + 1 or 5))
 end
