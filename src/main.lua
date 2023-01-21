@@ -99,7 +99,12 @@ function showPlayerKeyboard(mode)
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
 		if invalid or not ok then
-			switch(nil, mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
+			switch(
+				nil,
+				mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar,
+				mode == PLAYER_ID_SHOW_RENAME and OPTION_ID_RENAME_PROFILE or ACTION_ID_NEW_PLAYER,
+				true
+			)
 		else
 			context.player:save(context)
 			if mode == PLAYER_ID_SHOW_RENAME then
@@ -474,13 +479,13 @@ optionsSidebar.onResetProgress = function ()
 end
 
 optionsSidebar.onHintsDown = function ()
-	context.player.options.showHints = math.max(1, context.player.options.showHints - 1)
+	context.player.options.showHints = (context.player.options.showHints + 1) % 3 + 1
 	context.player:save(context)
 	switch(nil, optionsSidebar)
 end
 
 optionsSidebar.onHintsUp = function ()
-	context.player.options.showHints = math.min(3, context.player.options.showHints + 1)
+	context.player.options.showHints = context.player.options.showHints % 3 + 1
 	context.player:save(context)
 	switch(nil, optionsSidebar)
 end
