@@ -44,6 +44,22 @@ function PlayPuzzleSidebar:enter(context, selected)
 				self.onHintStyleNext()
 			end
 		})
+		local autocrossText = "Autocomplete: " .. (
+			context.player.options.autoCross and "on" or "off"
+		)
+		table.insert(config.menuItems, {
+			text = autocrossText,
+			selected = selected == ACTION_ID_TOGGLE_AUTOCROSS,
+			exec = function ()
+				self.onToggleAutoCross()
+			end,
+			execLeft = function ()
+				self.onToggleAutoCross()
+			end,
+			execRight = function ()
+				self.onToggleAutoCross()
+			end
+		})
 		table.insert(config.menuItems, {
 			text = "Restart",
 			exec = function()

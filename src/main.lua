@@ -560,6 +560,16 @@ playPuzzleSidebar.onNext = function ()
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
 
+playPuzzleSidebar.onToggleAutoCross = function ()
+	context.player.options.autoCross = not context.player.options.autoCross
+	if context.player.id ~= PLAYER_ID_QUICK_PLAY then
+		context.player:save(context)
+	end
+	switch(nil, playPuzzleSidebar, ACTION_ID_TOGGLE_AUTOCROSS)
+	context.screen:setAutocross(context.player.options.autoCross)
+end
+
+
 selectAvatarSidebar.onAbort = function()
 	switch(nil, selectPlayerSidebar, ACTION_ID_NEW_PLAYER, true)
 end

@@ -62,6 +62,10 @@ function PlayPuzzleScreen:fill(isStart)
 	self.grid:toggle(self.grid:getCursor(), isStart)
 end
 
+function PlayPuzzleScreen:setAutocross(value)
+	self.grid.autoCross = value
+end
+
 function PlayPuzzleScreen:dpadButtonDown(dx, dy, pressed)
 	if playdate.buttonIsPressed(playdate.kButtonA) then
 		self.grid:moveBy(dx, dy, pressed)
