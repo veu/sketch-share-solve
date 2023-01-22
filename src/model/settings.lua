@@ -14,7 +14,7 @@ function Settings:save(context)
 		fontType = self.fontType,
 		hintStyle = self.hintStyle,
 		music = self.music,
-		effects = self.ffects,
+		effects = self.effects,
 	}
 
 	save(context)
