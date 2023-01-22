@@ -49,16 +49,16 @@ function SettingsSidebar:enter(context, selected)
 				end
 			},
 			{
-				text = "Sound effects: " .. AUDIO_LEVEL_NAMES[context.settings.soundEffects],
-				selected = selected == ACTION_ID_SOUND_EFFECTS,
+				text = "Sound effects: " .. AUDIO_LEVEL_NAMES[context.settings.effects],
+				selected = selected == ACTION_ID_EFFECTS,
 				exec = function ()
-					self.onSoundEffectsUp()
+					self.onEffectsUp()
 				end,
 				execLeft = function ()
-					self.onSoundEffectsDown()
+					self.onEffectsDown()
 				end,
 				execRight = function ()
-					self.onSoundEffectsUp()
+					self.onEffectsUp()
 				end
 			}
 		}

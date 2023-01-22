@@ -205,7 +205,7 @@ function resume()
 end
 
 function playEffect(name)
-	if context.settings.soundEffects > 0 then
+	if context.settings.effects > 1 then
 		if snd1[name]:isPlaying() then
 			snd2[name]:play()
 		else
@@ -215,7 +215,7 @@ function playEffect(name)
 end
 
 function playTrack()
-	if MUSIC_ENABLED and context.settings.music > 0 and not music:isPlaying() then
+	if MUSIC_ENABLED and context.settings.music > 1 and not music:isPlaying() then
 		music:play(0)
 	end
 end
@@ -256,42 +256,41 @@ local onHintStyleNext <const> = function ()
 	context.screen:updateHintStyle(context)
 end
 
-local onMusicDown <const> = function ()
-	context.settings.music = (context.settings.music + 5) % 6
+local updateMusicSetting <const> = function (value)
+	context.settings.music = value
 	context.settings:save(context)
-	if context.settings.music > 0 then
-		musicChannel:setVolume(context.settings.music / 6.25 + 0.2)
+	if value > 1 then
+		musicChannel:setVolume((value - 1) / 6.25 + 0.2)
 		playTrack()
 	else
 		stopTrack()
 	end
+end
+
+local onMusicDown <const> = function ()
+	updateMusicSetting((context.settings.music + 4) % 6 + 1)
 	switch(nil, context.sidebar, ACTION_ID_MUSIC)
 end
 
 local onMusicUp <const> = function ()
-	context.settings.music = (context.settings.music + 1) % 6
-	context.settings:save(context)
-	if context.settings.music > 0 then
-		musicChannel:setVolume(context.settings.music / 6.25 + 0.2)
-		playTrack()
-	else
-		stopTrack()
-	end
+	updateMusicSetting(context.settings.music % 6 + 1)
 	switch(nil, context.sidebar, ACTION_ID_MUSIC)
 end
 
-local onSoundEffectsDown <const> = function ()
-	context.settings.soundEffects = (context.settings.soundEffects + 5) % 6
+local updateEffectsSetting <const> = function (value)
+	context.settings.effects = value
 	context.settings:save(context)
-	sndChannel:setVolume(context.settings.soundEffects / 6.25 + 0.2)
-	switch(nil, context.sidebar, ACTION_ID_SOUND_EFFECTS)
+	sndChannel:setVolume((value - 1) / 6.25 + 0.2)
 end
 
-local onSoundEffectsUp <const> = function ()
-	context.settings.soundEffects = (context.settings.soundEffects + 1) % 6
-	context.settings:save(context)
-	sndChannel:setVolume(context.settings.soundEffects / 6.25 + 0.2)
-	switch(nil, context.sidebar, ACTION_ID_SOUND_EFFECTS)
+local onEffectsDown <const> = function ()
+	updateEffectsSetting((context.settings.effects + 4) % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_EFFECTS)
+end
+
+local onEffectsUp <const> = function ()
+	updateEffectsSetting(context.settings.effects % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_EFFECTS)
 end
 
 createAvatarScreen.onChanged = function()
@@ -683,8 +682,8 @@ settingsSidebar.onHintStylePrevious = onHintStylePrevious
 settingsSidebar.onHintStyleNext = onHintStyleNext
 settingsSidebar.onMusicDown = onMusicDown
 settingsSidebar.onMusicUp = onMusicUp
-settingsSidebar.onSoundEffectsDown = onSoundEffectsDown
-settingsSidebar.onSoundEffectsUp = onSoundEffectsUp
+settingsSidebar.onEffectsDown = onEffectsDown
+settingsSidebar.onEffectsUp = onEffectsUp
 
 shareSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_SHARE, true)
@@ -811,11 +810,30 @@ context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
 openSidebar()
-
-local showFPS = false
--- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
--- 	showFPS = not showFPS
--- end)
+playdate.getSystemMenu():addOptionsMenuItem(
+	"effects",
+	AUDIO_LEVEL_NAMES,
+	context.settings.effects,
+	function (selected)
+		updateEffectsSetting(AUDIO_LEVEL_NAMES_REVERSED[selected])
+		if context.sidebar == settingsSidebar then
+			switch(nil, context.sidebar, ACTION_ID_EFFECTS)
+		end
+	end
+)
+if MUSIC_ENABLED then
+	playdate.getSystemMenu():addOptionsMenuItem(
+		"music",
+		AUDIO_LEVEL_NAMES,
+		context.settings.music,
+		function (selected)
+			updateMusicSetting(AUDIO_LEVEL_NAMES_REVERSED[selected])
+			if context.sidebar == settingsSidebar then
+				switch(nil, context.sidebar, ACTION_ID_MUSIC)
+			end
+		end
+	)
+end
 
 playTrack()
 
@@ -843,9 +861,6 @@ function playdate.update()
 			end
 			playdate.stop()
 		end
-	end
-	if showFPS then
-		playdate.drawFPS(0,0)
 	end
 	if context.undo and playdate.isCrankDocked() then
 		playdate.ui.crankIndicator:update()
