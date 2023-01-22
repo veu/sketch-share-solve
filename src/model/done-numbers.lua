@@ -45,27 +45,38 @@ function DoneNumbers:updatePosition(solutionNumbers, solution, x, y, autoCross)
 	self:calcLeftNumbersForRow(y)
 	self:calcTopNumbersForColumn(x)
 
-	if autoCross then
-		local width <const> = self.puzzle.width
-		local changed = false
-		if not doneLeft and self.leftLine[y] then
-			for index = (y - 1) * width + 1, y * width do
-				if solution[index] == 0 then
-					solution[index] = 2
-					changed = true
-				end
-			end
-		end
-		if not doneTop and self.topLine[x] then
-			for index = x, x + (self.puzzle.height - 1) * width, width do
-				if solution[index] == 0 then
-					solution[index] = 2
-					changed = true
-				end
-			end
-		end
-		return changed
+	if not autoCross then
+		return false, false
 	end
+
+	local width <const> = self.puzzle.width
+	local changedRow = false
+	if not doneLeft and self.leftLine[y] then
+		for index = (y - 1) * width + 1, y * width do
+			if solution[index] == 0 then
+				solution[index] = 2
+				changedRow = true
+			end
+		end
+	end
+	local changedColumn = false
+	if not doneTop and self.topLine[x] then
+		for index = x, x + (self.puzzle.height - 1) * width, width do
+			if solution[index] == 0 then
+				solution[index] = 2
+				changedColumn = true
+			end
+		end
+	end
+
+	if changedRow then
+		self:calcTopNumbers()
+	end
+	if changedColumn then
+		self:calcLeftNumbers()
+	end
+
+	return changedRow, changedColumn
 end
 
 function DoneNumbers:updateAll(solutionNumbers, solution)

@@ -23,6 +23,13 @@ function GridNumbersTop:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints,
 	self:redraw()
 end
 
+function GridNumbersTop:updateAll()
+	self:redraw()
+	if not self.cursorHidden then
+		self:redrawCursor(self.gridX)
+	end
+end
+
 function GridNumbersTop:updateForPosition()
 	self:redrawPosition()
 	if not self.cursorHidden then

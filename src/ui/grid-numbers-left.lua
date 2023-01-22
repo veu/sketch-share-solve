@@ -21,6 +21,13 @@ function GridNumbersLeft:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints
 	self:redraw()
 end
 
+function GridNumbersLeft:updateAll()
+	self:redraw()
+	if not self.cursorHidden then
+		self:redrawLeftCursor(self.gridY)
+	end
+end
+
 function GridNumbersLeft:updateForPosition()
 	self:redrawPosition()
 	if not self.cursorHidden then

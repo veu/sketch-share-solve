@@ -53,12 +53,13 @@ function GridNumbers:updateAllDone(solution)
 end
 
 function GridNumbers:updateForPosition(solution, mode, autoCross)
-	local didAutoCross = false
+	local didAutoCrossRow = false
+	local didAutoCrossColumn = false
 	if mode == MODE_CREATE then
 		self.gridNumbers:updatePosition(solution, self.gridX, self.gridY)
 	else
 		self.solutionNumbers:updatePosition(solution, self.gridX, self.gridY)
-		didAutoCross = self.doneNumbers:updatePosition(
+		didAutoCrossRow, didAutoCrossColumn = self.doneNumbers:updatePosition(
 			self.solutionNumbers,
 			solution,
 			self.gridX,
@@ -67,10 +68,19 @@ function GridNumbers:updateForPosition(solution, mode, autoCross)
 		)
 	end
 
-	self.numbersLeft:updateForPosition()
-	self.numbersTop:updateForPosition()
+	if didAutoCrossRow then
+		self.numbersTop:updateAll()
+	else
+		self.numbersTop:updateForPosition()
+	end
 
-	return didAutoCross
+	if didAutoCrossColumn then
+		self.numbersLeft:updateAll()
+	else
+		self.numbersLeft:updateForPosition()
+	end
+
+	return didAutoCrossRow or didAutoCrossColumn
 end
 
 function GridNumbers:leave()
