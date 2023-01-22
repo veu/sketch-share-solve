@@ -6,6 +6,7 @@ function Puzzle:init(puzzle, save)
 	self.title = puzzle.title
 	self.width = puzzle.width or 15
 	self.height = puzzle.height or 10
+	self.rotation = puzzle.rotation
 
 	local size = self.width * self.height
 	self.grid = table.create(size, 0)
@@ -31,8 +32,9 @@ function Puzzle:isSolved(solution)
 end
 
 function Puzzle:isTrivial()
-	for i, v in ipairs(self.grid) do
-		if v == 1 then
+	local grid = self.grid
+	for i = 1, #grid do
+		if grid[i] == 1 then
 			return false
 		end
 	end
@@ -73,6 +75,10 @@ function Puzzle:save(context)
 		grid = table.concat(self.grid)
 	}
 
+	if self.rotation then
+		puzzle.rotation = self.rotation
+	end
+
 	context.save.puzzles[self.id] = puzzle
 	table.insert(context.player.created, self.id)
 
@@ -94,8 +100,21 @@ function Puzzle:delete(context)
 	end
 
 	context.save.puzzles[self.id] = nil
-
 	save(context)
+end
+
+function Puzzle:rotate(context)
+	if self.rotation == 1 then
+		self.rotation = 2
+	elseif self.rotation == 2 then
+		self.rotation = nil
+	else
+		self.rotation = 1
+	end
+	if context.save.puzzles[self.id] then
+		context.save.puzzles[self.id].rotation = self.rotation
+		save(context)
+	end
 end
 
 Puzzle.load = function (context, id, save)

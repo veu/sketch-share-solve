@@ -24,6 +24,13 @@ function PlayPuzzleSidebar:enter(context, selected)
 
 	if not puzzle.hasBeenSolved then
 		table.insert(config.menuItems, {
+			text = "Undo",
+			selected = selected == ACTION_ID_UNDO,
+			exec = function ()
+				self.onUndo()
+			end
+		})
+		table.insert(config.menuItems, {
 			text = "Hint style: " .. NUM_STYLE_NAMES[context.settings.hintStyle],
 			selected = selected == ACTION_ID_HINT_STYLE,
 			img = createHintStylePreview(context.settings.hintStyle),
@@ -35,6 +42,22 @@ function PlayPuzzleSidebar:enter(context, selected)
 			end,
 			execRight = function ()
 				self.onHintStyleNext()
+			end
+		})
+		local autocrossText = "Autocomplete: " .. (
+			context.player.options.autoCross and "on" or "off"
+		)
+		table.insert(config.menuItems, {
+			text = autocrossText,
+			selected = selected == ACTION_ID_TOGGLE_AUTOCROSS,
+			exec = function ()
+				self.onToggleAutoCross()
+			end,
+			execLeft = function ()
+				self.onToggleAutoCross()
+			end,
+			execRight = function ()
+				self.onToggleAutoCross()
 			end
 		})
 		table.insert(config.menuItems, {
@@ -65,6 +88,14 @@ function PlayPuzzleSidebar:enter(context, selected)
 		end
 		if creator.id == player.id then
 			table.insert(config.menuItems, {
+				text = "Rotate solution",
+				selected = selected == ACTION_ID_ROTATE,
+				img = createPuzzlePreview(puzzle),
+				exec = function()
+					self.onRotatePuzzle()
+				end
+			})
+			table.insert(config.menuItems, {
 				text = "Delete puzzle",
 				exec = function()
 					self.onDeletePuzzle()
@@ -81,8 +112,9 @@ function PlayPuzzleSidebar:getTitle(player, creator, puzzle)
 		return "\"" .. puzzle.title .. "\""
 	end
 
-	for i, id in ipairs(creator.created) do
-		if id == puzzle.id then
+	local created = creator.created
+	for i = 1, #created do
+		if created[i] == puzzle.id then
 			return string.format("Puzzle %02d", i)
 		end
 	end

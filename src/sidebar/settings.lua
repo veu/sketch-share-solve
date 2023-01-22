@@ -47,9 +47,46 @@ function SettingsSidebar:enter(context, selected)
 				execRight = function ()
 					self.onHintStyleNext()
 				end
+			},
+			{
+				text = "Sound effects: " .. AUDIO_LEVEL_NAMES[context.settings.effects],
+				selected = selected == ACTION_ID_EFFECTS,
+				exec = function ()
+					self.onEffectsUp()
+				end,
+				execLeft = function ()
+					self.onEffectsDown()
+				end,
+				execRight = function ()
+					self.onEffectsUp()
+				end
 			}
 		}
 	}
+
+	if MUSIC_ENABLED then
+		table.insert(config.menuItems, {
+			text = "Music: " .. AUDIO_LEVEL_NAMES[context.settings.music],
+			selected = selected == ACTION_ID_MUSIC,
+			exec = function ()
+				self.onMusicUp()
+			end,
+			execLeft = function ()
+				self.onMusicDown()
+			end,
+			execRight = function ()
+				self.onMusicUp()
+			end
+		})
+	end
+
+	table.insert(config.menuItems, {
+		text = "Delete puzzles",
+		selected = selected == ACTION_ID_DELETE_PUZZLES,
+		exec = function ()
+			self.onDeletePuzzles()
+		end,
+	})
 
 	SettingsSidebar.super.enter(self, context, config)
 end

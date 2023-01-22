@@ -113,11 +113,13 @@ function PlayerAvatar:initSlide()
 	if not self.slide then
 		self.slide = gfx.image.new(20, 23 * #self.menuItems, gfx.kColorClear)
 		gfx.lockFocus(self.slide)
-		for i, item in ipairs(self.menuItems) do
-			if item.avatar == self.avatar then
+		local menuItems = self.menuItems
+		for i = 1, #menuItems do
+			local avatar = menuItems[i].avatar
+			if avatar == self.avatar then
 				self.position = i
 			end
-			item.avatar:drawScaled(0, (i - 1) * 23, 2)
+			avatar:drawScaled(0, (i - 1) * 23, 2)
 			gfx.setColor(gfx.kColorBlack)
 			gfx.drawRect(0, (i - 1) * 23 + 20, 20, 3)
 			gfx.setColor(gfx.kColorWhite)

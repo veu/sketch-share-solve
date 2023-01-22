@@ -29,8 +29,13 @@ function CreatePuzzleScreen:invertGrid()
 	self.puzzle.grid = self.grid.solution
 end
 
-function CreatePuzzleScreen:flipGrid()
-	self.grid:flip()
+function CreatePuzzleScreen:flipGridX()
+	self.grid:flipX()
+	self.puzzle.grid = self.grid.solution
+end
+
+function CreatePuzzleScreen:flipGridY()
+	self.grid:flipY()
 	self.puzzle.grid = self.grid.solution
 end
 

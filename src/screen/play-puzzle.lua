@@ -21,7 +21,13 @@ function PlayPuzzleScreen:enter(context)
 		end
 	end
 
-	self.grid:enter(self.puzzle, MODE_PLAY, context.player.options.showHints, context.settings.hintStyle)
+	self.grid:enter(
+		self.puzzle,
+		MODE_PLAY,
+		context.player.options.showHints,
+		context.settings.hintStyle,
+		context.player.options.autoCross
+	 )
 	self.timer:enter(context.player.options.showTimer, MODE_PLAY)
 	self.cantIdle = context.player.options.showTimer
 end
@@ -54,6 +60,10 @@ end
 
 function PlayPuzzleScreen:fill(isStart)
 	self.grid:toggle(self.grid:getCursor(), isStart)
+end
+
+function PlayPuzzleScreen:setAutocross(value)
+	self.grid.autoCross = value
 end
 
 function PlayPuzzleScreen:dpadButtonDown(dx, dy, pressed)

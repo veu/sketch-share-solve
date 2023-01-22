@@ -88,7 +88,8 @@ function createDefaultInputHandler(context)
 		end,
 
 		update = function ()
-			for i, button in ipairs(buttons) do
+			for i = 1, #buttons do
+				local button = buttons[i]
 				if playdate.buttonJustPressed(button) then
 					pressed[i] = 0
 				elseif playdate.buttonIsPressed(button) then

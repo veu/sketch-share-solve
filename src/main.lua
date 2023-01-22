@@ -1,39 +1,40 @@
 import "imports"
 
 -- screens
-local aboutScreen = AboutScreen()
-local createAvatarScreen = CreateAvatarScreen()
-local createPuzzleScreen = CreatePuzzleScreen()
-local selectPuzzleScreen = SelectPuzzleScreen()
-local sketchTutorialScreen = SketchTutorialScreen()
-local solvedPuzzleScreen = SolvedPuzzleScreen()
-local solveTutorialScreen = SolveTutorialScreen()
-local playPuzzleScreen = PlayPuzzleScreen()
-local titleScreen = TitleScreen()
+local aboutScreen <const> = AboutScreen()
+local createAvatarScreen <const> = CreateAvatarScreen()
+local createPuzzleScreen <const> = CreatePuzzleScreen()
+local selectPuzzleScreen <const> = SelectPuzzleScreen()
+local sketchTutorialScreen <const> = SketchTutorialScreen()
+local solvedPuzzleScreen <const> = SolvedPuzzleScreen()
+local solveTutorialScreen <const> = SolveTutorialScreen()
+local playPuzzleScreen <const> = PlayPuzzleScreen()
+local titleScreen <const> = TitleScreen()
 
 -- sidebars
-local aboutSidebar = AboutSidebar()
-local changeAvatarSidebar = ChangeAvatarSidebar()
-local createAvatarSidebar = CreateAvatarSidebar()
-local createPuzzleSidebar = CreatePuzzleSidebar()
-local namePlayerSidebar = SelectPlayerSidebar()
-local namePuzzleSidebar = NamePuzzleSidebar()
-local optionsSidebar = OptionsSidebar()
-local playPuzzleSidebar = PlayPuzzleSidebar()
-local selectAvatarSidebar = SelectAvatarSidebar()
-local selectCreatorSidebar = SelectCreatorSidebar()
-local selectPuzzleSidebar = SelectPuzzleSidebar()
-local selectPlayerSidebar = SelectPlayerSidebar()
-local selectModeSidebar = SelectModeSidebar()
-local selectTutorialSidebar = SelectTutorialSidebar()
-local settingsSidebar = SettingsSidebar()
-local shareSidebar = ShareSidebar()
-local sketchTutorialSidebar = TutorialSidebar()
-local solveTutorialSidebar = TutorialSidebar()
-local testPuzzleSidebar = TestPuzzleSidebar()
-local titleSidebar = TitleSidebar()
+local aboutSidebar <const> = AboutSidebar()
+local changeAvatarSidebar <const> = ChangeAvatarSidebar()
+local createAvatarSidebar <const> = CreateAvatarSidebar()
+local createPuzzleSidebar <const> = CreatePuzzleSidebar()
+local deletePuzzlesSidebar <const> = DeletePuzzlesSidebar()
+local namePlayerSidebar <const> = SelectPlayerSidebar()
+local namePuzzleSidebar <const> = NamePuzzleSidebar()
+local optionsSidebar <const> = OptionsSidebar()
+local playPuzzleSidebar <const> = PlayPuzzleSidebar()
+local selectAvatarSidebar <const> = SelectAvatarSidebar()
+local selectCreatorSidebar <const> = SelectCreatorSidebar()
+local selectPuzzleSidebar <const> = SelectPuzzleSidebar()
+local selectPlayerSidebar <const> = SelectPlayerSidebar()
+local selectModeSidebar <const> = SelectModeSidebar()
+local selectTutorialSidebar <const> = SelectTutorialSidebar()
+local settingsSidebar <const> = SettingsSidebar()
+local shareSidebar <const> = ShareSidebar()
+local sketchTutorialSidebar <const> = TutorialSidebar()
+local solveTutorialSidebar <const> = TutorialSidebar()
+local testPuzzleSidebar <const> = TestPuzzleSidebar()
+local titleSidebar <const> = TitleSidebar()
 
-local context = {
+local context <const> = {
 	creator = nil,
 	puzzle = nil,
 	player = nil,
@@ -46,9 +47,10 @@ local context = {
 	isSidebarOpen = false,
 }
 
-local defaultInputHandler = createDefaultInputHandler(context)
-local modalInputHandler = createModalInputHandler(context)
-local noopInputHandler = createNoopInputHandler(context)
+local defaultInputHandler <const> = createDefaultInputHandler(context)
+local modalInputHandler <const> = createModalInputHandler(context)
+local noopInputHandler <const> = createNoopInputHandler(context)
+local undoInputHandler <const> = createUndoInputHandler(context)
 
 local openMenuItem = nil
 
@@ -56,6 +58,9 @@ function openSidebar()
 	if not context.isSidebarOpen then
 		if context.screen == createPuzzleScreen then
 			switch(nil, createPuzzleSidebar)
+		end
+		if context.undo then
+			endUndo()
 		end
 
 		context.isSidebarOpen = true
@@ -94,7 +99,12 @@ function showPlayerKeyboard(mode)
 
 	playdate.keyboard.keyboardWillHideCallback = function (ok)
 		if invalid or not ok then
-			switch(nil, mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar, nil, true)
+			switch(
+				nil,
+				mode == PLAYER_ID_SHOW_RENAME and optionsSidebar or selectPlayerSidebar,
+				mode == PLAYER_ID_SHOW_RENAME and OPTION_ID_RENAME_PROFILE or ACTION_ID_NEW_PLAYER,
+				true
+			)
 		else
 			context.player:save(context)
 			if mode == PLAYER_ID_SHOW_RENAME then
@@ -194,18 +204,93 @@ function resume()
 	idleCounter = 0
 end
 
-local onHintStylePrevious = function ()
+function playEffect(name)
+	if context.settings.effects > 1 then
+		if snd1[name]:isPlaying() then
+			snd2[name]:play()
+		else
+			snd1[name]:play()
+		end
+	end
+end
+
+function playTrack()
+	if MUSIC_ENABLED and context.settings.music > 1 and not music:isPlaying() then
+		music:play(0)
+	end
+end
+
+function stopTrack()
+	if MUSIC_ENABLED then
+		music:stop()
+	end
+end
+
+function startUndo()
+	closeSidebar()
+	context.screen:startUndo()
+	if playdate.isCrankDocked() then
+		playdate.ui.crankIndicator:start()
+	end
+	context.undo = true
+	playdate.inputHandlers.push(undoInputHandler, true)
+end
+
+function endUndo()
+	context.screen:endUndo()
+	context.undo = false
+	playdate.inputHandlers.pop()
+end
+
+local onHintStylePrevious <const> = function ()
 	context.settings.hintStyle = (context.settings.hintStyle) % 3 + 2
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
 	context.screen:updateHintStyle(context)
 end
 
-local onHintStyleNext = function ()
+local onHintStyleNext <const> = function ()
 	context.settings.hintStyle = (context.settings.hintStyle - 1) % 3 + 2
 	context.settings:save(context)
 	switch(nil, context.sidebar, ACTION_ID_HINT_STYLE)
 	context.screen:updateHintStyle(context)
+end
+
+local updateMusicSetting <const> = function (value)
+	context.settings.music = value
+	context.settings:save(context)
+	if value > 1 then
+		musicChannel:setVolume((value - 1) / 6.25 + 0.2)
+		playTrack()
+	else
+		stopTrack()
+	end
+end
+
+local onMusicDown <const> = function ()
+	updateMusicSetting((context.settings.music + 4) % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_MUSIC)
+end
+
+local onMusicUp <const> = function ()
+	updateMusicSetting(context.settings.music % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_MUSIC)
+end
+
+local updateEffectsSetting <const> = function (value)
+	context.settings.effects = value
+	context.settings:save(context)
+	sndChannel:setVolume((value - 1) / 6.25 + 0.2)
+end
+
+local onEffectsDown <const> = function ()
+	updateEffectsSetting((context.settings.effects + 4) % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_EFFECTS)
+end
+
+local onEffectsUp <const> = function ()
+	updateEffectsSetting(context.settings.effects % 6 + 1)
+	switch(nil, context.sidebar, ACTION_ID_EFFECTS)
 end
 
 createAvatarScreen.onChanged = function()
@@ -284,9 +369,15 @@ createPuzzleSidebar.onAbort = function()
 end
 
 createPuzzleSidebar.onFlip = function()
-	context.screen:flipGrid()
+	context.screen:flipGridX()
 	context.puzzle.hasBeenSolved = false
 	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP)
+end
+
+createPuzzleSidebar.onFlipY = function()
+	context.screen:flipGridY()
+	context.puzzle.hasBeenSolved = false
+	switch(nil, createPuzzleSidebar, ACTION_ID_FLIP_Y)
 end
 
 createPuzzleSidebar.onInvertColors = function()
@@ -307,6 +398,44 @@ createPuzzleSidebar.onTestAndSave = function ()
 	else
 		switch(playPuzzleScreen, testPuzzleSidebar)
 	end
+end
+
+createPuzzleSidebar.onUndo = function ()
+	startUndo()
+end
+
+deletePuzzlesSidebar.onAbort = function()
+	switch(nil, settingsSidebar, ACTION_ID_DELETE_PUZZLES, true)
+end
+
+deletePuzzlesSidebar.onSelected = function (profile)
+	local save <const> = profile._save
+	if #save.profileList == 1 then
+		-- delete file
+		playdate.datastore.delete(DIR_IMPORT .. "/" .. save.id)
+		context.ext[profile._save.id] = nil
+	else
+		-- remove profile, save file
+		local savedProfileId = nil
+		for id, savedProfile in pairs(save.profiles) do
+			if savedProfile.id == profile.id then
+				savedProfileId = id
+				break
+			end
+		end
+		if savedProfileId then
+			save.profiles[savedProfileId] = nil
+			for i = 1, #save.profileList do
+				if save.profileList[i] == savedProfileId then
+					save.profileList[i] = nil
+					break
+				end
+			end
+		end
+		context.ext[profile._save.id] = save
+		playdate.datastore.write(save, DIR_IMPORT .. "/" .. profile._save.id)
+	end
+	switch(nil, deletePuzzlesSidebar)
 end
 
 optionsSidebar.onAbort = function ()
@@ -349,15 +478,21 @@ optionsSidebar.onResetProgress = function ()
 end
 
 optionsSidebar.onHintsDown = function ()
-	context.player.options.showHints = math.max(1, context.player.options.showHints - 1)
+	context.player.options.showHints = (context.player.options.showHints + 1) % 3 + 1
 	context.player:save(context)
 	switch(nil, optionsSidebar)
 end
 
 optionsSidebar.onHintsUp = function ()
-	context.player.options.showHints = math.min(3, context.player.options.showHints + 1)
+	context.player.options.showHints = context.player.options.showHints % 3 + 1
 	context.player:save(context)
 	switch(nil, optionsSidebar)
+end
+
+optionsSidebar.onToggleAutoCross = function ()
+	context.player.options.autoCross = not context.player.options.autoCross
+	context.player:save(context)
+	switch(nil, optionsSidebar, ACTION_ID_TOGGLE_AUTOCROSS)
 end
 
 optionsSidebar.onToggleHints = function ()
@@ -392,13 +527,26 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
 end
 
+playPuzzleSidebar.onRotatePuzzle = function ()
+	context.puzzle:rotate(context)
+	if context.screen == solvedPuzzleScreen then
+		switch(solvedPuzzleScreen, playPuzzleSidebar, ACTION_ID_ROTATE, true)
+	else
+		switch(nil, playPuzzleSidebar, ACTION_ID_ROTATE, true)
+	end
+end
+
 playPuzzleSidebar.onHintStylePrevious = onHintStylePrevious
 playPuzzleSidebar.onHintStyleNext = onHintStyleNext
+playPuzzleSidebar.onUndo = function ()
+	startUndo()
+end
 
 playPuzzleSidebar.onRemixPuzzle = function ()
 	local puzzle = Puzzle.createEmpty()
 	puzzle.grid = table.shallowcopy(context.puzzle.grid)
 	puzzle.title = context.puzzle.title
+	puzzle.rotation = context.puzzle.rotation
 	puzzle.hasBeenSolved = true
 	context.player.lastTime = context.player:hasPlayed(context.puzzle)
 	context.puzzle = puzzle
@@ -411,6 +559,16 @@ playPuzzleSidebar.onNext = function ()
 	context.puzzle = Puzzle.load(context, puzzleId, context.ext.rdk)
 	switch(playPuzzleScreen, playPuzzleSidebar)
 end
+
+playPuzzleSidebar.onToggleAutoCross = function ()
+	context.player.options.autoCross = not context.player.options.autoCross
+	if context.player.id ~= PLAYER_ID_QUICK_PLAY then
+		context.player:save(context)
+	end
+	switch(nil, playPuzzleSidebar, ACTION_ID_TOGGLE_AUTOCROSS)
+	context.screen:setAutocross(context.player.options.autoCross)
+end
+
 
 selectAvatarSidebar.onAbort = function()
 	switch(nil, selectPlayerSidebar, ACTION_ID_NEW_PLAYER, true)
@@ -519,6 +677,10 @@ settingsSidebar.onCrankSpeedUp = function ()
 	switch(nil, settingsSidebar, ACTION_ID_CRANK_SPEED)
 end
 
+settingsSidebar.onDeletePuzzles = function ()
+		switch(nil, deletePuzzlesSidebar)
+end
+
 settingsSidebar.onFontTypeToggle = function ()
 	context.settings.fontType = context.settings.fontType % 2 + 1
 	context.settings:save(context)
@@ -528,14 +690,20 @@ end
 
 settingsSidebar.onHintStylePrevious = onHintStylePrevious
 settingsSidebar.onHintStyleNext = onHintStyleNext
+settingsSidebar.onMusicDown = onMusicDown
+settingsSidebar.onMusicUp = onMusicUp
+settingsSidebar.onEffectsDown = onEffectsDown
+settingsSidebar.onEffectsUp = onEffectsUp
 
 shareSidebar.onAbort = function ()
 	switch(nil, selectModeSidebar, MODE_SHARE, true)
 end
 
 shareSidebar.onExportPuzzles = function ()
-	local puzzles = table.create(0, #context.player.created)
-	for i, id in ipairs(context.player.created) do
+	local created = context.player.created
+	local puzzles = table.create(0, #created)
+	for i = 1, #created do
+		local id = created[i]
 		puzzles[id] = context.save.puzzles[id]
 	end
 	local profile = table.deepcopy(context.save.profiles[context.player.id])
@@ -585,8 +753,17 @@ testPuzzleSidebar.onResetGrid = function()
 	switch(nil, testPuzzleSidebar, ACTION_ID_RESET_GRID)
 end
 
+testPuzzleSidebar.onRotatePuzzle = function ()
+	context.puzzle:rotate(context)
+	switch(solvedPuzzleScreen, testPuzzleSidebar, ACTION_ID_ROTATE, true)
+end
+
 testPuzzleSidebar.onSave = function ()
 	switch(nil, namePuzzleSidebar, nil, nil, showPuzzleKeyboard)
+end
+
+testPuzzleSidebar.onUndo = function ()
+	startUndo()
 end
 
 titleSidebar.onPlay = function ()
@@ -624,7 +801,9 @@ playdate.file.mkdir(DIR_IMPORT)
 playdate.file.mkdir(DIR_EXPORT)
 
 context.ext = {}
-for i, name in ipairs(playdate.file.listFiles(DIR_IMPORT)) do
+local files <const> = playdate.file.listFiles(DIR_IMPORT)
+for i = 1, #files do
+	local name = files[i]
 	if string.sub(name, -5, -1) == ".json" and string.sub(name, 0, 1) ~= "." then
 		local id = string.sub(name, 0, -6)
 		context.ext[id] = playdate.datastore.read(DIR_IMPORT .. "/" .. id)
@@ -641,11 +820,32 @@ context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
 openSidebar()
+playdate.getSystemMenu():addOptionsMenuItem(
+	"effects",
+	AUDIO_LEVEL_NAMES,
+	context.settings.effects,
+	function (selected)
+		updateEffectsSetting(AUDIO_LEVEL_NAMES_REVERSED[selected])
+		if context.sidebar == settingsSidebar then
+			switch(nil, context.sidebar, ACTION_ID_EFFECTS)
+		end
+	end
+)
+if MUSIC_ENABLED then
+	playdate.getSystemMenu():addOptionsMenuItem(
+		"music",
+		AUDIO_LEVEL_NAMES,
+		context.settings.music,
+		function (selected)
+			updateMusicSetting(AUDIO_LEVEL_NAMES_REVERSED[selected])
+			if context.sidebar == settingsSidebar then
+				switch(nil, context.sidebar, ACTION_ID_MUSIC)
+			end
+		end
+	)
+end
 
-local showFPS = false
--- local menuItem = playdate.getSystemMenu():addMenuItem("toggle fps", function()
--- 	showFPS = not showFPS
--- end)
+playTrack()
 
 function playdate.update()
 	context.screen:update()
@@ -672,8 +872,8 @@ function playdate.update()
 			playdate.stop()
 		end
 	end
-	if showFPS then
-		playdate.drawFPS(0,0)
+	if context.undo and playdate.isCrankDocked() then
+		playdate.ui.crankIndicator:update()
 	end
 	playdate.timer.updateTimers()
 	playdate.frameTimer.updateTimers()

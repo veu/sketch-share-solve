@@ -33,8 +33,9 @@ function Sidebar:enter(context, config, player, creator)
 
 	self.cursor = 1
 	self.cursorRaw = 1
-	for i, item in ipairs(self.menuItems) do
-		if item.selected then
+	local menuItems = self.menuItems
+	for i = 1, #menuItems do
+		if menuItems[i].selected then
 			self.cursor = i
 			self.cursorRaw = i
 			break
@@ -53,7 +54,7 @@ function Sidebar:enter(context, config, player, creator)
 	self.list:moveTo()
 	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.list:enter(context, self.menuItems, self.menuTitle)
-	self.list:select(self.cursor)
+	self.list:select(self.cursor, true)
 	if not context.scrolling then
 		self.list.highlightUpdate = true
 		self.list.needsRedraw = true
@@ -90,7 +91,6 @@ function Sidebar:cranked(change, acceleratedChange)
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 	end
 	self:onCranked()
 end
@@ -103,8 +103,9 @@ function Sidebar:downButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -112,6 +113,19 @@ function Sidebar:leftButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execLeft then
 		item.execLeft()
+		playEffect("back")
+		return
+	end
+	local newCursor = math.max(1, self.cursor - 6)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -119,6 +133,19 @@ function Sidebar:rightButtonDown()
 	local item = self.menuItems[self.cursor]
 	if not item.disabled and item.execRight then
 		item.execRight()
+		playEffect("click")
+		return
+	end
+	local newCursor = math.min(rawlen(self.menuItems), self.cursor + 6)
+	if self.cursor ~= newCursor then
+		self.cursor = newCursor
+		self.cursorRaw = newCursor
+		self.list:select(self.cursor)
+		self:onNavigated_(self.menuItems[self.cursor].ref)
+		self.onNavigated(self.menuItems[self.cursor].ref)
+		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -130,8 +157,9 @@ function Sidebar:upButtonDown()
 		self.list:select(self.cursor)
 		self:onNavigated_(self.menuItems[self.cursor].ref)
 		self.onNavigated(self.menuItems[self.cursor].ref)
-		self:redraw()
 		self:onMoved()
+	else
+		playEffect("scrollEnd")
 	end
 end
 
@@ -145,6 +173,7 @@ function Sidebar:AButtonDown()
 	end
 	self.list.highlightUpdate = true
 	self.list.needsRedraw = true
+	playEffect("click")
 	if item.exec then
 		item.exec()
 	else
@@ -153,6 +182,7 @@ function Sidebar:AButtonDown()
 end
 
 function Sidebar:BButtonDown()
+	playEffect("back")
 	self.onAbort()
 end
 
@@ -212,30 +242,5 @@ function Sidebar:onNavigated_()
 end
 
 function Sidebar:redraw()
-	self:getImage():clear(gfx.kColorClear)
-	gfx.lockFocus(self:getImage())
-	do
-		gfx.setFont(fontText)
-
-		-- background
-		gfx.setColor(gfx.kColorWhite)
-		gfx.fillRect(0, 0, SIDEBAR_WIDTH, 240)
-
-		-- shadow
-		if self.isOpen then
-			gfx.setPattern(imgPattern:getImage(5 + self.x % 2))
-			gfx.fillRect(SIDEBAR_WIDTH, 0, 3, 240)
-		end
-
-		local height = 242
-
-		-- draw sidebar
-		drawPaddedRect(SIDEBAR_WIDTH - 25, -1, 26, 242, self.x)
-
-		-- menu
-		drawStripedRect(-1, -1, SIDEBAR_WIDTH - 23, height, self.x)
-	end
-
-	gfx.unlockFocus()
-	self:markDirty()
+	self:setImage(imgSidebar:getImage(self.isOpen and self.x % 4 + 1 or 5))
 end

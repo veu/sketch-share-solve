@@ -1,24 +1,3 @@
-function drawPaddedRect(x, y, w, h, ref)
-	-- outline
-	gfx.setColor(gfx.kColorBlack)
-	gfx.drawRect(x, y, w, h)
-	-- padding
-	gfx.setPattern(imgPattern:getImage(5 + ref % 2))
-	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
-  gfx.setColor(gfx.kColorBlack)
-	gfx.drawLine(x + 23, y + 2, x + 23, y + h - 3)
-	gfx.drawLine(x + 2, y + h - 3, x + w - 3, y + h - 3)
-end
-
-function drawStripedRect(x, y, w, h, ref)
-	-- outline
-	gfx.setColor(gfx.kColorBlack)
-	gfx.drawRect(x, y, w, h)
-	-- stripes
-	gfx.setPattern(imgPattern:getImage(1 + ref % 4))
-	gfx.fillRect(x + 2, y + 2, w - 4, h - 4)
-end
-
 function drawRightTextRect(x, y, w, h, text)
 	-- background
 	gfx.setColor(gfx.kColorWhite)
@@ -96,12 +75,32 @@ function createPuzzlePreview(puzzle)
 		imgBox:drawImage(5, 0, 0)
 		gfx.setColor(gfx.kColorWhite)
 		local i = 1
-		for y = 1, puzzle.height do
-			for x = 1, puzzle.width do
-				if puzzle.grid[i] == 0 then
-					gfx.fillRect(x + 1, y + 3, 1, 1)
+		if puzzle.rotation == 1 then
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(y + 3, puzzle.width - x + 2, 1, 1)
+					end
+					i += 1
 				end
-				i += 1
+			end
+		elseif puzzle.rotation == 2 then
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(puzzle.height - y + 5, x + 1, 1, 1)
+					end
+					i += 1
+				end
+			end
+		else
+			for y = 1, puzzle.height do
+				for x = 1, puzzle.width do
+					if puzzle.grid[i] == 0 then
+						gfx.fillRect(x + 1, y + 3, 1, 1)
+					end
+					i += 1
+				end
 			end
 		end
 	end

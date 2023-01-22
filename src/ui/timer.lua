@@ -29,11 +29,30 @@ function Timer:reset()
 	end
 end
 
+function Timer:startUndo()
+	self.lastMode = self.mode
+	self.mode = MODE_UNDO
+	self:redraw()
+end
+
+function Timer:endUndo()
+	self.start = math.floor(playdate.getCurrentTimeMilliseconds() / 1000) - self.current
+	self.mode = self.lastMode
+	self:redraw()
+end
+
 function Timer:redraw()
 	self:getImage():clear(gfx.kColorClear)
 	gfx.lockFocus(self:getImage())
 	do
-		if self.show then
+		if self.mode == MODE_UNDO then
+			imgMode:drawImage(self.mode, 17, 10)
+
+			gfx.setColor(gfx.kColorBlack)
+			gfx.drawLine(12, 40, 114, 40)
+			gfx.setFont(fontTextBold)
+			gfx.drawText("Exit with Ⓑ", 22, 49)
+		elseif self.show then
 			imgMode:drawImage(self.mode, 17, 10)
 
 			gfx.setColor(gfx.kColorBlack)
@@ -55,7 +74,7 @@ end
 
 function Timer:update()
 	local elapsed = math.min(5940, math.floor(playdate.getCurrentTimeMilliseconds() / 1000) - self.start)
-	if elapsed == self.current then
+	if self.mode == MODE_UNDO or elapsed == self.current then
 		return
 	end
 	self.current = elapsed

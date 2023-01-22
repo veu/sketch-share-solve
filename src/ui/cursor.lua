@@ -45,6 +45,7 @@ function Cursor:moveBy(dx, dy, pressed)
 		self.gridX = math.max(1, math.min(self.puzzle.width, self.gridX + dx))
 		self.gridY = math.max(1, math.min(self.puzzle.height, self.gridY + dy))
 	else
+		playEffect("scroll")
 		self.gridX = (self.gridX + dx + self.puzzle.width - 1) % self.puzzle.width + 1
 		self.gridY = (self.gridY + dy + self.puzzle.height - 1) % self.puzzle.height + 1
 	end

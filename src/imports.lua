@@ -7,6 +7,7 @@ import "CoreLibs/object"
 import "CoreLibs/sprites"
 import "CoreLibs/string"
 import "CoreLibs/timer"
+import "CoreLibs/ui"
 
 gfx = playdate.graphics
 
@@ -15,20 +16,13 @@ import "constants"
 import "input/default"
 import "input/modal"
 import "input/noop"
+import "input/undo"
 
 import "model/done-numbers"
-import "model/done-numbers-disabled"
-import "model/done-numbers-line"
 import "model/numbers"
 import "model/profile"
 import "model/puzzle"
 import "model/settings"
-
-DONE_NUMBERS_TYPES = {
-	DoneNumbersDisabled,
-	DoneNumbersLine,
-	DoneNumbers,
-}
 
 import "screen/screen"
 import "screen/about"
@@ -46,6 +40,7 @@ import "sidebar/about"
 import "sidebar/change-avatar"
 import "sidebar/create-avatar"
 import "sidebar/create-puzzle"
+import "sidebar/delete-puzzles"
 import "sidebar/name-puzzle"
 import "sidebar/options"
 import "sidebar/play-puzzle"
@@ -105,10 +100,10 @@ imgCursor, err = gfx.imagetable.new("img/cursor")
 assert(imgCursor, err)
 imgMode, err = gfx.imagetable.new("img/mode")
 assert(imgMode, err)
-imgPattern, err = gfx.imagetable.new("img/pattern")
-assert(imgPattern, err)
 imgBox, err = gfx.imagetable.new("img/box")
 assert(imgBox, err)
+imgSidebar, err = gfx.imagetable.new("img/sidebar")
+assert(imgSidebar, err)
 imgDialog = gfx.nineSlice.new("img/dialog", 19, 9, 2, 2)
 imgTitle = gfx.image.new("img/title")
 assert(imgTitle, err)
@@ -118,3 +113,32 @@ imgRdk = gfx.image.new("img/rdk")
 assert(imgRdk, err)
 imgAbout = gfx.image.new("img/about")
 assert(imgAbout, err)
+
+snd1 = {}
+snd2 = {}
+sndChannel = playdate.sound.channel.new()
+
+local SOUNDS = {"back", "click", "cross", "erase", "scroll", "scrollEnd", "scrollFast", "sketch"}
+for i, name in ipairs(SOUNDS) do
+	local sound1, err = playdate.sound.sampleplayer.new("sound/" .. name)
+	assert(sound1, err)
+	snd1[name] = sound1
+	sndChannel:addSource(sound1)
+	local sound2, err = playdate.sound.sampleplayer.new("sound/" .. name)
+	assert(sound2, err)
+	snd2[name] = sound2
+	sndChannel:addSource(sound2)
+end
+
+music = {}
+musicChannel = playdate.sound.channel.new()
+
+MUSIC_ENABLED = true
+local track, err = playdate.sound.fileplayer.new("music/dialog", 1)
+if track then
+	music = track
+	musicChannel:addSource(music)
+	music:setStopOnUnderrun(false)
+else
+	MUSIC_ENABLED = false
+end

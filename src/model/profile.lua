@@ -7,6 +7,7 @@ function Profile:init(profile, save)
 	self.createdOn = profile.createdOn
 	self.played = profile.played
 	self.options = profile.options or {
+		autoCross = false,
 		showTimer = false,
 		showHints = HINTS_ID_BLOCKS,
 	}
@@ -35,8 +36,9 @@ function Profile:save(context)
 	context.save.profiles[self.id] = profile
 
 	local hasProfile = false
-	for _, id in ipairs(context.save.profileList) do
-		if id == profile.id then
+	local profileList = context.save.profileList
+	for i = 1, #profileList do
+		if profileList[i] == profile.id then
 			hasProfile = true
 			break
 		end
@@ -54,8 +56,9 @@ function Profile:delete(context)
 	end
 
 	local profileIndex = nil
-	for i, id in ipairs(context.save.profileList) do
-		if id == self.id then
+	local profileList = context.save.profileList
+	for i = 1, #profileList do
+		if profileList[i] == self.id then
 			profileIndex = i
 			break
 		end
@@ -88,8 +91,9 @@ function Profile:getNumPlayedBy(creator)
 	end
 	local prefix = creator._save and creator._save.id .. "." or ""
 	local count = 0
-	for _, id in ipairs(creator.created) do
-		if self.played[prefix .. id] then
+	local created = creator.created
+	for i = 1, #created do
+		if self.played[prefix .. created[i]] then
 			count += 1
 		end
 	end
@@ -101,8 +105,9 @@ function Profile:playedAllBy(creator)
 		return true
 	end
 	local prefix = creator._save and creator._save.id .. "." or ""
-	for _, id in ipairs(creator.created) do
-		if not self.played[prefix .. id] then
+	local created = creator.created
+	for i = 1, #created do
+		if not self.played[prefix .. created[i]] then
 			return false
 		end
 	end
@@ -115,8 +120,9 @@ function Profile:getTimeSpentWith(creator)
 	end
 	local prefix = creator._save and creator._save.id .. "." or ""
 	local time = 0
-	for _, id in ipairs(creator.created) do
-		local puzzleTime = self.played[prefix .. id]
+	local created = creator.created
+	for i = 1, #created do
+		local puzzleTime = self.played[prefix .. created[i]]
 		if puzzleTime then
 			time += puzzleTime
 		end
@@ -126,6 +132,11 @@ end
 
 function Profile:hasPlayed(puzzle)
 	local id = puzzle._save and puzzle._save.id .. "." .. puzzle.id or puzzle.id
+	return self.played[id]
+end
+
+function Profile:hasPlayedId(puzzleId, creator)
+	local id = creator._save and creator._save.id .. "." .. puzzleId or puzzleId
 	return self.played[id]
 end
 

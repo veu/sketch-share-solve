@@ -12,13 +12,14 @@ function SelectCreatorSidebar:enter(context, selected)
 	}
 
 	local selectedIndex = nil
-	local i = 1
+	local index = 1
 	local creator = nil
-	for _, id in ipairs(context.save.profileList) do
-		local profile = Profile.load(context, id)
+	local profileList = context.save.profileList
+	for i = 1, #profileList do
+		local profile = Profile.load(context, profileList[i])
 		if #profile.created > 0 then
 			if profile.id == selected or not creator then
-				selectedIndex = i
+				selectedIndex = index
 				creator = profile
 			end
 			table.insert(config.menuItems, {
@@ -28,15 +29,16 @@ function SelectCreatorSidebar:enter(context, selected)
 				selected = profile.id == selected,
 				checked = context.player:playedAllBy(profile),
 			})
-			i += 1
+			index += 1
 		end
 	end
 	for _, save in pairs(context.ext) do
-		for _, id in ipairs(save.profileList) do
-			local profile = Profile.load(context, id, save)
+		local profileList = save.profileList
+		for i = 1, #profileList do
+			local profile = Profile.load(context, profileList[i], save)
 			if #profile.created > 0 then
 				if profile.id == selected or not creator then
-					selectedIndex = i
+					selectedIndex = index
 					creator = profile
 				end
 				table.insert(config.menuItems, {
@@ -46,7 +48,7 @@ function SelectCreatorSidebar:enter(context, selected)
 					selected = profile.id == selected,
 					checked = context.player:playedAllBy(profile),
 				})
-				i += 1
+				index += 1
 			end
 		end
 	end

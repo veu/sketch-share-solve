@@ -7,17 +7,25 @@ function GridNumbersLeft:init()
 	self:setZIndex(Z_INDEX_GRID_NUMBERS)
 end
 
-function GridNumbersLeft:enter(puzzle, gridNumbers, doneNumbers, x, y, hintStyle)
+function GridNumbersLeft:enter(puzzle, gridNumbers, doneNumbers, x, y, showHints, hintStyle)
 	self.puzzle = puzzle
 	self.gridNumbers = gridNumbers
 	self.doneNumbers = doneNumbers
 	self.gridX = x
 	self.gridY = y
+	self.showHints = showHints
 	self.hintStyle = hintStyle
 
 	self:moveTo(SEPARATOR_WIDTH, GRID_OFFSET_Y)
 	self:add()
 	self:redraw()
+end
+
+function GridNumbersLeft:updateAll()
+	self:redraw()
+	if not self.cursorHidden then
+		self:redrawLeftCursor(self.gridY)
+	end
 end
 
 function GridNumbersLeft:updateForPosition()
@@ -58,12 +66,20 @@ function GridNumbersLeft:redraw()
 		gfx.setDrawOffset(GRID_OFFSET_X - SEPARATOR_WIDTH + CELL * (15 - self.puzzle.width), 0)
 
 		-- numbers
-		for y, numbers in ipairs(self.gridNumbers.left) do
-			local done = self.doneNumbers.left[y]
-			local lenNumbers = #numbers
-			for i, v in ipairs(numbers) do
+		local gridNumbers <const> = self.gridNumbers.left
+		local doneNumbers <const> = self.doneNumbers.left
+		local doneNumbersLine <const> = self.doneNumbers.leftLine
+		for y = 1, #gridNumbers do
+			local numbers <const> = gridNumbers[y]
+			local done <const> = doneNumbers[y]
+			local doneLine <const> = doneNumbersLine[y]
+			local lenNumbers <const> = #numbers
+			for i = 1, lenNumbers do
+				local isDone <const> =
+					self.showHints ~= HINTS_ID_OFF and doneLine or
+					self.showHints == HINTS_ID_BLOCKS and done[i]
 				imgGrid:drawImage(
-					NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+					NUM_STYLE_OFFSETS[isDone and self.hintStyle or 1] + numbers[i],
 					(CELL - 1) * (i - 1 - lenNumbers) - 1,
 					CELL * (y - 1) + 1
 				)
@@ -86,14 +102,19 @@ function GridNumbersLeft:redrawPosition()
 	gfx.fillRect(0, CELL * (self.gridY - 1), CELL * 8, CELL + 1)
 	gfx.setDrawOffset(GRID_OFFSET_X - SEPARATOR_WIDTH + CELL * (15 - self.puzzle.width), 0)
 	do
-		local numbers = self.gridNumbers.left[self.gridY]
-		local done = self.doneNumbers.left[self.gridY]
-		local lenNumbers = #numbers
-		for i, v in ipairs(numbers) do
+		local y <const> = self.gridY
+		local numbers <const> = self.gridNumbers.left[y]
+		local done <const> = self.doneNumbers.left[y]
+		local doneLine <const> = self.doneNumbers.leftLine[y]
+		local lenNumbers <const> = #numbers
+		for i = 1, lenNumbers do
+			local isDone <const> =
+				self.showHints ~= HINTS_ID_OFF and doneLine or
+				self.showHints == HINTS_ID_BLOCKS and done[i]
 			imgGrid:drawImage(
-				NUM_STYLE_OFFSETS[done[i] and self.hintStyle or 1] + v,
+				NUM_STYLE_OFFSETS[isDone and self.hintStyle or 1] + numbers[i],
 				(CELL - 1) * (i - 1 - lenNumbers) - 1,
-				CELL * (self.gridY - 1) + 1
+				CELL * (y - 1) + 1
 			)
 		end
 	end

@@ -9,6 +9,9 @@ function OptionsSidebar:enter(context, selected)
 	local timerText = "Timer: " .. (
 		context.player.options.showTimer and "on" or "off"
 	)
+	local autocrossText = "Autocomplete: " .. (
+		context.player.options.autoCross and "on" or "off"
+	)
 	local config = {
 		player = context.player.avatar,
 		menuTitle = "Options",
@@ -36,6 +39,19 @@ function OptionsSidebar:enter(context, selected)
 				end,
 				execRight = function ()
 					self.onToggleTimer()
+				end
+			},
+			{
+				text = autocrossText,
+				selected = selected == ACTION_ID_TOGGLE_AUTOCROSS,
+				exec = function ()
+					self.onToggleAutoCross()
+				end,
+				execLeft = function ()
+					self.onToggleAutoCross()
+				end,
+				execRight = function ()
+					self.onToggleAutoCross()
 				end
 			}
 		}

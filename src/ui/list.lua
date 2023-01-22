@@ -18,8 +18,8 @@ function List:enter(context, menuItems, menuTitle)
 	self.idleCounter = 0
 
 	local selected = 1
-	for i, item in ipairs(menuItems) do
-		if item.selected then
+	for i = 1, #menuItems do
+		if menuItems[i].selected then
 			selected = i
 		end
 	end
@@ -60,7 +60,15 @@ function List:onLeft_()
 	self.onLeft()
 end
 
-function List:select(index)
+function List:select(index, initial)
+	if not initial then
+		local diff = self.cursor - index
+		if diff > 1 or diff < -1 then
+			playEffect("scrollFast")
+		else
+			playEffect("scroll")
+		end
+	end
 	self.cursor = index
 	self.needsRedraw = true
 end
@@ -146,6 +154,7 @@ function List:redraw()
 		end
 	end
 	gfx.unlockFocus()
+	self:markDirty()
 end
 
 function List:moveTo(x, y)
