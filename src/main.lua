@@ -259,6 +259,7 @@ end
 local updateMusicSetting <const> = function (value)
 	context.settings.music = value
 	context.settings:save(context)
+	musicMenuItem:setValue(value)
 	if value > 1 then
 		musicChannel:setVolume((value - 1) / 6.25 + 0.2)
 		playTrack()
@@ -280,6 +281,7 @@ end
 local updateEffectsSetting <const> = function (value)
 	context.settings.effects = value
 	context.settings:save(context)
+	effectsMenuItem:setValue(value)
 	sndChannel:setVolume((value - 1) / 6.25 + 0.2)
 end
 
@@ -820,7 +822,7 @@ context.sidebar:enter(context)
 playdate.inputHandlers.push(defaultInputHandler)
 
 openSidebar()
-playdate.getSystemMenu():addOptionsMenuItem(
+effectsMenuItem = playdate.getSystemMenu():addOptionsMenuItem(
 	"effects",
 	AUDIO_LEVEL_NAMES,
 	context.settings.effects,
@@ -832,7 +834,7 @@ playdate.getSystemMenu():addOptionsMenuItem(
 	end
 )
 if MUSIC_ENABLED then
-	playdate.getSystemMenu():addOptionsMenuItem(
+	musicMenuItem = playdate.getSystemMenu():addOptionsMenuItem(
 		"music",
 		AUDIO_LEVEL_NAMES,
 		context.settings.music,
