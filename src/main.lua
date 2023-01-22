@@ -845,6 +845,8 @@ if MUSIC_ENABLED then
 	)
 end
 
+musicChannel:setVolume((context.settings.music - 1) / 6.25 + 0.2)
+sndChannel:setVolume((context.settings.effects - 1) / 6.25 + 0.2)
 playTrack()
 
 function playdate.update()
