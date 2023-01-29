@@ -22,7 +22,7 @@ function Sidebar:init()
 	self.onSelected = function () end
 end
 
-function Sidebar:enter(context, config, player, creator)
+function Sidebar:enter(context, config, player, creator, same)
 	self.config = config
 	self.menuItems = config.menuItems
 	self.menuTitle = config.menuTitle
@@ -44,7 +44,7 @@ function Sidebar:enter(context, config, player, creator)
 
 	self:add()
 
-	local isOpen = context.isSidebarOpen
+	local isOpen <const> = context.isSidebarOpen
 	self.isOpen = isOpen
 	self:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.playerAvatar:enter(config, config.player)
@@ -53,7 +53,7 @@ function Sidebar:enter(context, config, player, creator)
 	self.creatorAvatar:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
 	self.list:moveTo()
 	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
-	self.list:enter(context, self.menuItems, self.menuTitle)
+	self.list:enter(context, self.menuItems, self.menuTitle, same)
 	self.list:select(self.cursor, true)
 	if not context.scrolling then
 		self.list.highlightUpdate = true

@@ -193,9 +193,10 @@ function switch(newScreen, newSidebar, selected, out, onReady)
 			onReady()
 		end
 	end
+	local same <const> = context.sidebar == newSidebar
 	context.sidebar:leave(context)
 	context.sidebar = newSidebar
-	context.sidebar:enter(context, selected)
+	context.sidebar:enter(context, selected, same)
 end
 
 local idleCounter = 0

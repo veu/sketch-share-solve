@@ -4,7 +4,7 @@ function CreatePuzzleSidebar:init()
 	CreatePuzzleSidebar.super.init(self)
 end
 
-function CreatePuzzleSidebar:enter(context, selected)
+function CreatePuzzleSidebar:enter(context, selected, same)
 	local config = {
 		player = context.player.avatar,
 		menuTitle = "Create new puzzle",
@@ -61,5 +61,5 @@ function CreatePuzzleSidebar:enter(context, selected)
 		}
 	}
 
-	CreatePuzzleSidebar.super.enter(self, context, config)
+	CreatePuzzleSidebar.super.enter(self, context, config, nil, nil, same)
 end

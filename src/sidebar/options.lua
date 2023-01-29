@@ -4,7 +4,7 @@ function OptionsSidebar:init()
 	OptionsSidebar.super.init(self)
 end
 
-function OptionsSidebar:enter(context, selected)
+function OptionsSidebar:enter(context, selected, same)
 	local hintsText = "Hints: " .. HINTS_TEXT[context.player.options.showHints]
 	local timerText = "Timer: " .. (
 		context.player.options.showTimer and "on" or "off"
@@ -93,6 +93,9 @@ function OptionsSidebar:enter(context, selected)
 	OptionsSidebar.super.enter(
 		self,
 		context,
-		config
+		config,
+		nil,
+		nil,
+		same
 	)
 end
