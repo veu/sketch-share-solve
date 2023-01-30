@@ -4,6 +4,7 @@ import "imports"
 local aboutScreen <const> = AboutScreen()
 local createAvatarScreen <const> = CreateAvatarScreen()
 local createPuzzleScreen <const> = CreatePuzzleScreen()
+local selectCreatorScreen <const> = SelectCreatorScreen()
 local selectPuzzleScreen <const> = SelectPuzzleScreen()
 local sketchTutorialScreen <const> = SketchTutorialScreen()
 local solvedPuzzleScreen <const> = SolvedPuzzleScreen()
@@ -524,7 +525,7 @@ playPuzzleSidebar.onDeletePuzzle = function ()
 		if #context.creator.created > 0 then
 			switch(selectPuzzleScreen, selectPuzzleSidebar, nil, true)
 		else
-			switch(titleScreen, selectCreatorSidebar, nil, true)
+			switch(selectCreatorScreen, selectCreatorSidebar, nil, true)
 		end
 	end
 	showModal("Are you sure you want to delete the puzzle \"" .. context.puzzle.title .. "\"?", "Delete")
@@ -591,7 +592,11 @@ selectAvatarSidebar.onSelected = function(avatar)
 end
 
 selectCreatorSidebar.onAbort = function()
-	switch(nil, selectModeSidebar, MODE_PLAY, true)
+	switch(titleScreen, selectModeSidebar, MODE_PLAY, true)
+end
+
+selectCreatorSidebar.onNavigated = function (creator)
+	context.screen:setCreator(creator)
 end
 
 selectCreatorSidebar.onSelected = function(creator)
@@ -600,7 +605,11 @@ selectCreatorSidebar.onSelected = function(creator)
 end
 
 selectPuzzleSidebar.onAbort = function()
-	switch(titleScreen, selectCreatorSidebar, context.creator.id, true)
+	switch(selectCreatorScreen, selectCreatorSidebar, context.creator.id, true)
+end
+
+selectPuzzleSidebar.onNavigated = function (puzzle, preview)
+	context.screen:setPuzzle(puzzle, preview)
 end
 
 selectPuzzleSidebar.onSelected = function (puzzle)
@@ -615,7 +624,7 @@ end
 selectModeSidebar.onSelected = function(selectedMode)
 	context.mode = selectedMode
 	if context.mode == MODE_PLAY then
-		switch(nil, selectCreatorSidebar)
+		switch(selectCreatorScreen, selectCreatorSidebar)
 	elseif context.mode == MODE_CREATE then
 		local puzzle = Puzzle.createEmpty()
 		if context.player.sketch then

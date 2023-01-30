@@ -29,6 +29,7 @@ import "screen/about"
 import "screen/create-avatar"
 import "screen/create-puzzle"
 import "screen/play-puzzle"
+import "screen/select-creator"
 import "screen/select-puzzle"
 import "screen/sketch-tutorial"
 import "screen/solved-puzzle"
@@ -73,6 +74,7 @@ import "ui/list"
 import "ui/menu-border"
 import "ui/modal"
 import "ui/player-avatar"
+import "ui/puzzle-preview"
 import "ui/text-cursor"
 import "ui/time"
 import "ui/timer"
@@ -113,6 +115,8 @@ imgRdk = gfx.image.new("img/rdk")
 assert(imgRdk, err)
 imgAbout = gfx.image.new("img/about")
 assert(imgAbout, err)
+imgPreview = gfx.imagetable.new("img/preview")
+assert(imgPreview, err)
 
 snd1 = {}
 snd2 = {}
