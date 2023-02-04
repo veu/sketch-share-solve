@@ -37,6 +37,10 @@ function SelectPuzzleSidebar:enter(context, selected)
 	local start = self.list.position
 	for i = start, math.min(numCreated, start + 5) do
 		self:addItem(i)
+		if i == self.list.cursor then
+			local menuItem <const> = self.menuItems[i]
+			self.onNavigated(menuItem.ref, menuItem.img)
+		end
 	end
 	self.list.needsRedraw = true
 

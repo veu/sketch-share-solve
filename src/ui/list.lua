@@ -12,7 +12,7 @@ function List:init(parent)
 	end
 end
 
-function List:enter(context, menuItems, menuTitle)
+function List:enter(context, menuItems, menuTitle, same)
 	self.menuTitle = menuTitle
 	self.menuItems = menuItems
 	self.idleCounter = 0
@@ -24,9 +24,11 @@ function List:enter(context, menuItems, menuTitle)
 		end
 	end
 
-	self.cursor = selected
-	self.position = math.max(1, math.min(#menuItems - 5, selected - 2))
-	self.target = self.position
+	if not same then
+		self.cursor = selected
+		self.position = math.max(1, math.min(#menuItems - 5, selected - 2))
+		self.target = self.position
+	end
 
 	self.textCursor = TextCursor()
 

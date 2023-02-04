@@ -4,7 +4,7 @@ function PlayPuzzleSidebar:init()
 	PlayPuzzleSidebar.super.init(self)
 end
 
-function PlayPuzzleSidebar:enter(context, selected)
+function PlayPuzzleSidebar:enter(context, selected, same)
 	local player = context.player
 	local creator = context.creator
 	local puzzle = context.puzzle
@@ -104,7 +104,7 @@ function PlayPuzzleSidebar:enter(context, selected)
 		end
 	end
 
-	PlayPuzzleSidebar.super.enter(self, context, config)
+	PlayPuzzleSidebar.super.enter(self, context, config, nil, nil, same)
 end
 
 function PlayPuzzleSidebar:getTitle(player, creator, puzzle)

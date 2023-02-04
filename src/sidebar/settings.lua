@@ -4,7 +4,7 @@ function SettingsSidebar:init()
 	SettingsSidebar.super.init(self)
 end
 
-function SettingsSidebar:enter(context, selected)
+function SettingsSidebar:enter(context, selected, same)
 	local config = {
 		menuTitle = "Settings",
 		menuItems = {
@@ -88,5 +88,5 @@ function SettingsSidebar:enter(context, selected)
 		end,
 	})
 
-	SettingsSidebar.super.enter(self, context, config)
+	SettingsSidebar.super.enter(self, context, config, nil, nil, same)
 end

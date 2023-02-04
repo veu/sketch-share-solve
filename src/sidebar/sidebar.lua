@@ -22,7 +22,7 @@ function Sidebar:init()
 	self.onSelected = function () end
 end
 
-function Sidebar:enter(context, config, player, creator)
+function Sidebar:enter(context, config, player, creator, same)
 	self.config = config
 	self.menuItems = config.menuItems
 	self.menuTitle = config.menuTitle
@@ -44,7 +44,7 @@ function Sidebar:enter(context, config, player, creator)
 
 	self:add()
 
-	local isOpen = context.isSidebarOpen
+	local isOpen <const> = context.isSidebarOpen
 	self.isOpen = isOpen
 	self:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
 	self.playerAvatar:enter(config, config.player)
@@ -53,7 +53,7 @@ function Sidebar:enter(context, config, player, creator)
 	self.creatorAvatar:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, Sidebar.creatorAvatar.y)
 	self.list:moveTo()
 	self.menuBorder:moveTo(isOpen and 0 or -SIDEBAR_WIDTH + 24, 0)
-	self.list:enter(context, self.menuItems, self.menuTitle)
+	self.list:enter(context, self.menuItems, self.menuTitle, same)
 	self.list:select(self.cursor, true)
 	if not context.scrolling then
 		self.list.highlightUpdate = true
@@ -62,8 +62,9 @@ function Sidebar:enter(context, config, player, creator)
 	self:redraw()
 
 	if isOpen then
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 	end
 end
 
@@ -89,8 +90,9 @@ function Sidebar:cranked(change, acceleratedChange)
 	if self.cursor ~= newCursor then
 		self.cursor = newCursor
 		self.list:select(self.cursor)
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 	end
 	self:onCranked()
 end
@@ -101,8 +103,9 @@ function Sidebar:downButtonDown()
 		self.cursor = newCursor
 		self.cursorRaw = newCursor
 		self.list:select(self.cursor)
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -121,8 +124,9 @@ function Sidebar:leftButtonDown()
 		self.cursor = newCursor
 		self.cursorRaw = newCursor
 		self.list:select(self.cursor)
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -141,8 +145,9 @@ function Sidebar:rightButtonDown()
 		self.cursor = newCursor
 		self.cursorRaw = newCursor
 		self.list:select(self.cursor)
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -155,8 +160,9 @@ function Sidebar:upButtonDown()
 		self.cursor = newCursor
 		self.cursorRaw = newCursor
 		self.list:select(self.cursor)
-		self:onNavigated_(self.menuItems[self.cursor].ref)
-		self.onNavigated(self.menuItems[self.cursor].ref)
+		local menuItem <const> = self.menuItems[self.cursor]
+		self:onNavigated_(menuItem.ref)
+		self.onNavigated(menuItem.ref, menuItem.img)
 		self:onMoved()
 	else
 		playEffect("scrollEnd")
@@ -164,6 +170,9 @@ function Sidebar:upButtonDown()
 end
 
 function Sidebar:AButtonDown()
+	if self.animator then
+		return
+	end
 	local item = self.menuItems[self.cursor]
 	if item.disabled then
 		if item.disabledText then
@@ -182,6 +191,9 @@ function Sidebar:AButtonDown()
 end
 
 function Sidebar:BButtonDown()
+	if self.animator then
+		return
+	end
 	playEffect("back")
 	self.onAbort()
 end
