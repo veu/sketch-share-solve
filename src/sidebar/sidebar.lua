@@ -170,6 +170,9 @@ function Sidebar:upButtonDown()
 end
 
 function Sidebar:AButtonDown()
+	if self.animator then
+		return
+	end
 	local item = self.menuItems[self.cursor]
 	if item.disabled then
 		if item.disabledText then
@@ -188,6 +191,9 @@ function Sidebar:AButtonDown()
 end
 
 function Sidebar:BButtonDown()
+	if self.animator then
+		return
+	end
 	playEffect("back")
 	self.onAbort()
 end
