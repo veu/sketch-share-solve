@@ -1,5 +1,7 @@
 class("PuzzlePreview").extends(gfx.sprite)
 
+local SCALE_FIX_OFFSET <const> = playdate.systemInfo.pdxversion < 11300 and -1 or 0
+
 function PuzzlePreview:init()
 	PuzzlePreview.super.init(self, gfx.image.new(400, 240, gfx.kColorWhite))
 
@@ -39,13 +41,13 @@ function PuzzlePreview:redraw()
 		if self.preview then
 			if puzzle.rotation == 1 then
 				gfx.setClipRect(SIDEBAR_WIDTH + 59, 92, 62, 92)
-				self.preview:drawScaled(SIDEBAR_WIDTH + 35, 81, 6)
+				self.preview:drawScaled(SIDEBAR_WIDTH + SCALE_FIX_OFFSET + 36, 81, 6)
 			elseif puzzle.rotation == 2 then
 				gfx.setClipRect(SIDEBAR_WIDTH + 59, 92, 62, 92)
-				self.preview:drawScaled(SIDEBAR_WIDTH + 29, 81, 6)
+				self.preview:drawScaled(SIDEBAR_WIDTH + SCALE_FIX_OFFSET + 30, 81, 6)
 			else
 				gfx.setClipRect(SIDEBAR_WIDTH + 44, 107, 92, 62)
-				self.preview:drawScaled(SIDEBAR_WIDTH + 32, 84, 6)
+				self.preview:drawScaled(SIDEBAR_WIDTH + SCALE_FIX_OFFSET + 33, 84, 6)
 			end
 		end
 	end
