@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("PuzzlePreview").extends(gfx.sprite)
 
 local SCALE_FIX_OFFSET <const> = playdate.systemInfo.pdxversion < 11300 and -1 or 0

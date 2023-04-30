@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("Modal").extends(gfx.sprite)
 
 function Modal:init()

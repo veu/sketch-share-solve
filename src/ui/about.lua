@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("About").extends(gfx.sprite)
 
 function About:init()

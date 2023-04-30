@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 function drawRightTextRect(x, y, w, h, text)
 	-- background
 	gfx.setColor(gfx.kColorWhite)

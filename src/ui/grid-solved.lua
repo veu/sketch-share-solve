@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("GridSolved").extends(gfx.sprite)
 
 function GridSolved:init()

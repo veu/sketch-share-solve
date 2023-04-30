@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("List").extends(gfx.sprite)
 
 function List:init(parent)

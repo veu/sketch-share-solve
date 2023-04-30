@@ -1,4 +1,4 @@
-class("GridNumbers").extends(Object)
+class("GridNumbers").extends()
 
 function GridNumbers:init()
 	GridNumbers.super.init()

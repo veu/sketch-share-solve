@@ -1,5 +1,7 @@
 import "imports"
 
+local gfx <const> = playdate.graphics
+
 -- screens
 local aboutScreen <const> = AboutScreen()
 local createAvatarScreen <const> = CreateAvatarScreen()

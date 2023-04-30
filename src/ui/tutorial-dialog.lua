@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("TutorialDialog").extends(gfx.sprite)
 
 function TutorialDialog:init()
