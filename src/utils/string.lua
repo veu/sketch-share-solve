@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 function escapeString(input)
 	return string.gsub(input, "[*_]", "%0%0")
 end

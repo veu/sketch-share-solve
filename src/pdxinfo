@@ -3,5 +3,5 @@ author=RDK
 description=Playdate’s #1 nonogram game
 bundleID=net.monometric.sketch-share-solve
 imagePath=launcherAssets/
-version=2.1.1
-buildNumber=201010
+version=2.1.2
+buildNumber=201020

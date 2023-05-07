@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("Grid").extends(gfx.sprite)
 
 function Grid:init(withNumbers, autoCross)

@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("GridNumbersTop").extends(gfx.sprite)
 
 function GridNumbersTop:init()

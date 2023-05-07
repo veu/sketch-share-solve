@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("Frame").extends(gfx.sprite)
 
 function Frame:init()

@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("SolvedPuzzleScreen").extends(Screen)
 
 function SolvedPuzzleScreen:init()

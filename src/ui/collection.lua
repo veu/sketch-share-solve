@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("Collection").extends(gfx.sprite)
 
 function Collection:init()

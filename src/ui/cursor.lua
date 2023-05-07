@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("Cursor").extends(gfx.sprite)
 
 local CURSOR_DRAW = 1

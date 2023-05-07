@@ -1,3 +1,5 @@
+local gfx <const> = playdate.graphics
+
 class("PlayerAvatar").extends(gfx.sprite)
 
 function PlayerAvatar:init()

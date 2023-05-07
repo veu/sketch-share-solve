@@ -9,8 +9,6 @@ import "CoreLibs/string"
 import "CoreLibs/timer"
 import "CoreLibs/ui"
 
-gfx = playdate.graphics
-
 import "constants"
 
 import "input/default"
@@ -85,6 +83,8 @@ import "utils/files"
 import "utils/numbers"
 import "utils/string"
 import "utils/ui"
+
+local gfx <const> = playdate.graphics
 
 fontTextThin = gfx.font.new("font/text-thin")
 fontTextBold = gfx.font.new("font/text-bold")
